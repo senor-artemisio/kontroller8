@@ -46,7 +46,7 @@ class Init extends Migration
         });
 
         Schema::create('day_items', function (Blueprint $table) {
-            $table->primary('id');
+            $table->char('id', 26)->nullable(false);
             $table->char('day_id', 26);
             $table->float('protein')->nullable(false);
             $table->float('fat')->nullable(false);
@@ -58,7 +58,6 @@ class Init extends Migration
             $table->time('eat_before')->nullable();
 
             $table->primary('id');
-            $table->primary('day_id');
         });
     }
 

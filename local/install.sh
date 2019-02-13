@@ -8,7 +8,7 @@ else
     cd ..
 fi
 
-cp local/.env laradock/.env
+cp local/env-laradock laradock/.env
 
 echo "Laradock installed"
 
