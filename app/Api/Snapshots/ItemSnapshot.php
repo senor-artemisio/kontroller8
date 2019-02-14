@@ -2,7 +2,8 @@
 
 namespace App\Api\Snapshots;
 
-use App\Api\Http\Requests\ItemCreateRequest;
+use App\Api\Http\Requests\ItemStoreRequest;
+use App\Api\Http\Requests\ItemUpdateRequest;
 
 /**
  * Снимок для сущности «продукт».
@@ -13,22 +14,64 @@ class ItemSnapshot
     private $attributes;
 
     /**
-     * @param ItemCreateRequest $itemRequest
+     * @param ItemStoreRequest $itemRequest
      * @return ItemSnapshot
      */
-    public static function createFromRequest(ItemCreateRequest $itemRequest): ItemSnapshot
+    public static function createFromStoreRequest(ItemStoreRequest $itemRequest): ItemSnapshot
     {
         $snapshot = new self();
 
         $snapshot->setId($itemRequest->get('id'));
         $snapshot->setTitle($itemRequest->get('title'));
-        $snapshot->setProtein((float)$itemRequest->get('protein'));
-        $snapshot->setFat((float)$itemRequest->get('fat'));
-        $snapshot->setCarbohydrates((float)$itemRequest->get('carbohydrates'));
-        $snapshot->setFiber((float)$itemRequest->get('fiber'));
+        $snapshot->setProtein($itemRequest->get('protein'));
+        $snapshot->setFat($itemRequest->get('fat'));
+        $snapshot->setCarbohydrates($itemRequest->get('carbohydrates'));
+        $snapshot->setFiber($itemRequest->get('fiber'));
         $snapshot->setUserId($itemRequest->get('user_id'));
 
         return $snapshot;
+    }
+
+    /**
+     * @param ItemUpdateRequest $itemRequest
+     * @return ItemSnapshot
+     * @throws \ErrorException
+     */
+    public static function createFromUpdateRequest(ItemUpdateRequest $itemRequest): ItemSnapshot
+    {
+        $snapshot = new self();
+
+        foreach ($itemRequest->all() as $attribute => $value) {
+            switch ($attribute) {
+                case 'title':
+                    $snapshot->setTitle($value);
+                    break;
+                case 'protein':
+                    $snapshot->setProtein($value);
+                    break;
+                case 'fat':
+                    $snapshot->setFat($value);
+                    break;
+                case 'carbohydrates':
+                    $snapshot->setCarbohydrates($value);
+                    break;
+                case 'fiber':
+                    $snapshot->setFiber($value);
+                    break;
+                default:
+                    throw new \ErrorException('Invalid item attribute');
+            }
+        }
+
+        return $snapshot;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttributes(): array
+    {
+        return $this->attributes;
     }
 
     /**

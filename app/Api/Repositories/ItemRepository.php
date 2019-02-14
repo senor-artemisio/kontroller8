@@ -4,8 +4,10 @@ namespace App\Api\Repositories;
 
 use App\Api\Snapshots\ItemSnapshot;
 use App\Models\Item;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 /**
  * Репозиторий для сущности «продукт».
@@ -69,6 +71,17 @@ class ItemRepository
     }
 
     /**
+     * @param ItemSnapshot $snapshot
+     * @return Item|Model
+     */
+    public function update(ItemSnapshot $snapshot, Item $item): Item
+    {
+        $item->update($snapshot->getAttributes());
+
+        return $item;
+    }
+
+    /**
      * @param string $id
      * @return Item|Model
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
@@ -80,14 +93,14 @@ class ItemRepository
 
     /**
      * @param string $id
-     * @return array
+     * @return Collection|LengthAwarePaginator
      */
-    public function findByOwner(string $id): array
+    public function findByOwner(string $id)
     {
         $query = $this->item->where('user_id', $id);
 
         if ($this->perPage !== null) {
-            $query->paginate($this->perPage);
+            return $query->paginate($this->perPage, $this->columns);
         }
 
         return $query->get($this->columns);

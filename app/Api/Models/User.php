@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Api\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -18,6 +18,7 @@ class User extends Authenticatable
      */
     public function __construct(array $attributes = [])
     {
+        $this->incrementing = false;
         $this->fillable = [
             'id', 'name', 'email', 'password',
         ];

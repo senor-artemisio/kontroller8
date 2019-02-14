@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Запрос на создание сущности «продукт».
  */
-class ItemCreateRequest extends FormRequest
+class ItemStoreRequest extends FormRequest
 {
     /**
      * Возвращает правила валидации применяемых к запросу.
@@ -22,7 +22,6 @@ class ItemCreateRequest extends FormRequest
             'fat' => 'numeric|required',
             'carbohydrates' => 'numeric|required',
             'fiber' => 'numeric|required',
-            'user_id' => 'string|required',
         ];
     }
 

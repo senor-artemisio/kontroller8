@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Модель для сущности «продукт»
+ *
+ * @property string $id
+ * @property string $title
+ * @property float $protein
+ * @property float $fat
+ * @property float $carbohydrates
+ * @property float $fiber
+ * @property string $user_id
  */
 class Item extends Model
 {

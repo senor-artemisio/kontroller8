@@ -2,13 +2,15 @@
 
 namespace App\Api\Http\Controllers;
 
-use App\Api\Http\Requests\ItemCreateRequest;
+use App\Api\Http\Requests\ItemStoreRequest;
+use App\Api\Http\Requests\ItemUpdateRequest;
 use App\Api\Http\Resources\ItemResource;
 use App\Api\Repositories\ItemRepository;
 use App\Api\Services\ItemService;
 use App\Api\Snapshots\ItemSnapshot;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Models\Item;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -35,34 +37,50 @@ class ItemController extends Controller
     /**
      * Список продуктов текущего пользователя.
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function index(): AnonymousResourceCollection
+    public function index(): ResourceCollection
     {
         $userId = Auth::user()->getAuthIdentifier();
         $items = $this->itemRepository->paginate()->findByOwner($userId);
 
-        return ItemResource::collection($items);
+        return ResourceCollection::make($items);
     }
 
     /**
      * Создание продукта для текущего пользователя.
      *
-     * @param ItemCreateRequest $request
+     * @param ItemStoreRequest $request
      * @return ItemResource
      */
-    public function create(ItemCreateRequest $request): ItemResource
+    public function store(ItemStoreRequest $request): ItemResource
     {
-        $id = Ulid::generate();
-        $request->merge([
-            'id' => $id,
-            'user_id' => Auth::user()->getAuthIdentifier()
-        ]);
+        $snapshot = ItemSnapshot::createFromStoreRequest($request);
+        $snapshot->setId(\Ulid::generate());
+        $snapshot->setUserId(Auth::user()->getAuthIdentifier());
 
-        $snapshot = ItemSnapshot::createFromRequest($request);
         $this->itemService->create($snapshot);
-        $item = $this->itemRepository->findById($id);
+        $item = $this->itemRepository->findById($snapshot->getId());
+        $item->wasRecentlyCreated = true;
 
         return ItemResource::make($item);
+    }
+
+
+    /**
+     * @param ItemUpdateRequest $request
+     * @param Item $item
+     * @return ItemResource
+     * @throws \ErrorException
+     */
+    public function update(Item $item, ItemUpdateRequest $request): ItemResource
+    {
+        $snapshot = ItemSnapshot::createFromUpdateRequest($request);
+
+        $this->itemService->update($snapshot, $item);
+
+        $updatedItem = $this->itemRepository->findById($item->id);
+
+        return ItemResource::make($updatedItem);
     }
 }
