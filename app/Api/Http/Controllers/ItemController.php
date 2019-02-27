@@ -47,6 +47,18 @@ class ItemController extends Controller
     }
 
     /**
+     * @param Item $item
+     * @return ItemResource
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function show(Item $item): ItemResource
+    {
+        $this->authorize('view', $item);
+
+        return ItemResource::make($item);
+    }
+
+    /**
      * Создание продукта для текущего пользователя.
      *
      * @param ItemRequest $request

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Api\Http\Controllers\ItemController;
 use App\Api\Models\User;
 use App\Api\Models\Item;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -9,9 +10,9 @@ use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 /**
- * Проверка API для сущности «продукт»
+ * @see ItemController
  */
-class ItemTest extends TestCase
+class ItemApiTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -29,19 +30,17 @@ class ItemTest extends TestCase
     }
 
     /**
-     * Проверка корректности отображения списка продуктов неавторизованному пользователю
+     * @see ItemController::index()
      */
-    public function testUnauthorized():void
+    public function testIndexUnauthorized(): void
     {
-        $response = $this->getJson()
+        $this->getJson('/api/items')->assertStatus(401);
     }
 
     /**
-     * Проверка корректности отображения списка продуктов владельцу.
-     *
-     * @return void
+     * @see ItemController::index()
      */
-    public function testOwner(): void
+    public function testIndexOwner(): void
     {
         $user = factory(User::class)->create();
 
@@ -65,6 +64,32 @@ class ItemTest extends TestCase
         $this->assertNotNull($meta);
         $this->assertArrayHasKey('total', $meta);
         $this->assertEquals(5, $meta['total']);
+    }
+
+    /**
+     * @see ItemController::show()
+     */
+    public function testShowUnauthorized(): void
+    {
+        $item = factory(Item::class)->create();
+        $this->getJson("/api/items/{$item->id}")->assertStatus(401);
+    }
+
+    /**
+     * @see ItemController::show()
+     */
+    public function testShowAuthorized(): void
+    {
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Item $item */
+        $item = factory(Item::class)->create(['user_id' => $user->id]);
+        $response = $this->actingAs($user, 'api')->getJson("/api/items/$item->id");
+        $response->assertStatus(200);
+        $data = $response->decodeResponseJson('data');
+
+        $this->assertNotNull($data);
+        $this->assertEquals($item->toArray(), $this->arraySnakeCase($data));
     }
 
 
@@ -117,13 +142,11 @@ class ItemTest extends TestCase
 
         $itemData['id'] = $data['id'];
         $itemData['userId'] = $user->id;
-        unset($itemData['created_at'], $itemData['updated_at']);
+        $itemData['createdAt'] = $data['createdAt'];
+        $itemData['updatedAt'] = $data['updatedAt'];
+
         $this->assertEquals($data, $itemData);
-
-        $itemData['user_id'] = $itemData['userId'];
-        unset($itemData['userId']);
-
-        $this->assertDatabaseHas($this->item->getTable(), $itemData);
+        $this->assertDatabaseHas($this->item->getTable(), $this->arraySnakeCase($data));
     }
 
     /**

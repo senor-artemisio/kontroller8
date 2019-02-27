@@ -14,6 +14,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property float $carbohydrates
  * @property float $fiber
  * @property string $user_id
+ * @property string created_at
+ * @property string updated_at
  */
 class ItemResource extends JsonResource
 {
@@ -31,6 +33,8 @@ class ItemResource extends JsonResource
             'carbohydrates' => $this->carbohydrates,
             'fiber' => $this->fiber,
             'userId' => $this->user_id,
+            'createdAt' => $this->created_at->toDateTimeString(),
+            'updatedAt' => $this->updated_at->toDateTimeString(),
         ];
     }
 }
