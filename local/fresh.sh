@@ -10,5 +10,9 @@ docker-compose exec workspace mv ./.gitignore.storage storage/app/public/.gitign
 
 docker-compose exec mysql mysql -udefault -psecret -e "DROP DATABASE IF EXISTS \`default\`";
 docker-compose exec mysql mysql -udefault -psecret -e "CREATE DATABASE IF NOT EXISTS \`default\` COLLATE 'utf8_general_ci';";
+
+docker-compose exec mysql mysql -udefault -psecret -e "DROP DATABASE IF EXISTS \`test\`";
+docker-compose exec mysql mysql -udefault -psecret -e "CREATE DATABASE IF NOT EXISTS \`test\` COLLATE 'utf8_general_ci';";
+
 docker-compose exec workspace php artisan migrate
 docker-compose exec workspace php artisan db:seed
