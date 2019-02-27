@@ -10,6 +10,8 @@ use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 /**
+ * Feature test for item API.
+ *
  * @see ItemController
  */
 class ItemApiTest extends TestCase
@@ -30,6 +32,8 @@ class ItemApiTest extends TestCase
     }
 
     /**
+     * Check view items list for unauthorized user.
+     *
      * @see ItemController::index()
      */
     public function testIndexUnauthorized(): void
@@ -38,9 +42,11 @@ class ItemApiTest extends TestCase
     }
 
     /**
+     * Check view items list for authorized user.
+     *
      * @see ItemController::index()
      */
-    public function testIndexOwner(): void
+    public function testIndexAuthorized(): void
     {
         $user = factory(User::class)->create();
 
@@ -67,6 +73,8 @@ class ItemApiTest extends TestCase
     }
 
     /**
+     * Check view item for unauthorized user.
+     *
      * @see ItemController::show()
      */
     public function testShowUnauthorized(): void
@@ -76,6 +84,8 @@ class ItemApiTest extends TestCase
     }
 
     /**
+     * Check view item for authorized user.
+     *
      * @see ItemController::show()
      */
     public function testShowAuthorized(): void
@@ -94,9 +104,9 @@ class ItemApiTest extends TestCase
 
 
     /**
-     * Проверка пагинации в списке продуктов.
+     * Check pagination for items.
      *
-     * @return void
+     * @see ItemController::index()
      */
     public function testPagination(): void
     {
@@ -120,15 +130,15 @@ class ItemApiTest extends TestCase
     }
 
     /**
-     * Проверка создания продукта.
+     * Check create item for authorized user.
      *
-     * @return void
+     * @see ItemController::store()
      */
-    public function testCreate(): void
+    public function testCreateAuthorized(): void
     {
         $user = factory(User::class)->create();
         $itemData = [
-            'title' => 'куриная грудка',
+            'title' => 'chicken breast',
             'protein' => 23.5,
             'fat' => 1.2,
             'carbohydrates' => 4.3,
@@ -150,13 +160,33 @@ class ItemApiTest extends TestCase
     }
 
     /**
-     * Проверка обновления продукта.
+     * Check create item for unauthorized user.
+     *
+     * @see ItemController::store()
      */
-    public function testUpdate(): void
+    public function testCreateUnauthorized():void
+    {
+        $itemData = [
+            'title' => 'chicken breast',
+            'protein' => 23.5,
+            'fat' => 1.2,
+            'carbohydrates' => 4.3,
+            'fiber' => 0
+        ];
+        $response = $this->postJson('/api/items', $itemData);
+        $response->assertStatus(401);
+    }
+
+    /**
+     * Check update item for authorized user.
+     *
+     * @see ItemController::update()
+     */
+    public function testUpdateAuthorized(): void
     {
         $user = factory(User::class)->create();
         $item = factory(Item::class)->create(['user_id' => $user->id]);
-        $itemData = ['title' => 'не куриная грудка'];
+        $itemData = ['title' => 'not chicken breast'];
 
         $response = $this->actingAs($user, 'api')->patchJson("/api/items/$item->id", $itemData);
         $response->assertStatus(200);
@@ -173,14 +203,45 @@ class ItemApiTest extends TestCase
     }
 
     /**
-     * Проверка удаления продукта.
+     * Check update item for unauthorized user.
+     *
+     * @see ItemController::update()
      */
-    public function testDelete(): void
+    public function testUpdateUnauthorized():void
+    {
+        $user = factory(User::class)->create();
+        $item = factory(Item::class)->create(['user_id' => $user->id]);
+        $itemData = ['title' => 'not chicken breast'];
+
+        $response = $this->patchJson("/api/items/$item->id", $itemData);
+        $response->assertStatus(401);
+    }
+
+    /**
+     * Check delete item for authorized user
+     *
+     * @see ItemController::destroy()
+     */
+    public function testDeleteAuthorized(): void
     {
         $user = factory(User::class)->create();
         $item = factory(Item::class)->create(['user_id' => $user->id]);
         $response = $this->actingAs($user, 'api')->deleteJson("/api/items/$item->id");
         $response->assertStatus(204);
         $this->assertDatabaseMissing($this->item->getTable(), ['id' => $item->id]);
+    }
+
+    /**
+     * Check delete item for unauthorized user
+     *
+     * @see ItemController::destroy()
+     */
+    public function testDeleteUnauthorized(): void
+    {
+        $user = factory(User::class)->create();
+        $item = factory(Item::class)->create(['user_id' => $user->id]);
+        $response = $this->deleteJson("/api/items/$item->id");
+        $response->assertStatus(401);
+        $this->assertDatabaseHas($this->item->getTable(), ['id' => $item->id]);
     }
 }

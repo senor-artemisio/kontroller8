@@ -4,11 +4,16 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
+/**
+ * {@inheritdoc}
+ */
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
     /**
+     * Convert array keys to snake case.
+     *
      * @param $array
      * @return array
      */

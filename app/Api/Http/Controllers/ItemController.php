@@ -13,7 +13,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * API сущности «продукт»
+ * API for items.
  */
 class ItemController extends Controller
 {
@@ -34,8 +34,6 @@ class ItemController extends Controller
     }
 
     /**
-     * Список продуктов текущего пользователя.
-     *
      * @return ResourceCollection
      */
     public function index(): ResourceCollection
@@ -59,8 +57,6 @@ class ItemController extends Controller
     }
 
     /**
-     * Создание продукта для текущего пользователя.
-     *
      * @param ItemRequest $request
      * @return ItemResource
      */
