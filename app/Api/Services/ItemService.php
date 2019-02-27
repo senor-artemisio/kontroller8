@@ -4,7 +4,7 @@ namespace App\Api\Services;
 
 use App\Api\Repositories\ItemRepository;
 use App\Api\Snapshots\ItemSnapshot;
-use App\Models\Item;
+use App\Api\Models\Item;
 
 /**
  * Сервис для сущности «продукт»
@@ -34,8 +34,17 @@ class ItemService
      * @param ItemSnapshot $itemSnapshot
      * @param Item $item
      */
-    public function update(ItemSnapshot $itemSnapshot, Item $item): void
+    public function update(Item $item, ItemSnapshot $itemSnapshot): void
     {
-        $this->itemRepository->update($itemSnapshot, $item);
+        $this->itemRepository->update($item, $itemSnapshot);
+    }
+
+    /**
+     * @param Item $item
+     * @throws \Exception
+     */
+    public function delete(Item $item): void
+    {
+        $this->itemRepository->delete($item);
     }
 }

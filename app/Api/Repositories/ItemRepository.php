@@ -3,7 +3,7 @@
 namespace App\Api\Repositories;
 
 use App\Api\Snapshots\ItemSnapshot;
-use App\Models\Item;
+use App\Api\Models\Item;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -71,14 +71,25 @@ class ItemRepository
     }
 
     /**
+     * @param Item $item
      * @param ItemSnapshot $snapshot
      * @return Item|Model
      */
-    public function update(ItemSnapshot $snapshot, Item $item): Item
+    public function update(Item $item, ItemSnapshot $snapshot): Item
     {
         $item->update($snapshot->getAttributes());
 
         return $item;
+    }
+
+    /**
+     * @param Item $item
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function delete(Item $item): ?bool
+    {
+        return $item->delete($item);
     }
 
     /**

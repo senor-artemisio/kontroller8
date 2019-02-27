@@ -2,8 +2,8 @@
 
 namespace App\Api\Snapshots;
 
-use App\Api\Http\Requests\ItemStoreRequest;
-use App\Api\Http\Requests\ItemUpdateRequest;
+use App\Api\Http\Requests\ItemRequest;
+use App\Api\Models\Item;
 
 /**
  * Снимок для сущности «продукт».
@@ -14,10 +14,10 @@ class ItemSnapshot
     private $attributes;
 
     /**
-     * @param ItemStoreRequest $itemRequest
+     * @param ItemRequest $itemRequest
      * @return ItemSnapshot
      */
-    public static function createFromStoreRequest(ItemStoreRequest $itemRequest): ItemSnapshot
+    public static function createFromRequestStore(ItemRequest $itemRequest): ItemSnapshot
     {
         $snapshot = new self();
 
@@ -33,11 +33,11 @@ class ItemSnapshot
     }
 
     /**
-     * @param ItemUpdateRequest $itemRequest
+     * @param ItemRequest $itemRequest
      * @return ItemSnapshot
      * @throws \ErrorException
      */
-    public static function createFromUpdateRequest(ItemUpdateRequest $itemRequest): ItemSnapshot
+    public static function createFromRequestUpdate(ItemRequest $itemRequest): ItemSnapshot
     {
         $snapshot = new self();
 
@@ -62,6 +62,18 @@ class ItemSnapshot
                     throw new \ErrorException('Invalid item attribute');
             }
         }
+
+        return $snapshot;
+    }
+
+    /**
+     * @param Item $item
+     * @return ItemSnapshot
+     */
+    public static function createFromItem(Item $item): ItemSnapshot
+    {
+        $snapshot = new self();
+        $snapshot->attributes = $item->attributesToArray();
 
         return $snapshot;
     }

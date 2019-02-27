@@ -2,14 +2,13 @@
 
 namespace App\Api\Http\Controllers;
 
-use App\Api\Http\Requests\ItemStoreRequest;
-use App\Api\Http\Requests\ItemUpdateRequest;
+use App\Api\Http\Requests\ItemRequest;
 use App\Api\Http\Resources\ItemResource;
 use App\Api\Repositories\ItemRepository;
 use App\Api\Services\ItemService;
 use App\Api\Snapshots\ItemSnapshot;
 use App\Http\Controllers\Controller;
-use App\Models\Item;
+use App\Api\Models\Item;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
@@ -50,12 +49,12 @@ class ItemController extends Controller
     /**
      * Создание продукта для текущего пользователя.
      *
-     * @param ItemStoreRequest $request
+     * @param ItemRequest $request
      * @return ItemResource
      */
-    public function store(ItemStoreRequest $request): ItemResource
+    public function store(ItemRequest $request): ItemResource
     {
-        $snapshot = ItemSnapshot::createFromStoreRequest($request);
+        $snapshot = ItemSnapshot::createFromRequestStore($request);
         $snapshot->setId(\Ulid::generate());
         $snapshot->setUserId(Auth::user()->getAuthIdentifier());
 
@@ -68,19 +67,36 @@ class ItemController extends Controller
 
 
     /**
-     * @param ItemUpdateRequest $request
      * @param Item $item
+     * @param ItemRequest $request
      * @return ItemResource
      * @throws \ErrorException
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Item $item, ItemUpdateRequest $request): ItemResource
+    public function update(Item $item, ItemRequest $request): ItemResource
     {
-        $snapshot = ItemSnapshot::createFromUpdateRequest($request);
+        $this->authorize('update', $item);
 
-        $this->itemService->update($snapshot, $item);
+        $snapshot = ItemSnapshot::createFromRequestUpdate($request);
+
+        $this->itemService->update($item, $snapshot);
 
         $updatedItem = $this->itemRepository->findById($item->id);
 
         return ItemResource::make($updatedItem);
+    }
+
+    /**
+     * @param Item $item
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Exception
+     */
+    public function destroy(Item $item)
+    {
+        $this->authorize('delete', $item);
+        $this->itemService->delete($item);
+
+        return response()->json(null, 204);
     }
 }

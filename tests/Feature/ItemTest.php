@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Api\Models\User;
-use App\Models\Item;
+use App\Api\Models\Item;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
@@ -15,8 +15,29 @@ class ItemTest extends TestCase
 {
     use RefreshDatabase;
 
+    /** @var Item */
+    protected $item;
+
     /**
-     * Проверка корректности отображения продуктов владельцу.
+     * {@inheritdoc}
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->item = new Item();
+    }
+
+    /**
+     * Проверка корректности отображения списка продуктов неавторизованному пользователю
+     */
+    public function testUnauthorized():void
+    {
+        $response = $this->getJson()
+    }
+
+    /**
+     * Проверка корректности отображения списка продуктов владельцу.
      *
      * @return void
      */
@@ -96,8 +117,13 @@ class ItemTest extends TestCase
 
         $itemData['id'] = $data['id'];
         $itemData['userId'] = $user->id;
-
+        unset($itemData['created_at'], $itemData['updated_at']);
         $this->assertEquals($data, $itemData);
+
+        $itemData['user_id'] = $itemData['userId'];
+        unset($itemData['userId']);
+
+        $this->assertDatabaseHas($this->item->getTable(), $itemData);
     }
 
     /**
@@ -110,7 +136,6 @@ class ItemTest extends TestCase
         $itemData = ['title' => 'не куриная грудка'];
 
         $response = $this->actingAs($user, 'api')->patchJson("/api/items/$item->id", $itemData);
-
         $response->assertStatus(200);
 
         $data = $response->decodeResponseJson('data');
@@ -118,5 +143,21 @@ class ItemTest extends TestCase
 
         $this->assertEquals($data['title'], $itemData['title']);
         $this->assertEquals($data['id'], $item->id);
+        $this->assertDatabaseHas($this->item->getTable(), [
+            'id' => $item->id,
+            'title' => $itemData['title']
+        ]);
+    }
+
+    /**
+     * Проверка удаления продукта.
+     */
+    public function testDelete(): void
+    {
+        $user = factory(User::class)->create();
+        $item = factory(Item::class)->create(['user_id' => $user->id]);
+        $response = $this->actingAs($user, 'api')->deleteJson("/api/items/$item->id");
+        $response->assertStatus(204);
+        $this->assertDatabaseMissing($this->item->getTable(), ['id' => $item->id]);
     }
 }
