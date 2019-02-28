@@ -93,6 +93,21 @@ class ItemApiTest extends TestCase
         /** @var User $user */
         $user = factory(User::class)->create();
         /** @var Item $item */
+        $item = factory(Item::class)->create();
+        $response = $this->actingAs($user, 'api')->getJson("/api/items/$item->id");
+        $response->assertStatus(403);
+    }
+
+    /**
+     * Check view item for owner.
+     *
+     * @see ItemController::show()
+     */
+    public function testShowOwner(): void
+    {
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Item $item */
         $item = factory(Item::class)->create(['user_id' => $user->id]);
         $response = $this->actingAs($user, 'api')->getJson("/api/items/$item->id");
         $response->assertStatus(200);
@@ -164,7 +179,7 @@ class ItemApiTest extends TestCase
      *
      * @see ItemController::store()
      */
-    public function testCreateUnauthorized():void
+    public function testCreateUnauthorized(): void
     {
         $itemData = [
             'title' => 'chicken breast',
@@ -183,6 +198,21 @@ class ItemApiTest extends TestCase
      * @see ItemController::update()
      */
     public function testUpdateAuthorized(): void
+    {
+        $user = factory(User::class)->create();
+        $item = factory(Item::class)->create();
+        $itemData = ['title' => 'not chicken breast'];
+
+        $response = $this->actingAs($user, 'api')->patchJson("/api/items/$item->id", $itemData);
+        $response->assertStatus(403);
+    }
+
+    /**
+     * Check update item for owner.
+     *
+     * @see ItemController::update()
+     */
+    public function testUpdateOwner(): void
     {
         $user = factory(User::class)->create();
         $item = factory(Item::class)->create(['user_id' => $user->id]);
@@ -207,7 +237,7 @@ class ItemApiTest extends TestCase
      *
      * @see ItemController::update()
      */
-    public function testUpdateUnauthorized():void
+    public function testUpdateUnauthorized(): void
     {
         $user = factory(User::class)->create();
         $item = factory(Item::class)->create(['user_id' => $user->id]);
@@ -218,11 +248,24 @@ class ItemApiTest extends TestCase
     }
 
     /**
-     * Check delete item for authorized user
+     * Check delete item for authorized user.
      *
      * @see ItemController::destroy()
      */
     public function testDeleteAuthorized(): void
+    {
+        $user = factory(User::class)->create();
+        $item = factory(Item::class)->create();
+        $response = $this->actingAs($user, 'api')->deleteJson("/api/items/$item->id");
+        $response->assertStatus(403);
+    }
+
+    /**
+     * Check delete item for owner.
+     *
+     * @see ItemController::destroy()
+     */
+    public function testDeleteOwner(): void
     {
         $user = factory(User::class)->create();
         $item = factory(Item::class)->create(['user_id' => $user->id]);
@@ -232,7 +275,7 @@ class ItemApiTest extends TestCase
     }
 
     /**
-     * Check delete item for unauthorized user
+     * Check delete item for unauthorized user.
      *
      * @see ItemController::destroy()
      */
