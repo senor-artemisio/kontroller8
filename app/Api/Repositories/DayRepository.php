@@ -2,16 +2,16 @@
 
 namespace App\Api\Repositories;
 
-use App\Api\Models\Item;
+use App\Api\Models\Day;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 /**
- * Repository for item entity.
+ * Repository for day entity.
  */
-class ItemRepository
+class DayRepository
 {
     /** @var Builder */
     private $item;
@@ -23,18 +23,18 @@ class ItemRepository
     private $columns = ['*'];
 
     /**
-     * Инициализация репозитория.
+     * Init repo.
      */
     public function __construct()
     {
-        $this->item = Item::query();
+        $this->item = Day::query();
     }
 
     /**
      * @param int $perPage
-     * @return ItemRepository
+     * @return DayRepository
      */
-    public function paginate(?int $perPage = 20): ItemRepository
+    public function paginate(?int $perPage = 20): DayRepository
     {
         $this->perPage = $perPage;
 
@@ -43,9 +43,9 @@ class ItemRepository
 
     /**
      * @param array $columns
-     * @return ItemRepository
+     * @return DayRepository
      */
-    public function columns(array $columns): ItemRepository
+    public function columns(array $columns): DayRepository
     {
         $this->columns = $columns;
 
@@ -53,22 +53,30 @@ class ItemRepository
     }
 
     /**
-     * @param array $attributes
+     * @param ItemSnapshot $snapshot
      * @return Item|Model
      */
-    public function create(array $attributes): Item
+    public function create(ItemSnapshot $snapshot): Item
     {
-        return $this->item->create($attributes);
+        return $this->item->create([
+            'id' => $snapshot->getId(),
+            'title' => $snapshot->getTitle(),
+            'protein' => $snapshot->getProtein(),
+            'fat' => $snapshot->getFat(),
+            'carbohydrates' => $snapshot->getCarbohydrates(),
+            'fiber' => $snapshot->getFiber(),
+            'user_id' => $snapshot->getUserId(),
+        ]);
     }
 
     /**
      * @param Item $item
-     * @param array $attributes
+     * @param ItemSnapshot $snapshot
      * @return Item|Model
      */
-    public function update(Item $item, array $attributes): Item
+    public function update(Item $item, ItemSnapshot $snapshot): Item
     {
-        $item->update($attributes);
+        $item->update($snapshot->getAttributes());
 
         return $item;
     }
@@ -80,7 +88,7 @@ class ItemRepository
      */
     public function delete(Item $item): ?bool
     {
-        return $item->delete();
+        return $item->delete($item);
     }
 
     /**

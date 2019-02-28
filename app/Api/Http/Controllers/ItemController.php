@@ -6,7 +6,6 @@ use App\Api\Http\Requests\ItemRequest;
 use App\Api\Http\Resources\ItemResource;
 use App\Api\Repositories\ItemRepository;
 use App\Api\Services\ItemService;
-use App\Api\Snapshots\ItemSnapshot;
 use App\Http\Controllers\Controller;
 use App\Api\Models\Item;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -62,12 +61,11 @@ class ItemController extends Controller
      */
     public function store(ItemRequest $request): ItemResource
     {
-        $snapshot = ItemSnapshot::createFromRequestStore($request);
-        $snapshot->setId(\Ulid::generate());
-        $snapshot->setUserId(Auth::user()->getAuthIdentifier());
+        $attributes = $request->all();
+        $attributes['id'] = \Ulid::generate();
 
-        $this->itemService->create($snapshot);
-        $item = $this->itemRepository->findById($snapshot->getId());
+        $this->itemService->create($attributes);
+        $item = $this->itemRepository->findById($attributes['id']);
         $item->wasRecentlyCreated = true;
 
         return ItemResource::make($item);
@@ -85,9 +83,9 @@ class ItemController extends Controller
     {
         $this->authorize('update', $item);
 
-        $snapshot = ItemSnapshot::createFromRequestUpdate($request);
+        $attributes = $request->all();
 
-        $this->itemService->update($item, $snapshot);
+        $this->itemService->update($item, $attributes);
 
         $updatedItem = $this->itemRepository->findById($item->id);
 

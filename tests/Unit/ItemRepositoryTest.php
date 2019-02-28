@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Api\Repositories\ItemRepository;
-use App\Api\Snapshots\ItemSnapshot;
+use App\Api\DTO\ItemSnapshot;
 use App\Api\Models\Item;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -38,11 +38,13 @@ class ItemRepositoryTest extends TestCase
      */
     public function testCreate(): void
     {
-        $itemSnapshot = ItemSnapshot::createFromItem(factory(Item::class)->make());
+        /** @var Item $item */
+        $item = factory(Item::class)->make();
+        $attributes = $item->attributesToArray();
 
-        $this->itemRepository->create($itemSnapshot);
+        $this->itemRepository->create($attributes);
 
-        $this->assertDatabaseHas($this->item->getTable(), $itemSnapshot->getAttributes());
+        $this->assertDatabaseHas($this->item->getTable(), $attributes);
     }
 
     /**
@@ -50,15 +52,16 @@ class ItemRepositoryTest extends TestCase
      */
     public function testUpdate(): void
     {
+        /** @var Item $item */
         $item = factory(Item::class)->create();
-        $itemSnapshot = new ItemSnapshot();
-        $itemSnapshot->setTitle('не куриная грудка');
+        $attributes = $item->attributesToArray();
+        $attributes['title'] = 'not chicken breast';
 
-        $this->itemRepository->update($item, $itemSnapshot);
+        $this->itemRepository->update($item, $attributes);
 
         $this->assertDatabaseHas($this->item->getTable(), [
             'id' => $item->id,
-            'title' => $itemSnapshot->getTitle()
+            'title' => $attributes['title']
         ]);
     }
 

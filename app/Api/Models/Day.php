@@ -5,17 +5,9 @@ namespace App\Api\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Model for item entity.
- *
- * @property string $id
- * @property string $title
- * @property float $protein
- * @property float $fat
- * @property float $carbohydrates
- * @property float $fiber
- * @property string $user_id
+ * Model for day entity.
  */
-class Item extends Model
+class Day extends Model
 {
     /**
      * {@inheritdoc}
@@ -23,19 +15,23 @@ class Item extends Model
     public function __construct(array $attributes = [])
     {
         $this->incrementing = false;
-        $this->table = 'items';
+        $this->table = 'days';
         $this->fillable = [
             'id',
-            'title',
+            'date',
             'protein',
             'fat',
             'carbohydrates',
             'fiber',
-            'user_id'
+            'weight',
+            'weight_eaten',
+            'user_id',
         ];
+
         $this->dates = [
             'created_at',
-            'updated_at'
+            'updated_at',
+            'date'
         ];
 
         parent::__construct($attributes);

@@ -5,9 +5,9 @@ namespace App\Api\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * HTTP request for item entity.
+ * HTTP request for day entity.
  */
-class ItemRequest extends FormRequest
+class DayRequest extends FormRequest
 {
     /**
      * Validation rules for item.
@@ -17,11 +17,14 @@ class ItemRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'title' => 'string|required|max:255',
             'protein' => 'numeric|required',
             'fat' => 'numeric|required',
             'carbohydrates' => 'numeric|required',
             'fiber' => 'numeric|required',
+            'date' => 'date|required',
+            'weight' => 'numeric|required',
+            'weight_eaten' => 'numeric|required',
+            'user_id' => 'string|size:26|required|exists:days',
         ];
 
         if ($this->getMethod() === 'PATCH') {

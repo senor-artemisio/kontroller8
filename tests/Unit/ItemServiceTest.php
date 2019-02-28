@@ -3,7 +3,6 @@
 namespace Tests\Unit;
 
 use App\Api\Services\ItemService;
-use App\Api\Snapshots\ItemSnapshot;
 use App\Api\Models\Item;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -38,11 +37,12 @@ class ItemServiceTest extends TestCase
      */
     public function testCreate(): void
     {
-        $itemSnapshot = ItemSnapshot::createFromItem(factory(Item::class)->make());
+        /** @var Item $item */
+        $item = factory(Item::class)->make();
+        $attributes = $item->attributesToArray();
+        $this->itemService->create($attributes);
 
-        $this->itemService->create($itemSnapshot);
-
-        $this->assertDatabaseHas($this->item->getTable(), $itemSnapshot->getAttributes());
+        $this->assertDatabaseHas($this->item->getTable(), $attributes);
     }
 
     /**
@@ -51,14 +51,14 @@ class ItemServiceTest extends TestCase
     public function testUpdate(): void
     {
         $item = factory(Item::class)->create();
-        $itemSnapshot = new ItemSnapshot();
-        $itemSnapshot->setTitle('не куриная грудка');
+        $attributes = $item->attributesToArray();
+        $attributes['title'] = 'not chicken breast';
 
-        $this->itemService->update($item, $itemSnapshot);
+        $this->itemService->update($item, $attributes);
 
         $this->assertDatabaseHas($this->item->getTable(), [
             'id' => $item->id,
-            'title' => $itemSnapshot->getTitle()
+            'title' => $attributes['title']
         ]);
     }
 

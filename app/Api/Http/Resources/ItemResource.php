@@ -32,9 +32,9 @@ class ItemResource extends JsonResource
             'fat' => $this->fat,
             'carbohydrates' => $this->carbohydrates,
             'fiber' => $this->fiber,
-            'userId' => $this->user_id,
-            'createdAt' => $this->created_at->toDateTimeString(),
-            'updatedAt' => $this->updated_at->toDateTimeString(),
+            'user_id' => $this->user_id,
+            'created_at' => $this->created_at->toDateTimeString(),
+            'updated_at' => $this->updated_at->toDateTimeString(),
         ];
     }
 }

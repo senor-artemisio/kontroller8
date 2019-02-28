@@ -3,11 +3,11 @@
 namespace App\Api\Services;
 
 use App\Api\Repositories\ItemRepository;
-use App\Api\Snapshots\ItemSnapshot;
 use App\Api\Models\Item;
+use Illuminate\Support\Facades\Auth;
 
 /**
- * Сервис для сущности «продукт»
+ * Service for item entity.
  */
 class ItemService
 {
@@ -23,20 +23,21 @@ class ItemService
     }
 
     /**
-     * @param ItemSnapshot $itemSnapshot
+     * @param array $attributes
      */
-    public function create(ItemSnapshot $itemSnapshot): void
+    public function create(array $attributes): void
     {
-        $this->itemRepository->create($itemSnapshot);
+        $attributes['user_id'] = Auth::user()->getAuthIdentifier();
+        $this->itemRepository->create($attributes);
     }
 
     /**
-     * @param ItemSnapshot $itemSnapshot
+     * @param array $attributes
      * @param Item $item
      */
-    public function update(Item $item, ItemSnapshot $itemSnapshot): void
+    public function update(Item $item, array $attributes): void
     {
-        $this->itemRepository->update($item, $itemSnapshot);
+        $this->itemRepository->update($item, $attributes);
     }
 
     /**

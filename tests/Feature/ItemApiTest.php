@@ -114,7 +114,7 @@ class ItemApiTest extends TestCase
         $data = $response->decodeResponseJson('data');
 
         $this->assertNotNull($data);
-        $this->assertEquals($item->toArray(), $this->arraySnakeCase($data));
+        $this->assertEquals($item->toArray(), $data);
     }
 
 
@@ -166,12 +166,12 @@ class ItemApiTest extends TestCase
         $this->assertNotNull($data);
 
         $itemData['id'] = $data['id'];
-        $itemData['userId'] = $user->id;
-        $itemData['createdAt'] = $data['createdAt'];
-        $itemData['updatedAt'] = $data['updatedAt'];
+        $itemData['user_id'] = $user->id;
+        $itemData['created_at'] = $data['created_at'];
+        $itemData['updated_at'] = $data['updated_at'];
 
         $this->assertEquals($data, $itemData);
-        $this->assertDatabaseHas($this->item->getTable(), $this->arraySnakeCase($data));
+        $this->assertDatabaseHas($this->item->getTable(), $data);
     }
 
     /**
