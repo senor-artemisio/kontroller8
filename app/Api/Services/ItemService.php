@@ -2,12 +2,13 @@
 
 namespace App\Api\Services;
 
+use App\Api\DTO\ItemDTO;
 use App\Api\Repositories\ItemRepository;
 use App\Api\Models\Item;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * Service for item entity.
+ * Business logic for item.
  */
 class ItemService
 {
@@ -23,21 +24,29 @@ class ItemService
     }
 
     /**
-     * @param array $attributes
+     * @param ItemDTO $dto
      */
-    public function create(array $attributes): void
+    public function create(ItemDTO $dto): void
     {
-        $attributes['user_id'] = Auth::user()->getAuthIdentifier();
-        $this->itemRepository->create($attributes);
+        $dto->setUserId(Auth::user()->getAuthIdentifier());
+        $this->itemRepository->create([
+            'id' => $dto->getId(),
+            'title' => $dto->getTitle(),
+            'user_id' => $dto->getUserId(),
+            'protein' => $dto->getProtein(),
+            'fat' => $dto->getFat(),
+            'carbohydrates' => $dto->getCarbohydrates(),
+            'fiber' => $dto->getFiber(),
+        ]);
     }
 
     /**
-     * @param array $attributes
+     * @param ItemDTO $dto
      * @param Item $item
      */
-    public function update(Item $item, array $attributes): void
+    public function update(Item $item, ItemDTO $dto): void
     {
-        $this->itemRepository->update($item, $attributes);
+        $this->itemRepository->update($item, $dto->getChangedAttributes());
     }
 
     /**

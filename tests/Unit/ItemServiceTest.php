@@ -2,6 +2,8 @@
 
 namespace Tests\Unit;
 
+use App\Api\DTO\ItemDTO;
+use App\Api\Models\User;
 use App\Api\Services\ItemService;
 use App\Api\Models\Item;
 use Tests\TestCase;
@@ -34,27 +36,39 @@ class ItemServiceTest extends TestCase
     /**
      * @see ItemService::create()
      * @return void
+     * @throws \App\Api\DTO\DTOException
      */
     public function testCreate(): void
     {
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
+
         /** @var Item $item */
         $item = factory(Item::class)->make();
         $attributes = $item->attributesToArray();
-        $this->itemService->create($attributes);
+        unset($attributes['created_at'], $attributes['updated_at'], $attributes['user_id']);
 
+        $dto = new ItemDTO($attributes);
+        $this->itemService->create($dto);
+
+        $attributes['user_id'] = $user->id;
         $this->assertDatabaseHas($this->item->getTable(), $attributes);
     }
 
     /**
      * @see ItemService::update()
+     * @throws \App\Api\DTO\DTOException
      */
     public function testUpdate(): void
     {
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
         $item = factory(Item::class)->create();
-        $attributes = $item->attributesToArray();
-        $attributes['title'] = 'not chicken breast';
+        $attributes = ['title' => 'chicken breast'];
+        $dto = new ItemDTO($attributes);
 
-        $this->itemService->update($item, $attributes);
+        $this->itemService->update($item, $dto);
 
         $this->assertDatabaseHas($this->item->getTable(), [
             'id' => $item->id,
