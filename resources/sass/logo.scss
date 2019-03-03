@@ -1,0 +1,86 @@
+.logo-k8 {
+  width: 24px;
+  height: 30px;
+  position: relative;
+  display: inline-block;
+}
+
+.k {
+  position: absolute;
+}
+
+.k1 {
+  width: 18px;
+  top: 6px;
+  left: 3px;
+  background: #fff;
+  height: 24px;
+}
+
+.k2, .k3 {
+  width: 3px;
+  height: 3px;
+  background-color: #2c353e;
+  bottom: 0;
+}
+
+.k2 {
+  left: 3px;
+}
+
+.k3 {
+  right: 3px;
+}
+
+.k4, .k5 {
+  width: 6px;
+  height: 3px;
+  background: #2c353e;
+  left: 9px;
+}
+
+.k4 {
+  top: 12px;
+}
+
+.k5 {
+  top: 21px;
+}
+
+.k6, .k7, .k8, .k9, .k10 {
+  background: #34b0cb;
+}
+
+.k6 {
+  width: 100%;
+  top: 6px;
+  height: 3px;
+}
+
+.k7 {
+  width: 3px;
+  height: 9px;
+  left: 0;
+  top: 3px;
+}
+
+.k8 {
+  width: 3px;
+  height: 15px;
+  left: 3px;
+  top: 0px;
+}
+
+.k9 {
+  width: 3px;
+  height: 9px;
+  right: 0;
+  top: 3px;
+}
+
+.k10 {
+  width: 3px;
+  height: 15px;
+  right: 3px;
+  top: 0px;
+}

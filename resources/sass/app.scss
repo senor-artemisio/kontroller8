@@ -1,14 +1,11 @@
+$mdc-typography-font-family :'Oswald';
+$mdc-theme-primary :#2c353e;
 
-// Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
-
-// Variables
-@import 'variables';
-
-// Bootstrap
-@import '~bootstrap/scss/bootstrap';
-
-.navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
+@import url('https://fonts.googleapis.com/css?family=Oswald:400,700&subset=cyrillic');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import "~normalize.css";
+@import "logo";
+@import "~@material/top-app-bar/mdc-top-app-bar";
+@import "~@material/drawer/mdc-drawer";
+@import "~@material/list/mdc-list";
+@import "list";

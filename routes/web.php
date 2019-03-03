@@ -11,6 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+$routes = [
+    '/',
+    '/dashboard',
+    '/items',
+    '/calendar'
+];
+
+foreach ($routes as $route) {
+    Route::get($route, 'AppController@index');
+}
