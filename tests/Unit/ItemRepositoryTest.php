@@ -55,7 +55,7 @@ class ItemRepositoryTest extends TestCase
         /** @var Item $item */
         $item = factory(Item::class)->create();
         $attributes = $item->attributesToArray();
-        $attributes['title'] = 'not chicken breast';
+        $attributes['title'] = 'chicken breast';
 
         $this->itemRepository->update($item, $attributes);
 

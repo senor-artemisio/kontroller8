@@ -2,6 +2,7 @@
 
 namespace App\Api\Http\Controllers;
 
+use App\Api\DTO\ItemDTO;
 use App\Api\Http\Requests\ItemRequest;
 use App\Api\Http\Resources\ItemResource;
 use App\Api\Repositories\ItemRepository;
@@ -58,14 +59,15 @@ class ItemController extends Controller
     /**
      * @param ItemRequest $request
      * @return ItemResource
+     * @throws \App\Api\DTO\DTOException
      */
     public function store(ItemRequest $request): ItemResource
     {
-        $attributes = $request->all();
-        $attributes['id'] = \Ulid::generate();
+        $dto = new ItemDTO($request->all());
+        $dto->setId(\Ulid::generate());
 
-        $this->itemService->create($attributes);
-        $item = $this->itemRepository->findById($attributes['id']);
+        $this->itemService->create($dto);
+        $item = $this->itemRepository->findById($dto->getId());
         $item->wasRecentlyCreated = true;
 
         return ItemResource::make($item);
@@ -78,14 +80,15 @@ class ItemController extends Controller
      * @return ItemResource
      * @throws \ErrorException
      * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \App\Api\DTO\DTOException
      */
     public function update(Item $item, ItemRequest $request): ItemResource
     {
         $this->authorize('update', $item);
 
-        $attributes = $request->all();
+        $dto = new ItemDTO($request->all());
 
-        $this->itemService->update($item, $attributes);
+        $this->itemService->update($item, $dto);
 
         $updatedItem = $this->itemRepository->findById($item->id);
 
