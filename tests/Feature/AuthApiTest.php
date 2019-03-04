@@ -59,6 +59,11 @@ class AuthApiTest extends TestCase
             'remember_me' => false
         ]);
 
-        dd($response->decodeResponseJson());
+        $data = $response->decodeResponseJson();
+        $this->assertNotNull($data);
+
+        $this->assertArrayHasKey('access_token', $data);
+        $this->assertArrayHasKey('token_type', $data);
+        $this->assertArrayHasKey('expires_at', $data);
     }
 }
