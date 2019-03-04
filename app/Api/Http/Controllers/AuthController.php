@@ -32,6 +32,13 @@ class AuthController extends Controller
         $this->service = $service;
     }
 
+    /**
+     * Signup for unauthorized users.
+     *
+     * @param Request $request
+     * @return UserResource
+     * @throws \App\Api\DTO\DTOException
+     */
     public function signup(Request $request): UserResource
     {
         $v = validator($request->only('email', 'name', 'password'), [
@@ -55,14 +62,10 @@ class AuthController extends Controller
     }
 
     /**
-     * Login user and create token
+     * Login user and create token.
      *
-     * @param  [string] email
-     * @param  [string] password
-     * @param  [boolean] remember_me
-     * @return [string] access_token
-     * @return [string] token_type
-     * @return [string] expires_at
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse [string] access_token
      */
     public function login(Request $request)
     {
@@ -80,8 +83,9 @@ class AuthController extends Controller
         $user = $request->user();
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
-        if ($request->remember_me)
+        if ($request->remember_me) {
             $token->expires_at = Carbon::now()->addWeeks(1);
+        }
         $token->save();
 
         return response()->json([
