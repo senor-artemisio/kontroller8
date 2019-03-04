@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['json','auth:api'])->group(function(){
-    Route::get('/user', function (Request $request) {
-        return $request->user();
+Route::middleware(['json'])->group(function () {
+    Route::middleware(['auth:api'])->group(function () {
+        Route::resource('items', 'ItemController')->only('index', 'show', 'store', 'destroy');
     });
-
-    Route::resource('items', 'ItemController');
+    Route::post('users', 'UserController@store');
 });
+
 
