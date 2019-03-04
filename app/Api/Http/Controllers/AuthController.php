@@ -3,6 +3,7 @@
 namespace App\Api\Http\Controllers;
 
 use App\Api\DTO\UserDTO;
+use App\Api\Http\Requests\SignupRequest;
 use App\Api\Http\Resources\UserResource;
 use App\Api\Repositories\UserRepository;
 use App\Api\Services\UserService;
@@ -35,21 +36,12 @@ class AuthController extends Controller
     /**
      * Signup for unauthorized users.
      *
-     * @param Request $request
+     * @param SignupRequest $request
      * @return UserResource
      * @throws \App\Api\DTO\DTOException
      */
-    public function signup(Request $request): UserResource
+    public function signup(SignupRequest $request): UserResource
     {
-        $v = validator($request->only('email', 'name', 'password'), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
-        ]);
-
-        if ($v->fails()) {
-            return response()->json($v->errors()->all(), 400);
-        }
         $dto = new UserDTO($request->all());
         $dto->setId(\Ulid::generate());
 

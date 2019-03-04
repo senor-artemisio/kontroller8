@@ -22,6 +22,8 @@ class AuthApiTest extends TestCase
      */
     public function testSignup(): void
     {
+        $this->postJson('/api/auth/signup', ['name' => 'boo'])->assertStatus(422);
+
         $data = [
             'name' => 'Boo',
             'email' => 'foo@foo.foo',
@@ -53,6 +55,7 @@ class AuthApiTest extends TestCase
         ]);
         $userService->create($dto);
 
+        $this->postJson('/api/auth/login', ['email' => 'foo@foo.foo'])->assertStatus(422);
         $response = $this->postJson('/api/auth/login', [
             'email' => 'foo@foo.foo',
             'password' => 'secret',
