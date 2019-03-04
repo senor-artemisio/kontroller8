@@ -78,7 +78,6 @@ class ItemController extends Controller
      * @param Item $item
      * @param ItemRequest $request
      * @return ItemResource
-     * @throws \ErrorException
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \App\Api\DTO\DTOException
      */

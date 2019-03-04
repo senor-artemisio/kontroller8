@@ -46,7 +46,7 @@ class ItemService
      */
     public function update(Item $item, ItemDTO $dto): void
     {
-        $this->itemRepository->update($item, $dto->getChangedAttributes());
+        $this->itemRepository->update($item, $dto->getChangedValues());
     }
 
     /**

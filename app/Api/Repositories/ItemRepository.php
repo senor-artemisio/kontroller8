@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 /**
- * Repository for item entity.
+ * Repository for item.
  */
 class ItemRepository
 {
@@ -23,7 +23,7 @@ class ItemRepository
     private $columns = ['*'];
 
     /**
-     * Инициализация репозитория.
+     * Init repo.
      */
     public function __construct()
     {

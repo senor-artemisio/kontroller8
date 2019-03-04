@@ -24,7 +24,22 @@ abstract class BaseDTO
     }
 
     /**
-     * @return array
+     * @return array not empty values of changeable attributes
      */
-    abstract public function getChangedAttributes(): array;
+    public function getChangedValues(): array
+    {
+        $attributes = [];
+        foreach ($this->getChangeableAttributes() as $attribute) {
+            if ($this->$attribute !== null) {
+                $attributes[snake_case($attribute)] = $this->$attribute;
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * @return array list of changeable attributes
+     */
+    abstract protected function getChangeableAttributes():array;
 }

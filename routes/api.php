@@ -16,9 +16,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['json'])->group(function () {
     Route::middleware(['auth:api'])->group(function () {
-        Route::resource('items', 'ItemController')->only('index', 'show', 'store', 'destroy');
+        Route::resource('items', 'ItemController')
+            ->only('index', 'show', 'store', 'destroy', 'update');
     });
-    Route::post('users', 'UserController@store');
+    Route::post('auth/login', 'AuthController@login');
+    Route::post('auth/signup', 'AuthController@signup');
 });
 
 

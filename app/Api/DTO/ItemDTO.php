@@ -10,13 +10,13 @@ class ItemDTO extends BaseDTO
     use NutritionAttributes;
 
     /** @var string */
-    private $id;
+    protected $id;
 
     /** @var string */
-    private $title;
+    protected $title;
 
     /** @var string */
-    private $userId;
+    protected $userId;
 
     /**
      * @return string
@@ -67,17 +67,10 @@ class ItemDTO extends BaseDTO
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
-    public function getChangedAttributes(): array
+    protected function getChangeableAttributes(): array
     {
-        $attributes = [];
-        foreach (['title', 'userId', 'protein', 'fat', 'carbohydrates', 'fiber'] as $attribute) {
-            if ($this->$attribute !== null) {
-                $attributes[snake_case($attribute)] = $this->$attribute;
-            }
-        }
-
-        return $attributes;
+        return ['title', 'userId', 'protein', 'fat', 'carbohydrates', 'fiber'];
     }
 }

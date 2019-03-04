@@ -5,16 +5,16 @@ namespace App\Api\DTO;
 trait NutritionAttributes
 {
     /** @var float */
-    private $protein;
+    protected $protein;
 
     /** @var float */
-    private $fat;
+    protected $fat;
 
     /** @var float */
-    private $carbohydrates;
+    protected $carbohydrates;
 
     /** @var float */
-    private $fiber;
+    protected $fiber;
 
     /**
      * @return float
