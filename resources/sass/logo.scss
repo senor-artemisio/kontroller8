@@ -13,8 +13,12 @@
   width: 18px;
   top: 6px;
   left: 3px;
-  background: #fff;
+  background: #f2f2f2;
   height: 24px;
+}
+
+.logo.dark .k1{
+  background: #2c353e;
 }
 
 .k2, .k3 {
@@ -22,6 +26,10 @@
   height: 3px;
   background-color: #2c353e;
   bottom: 0;
+}
+
+.logo.dark .k2, .logo.dark .k3{
+  background-color: #f2f2f2;
 }
 
 .k2 {
@@ -37,6 +45,10 @@
   height: 3px;
   background: #2c353e;
   left: 9px;
+}
+
+.logo.dark .k4, .logo.dark .k5 {
+  background: #f2f2f2;
 }
 
 .k4 {

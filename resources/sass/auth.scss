@@ -1,0 +1,39 @@
+$mdc-typography-font-family :'Oswald';
+$mdc-theme-primary :#2c353e;
+
+@import url('https://fonts.googleapis.com/css?family=Oswald:400,700&subset=cyrillic');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+@import url('https://fonts.googleapis.com/css?family=Oswald:400,700&subset=cyrillic');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import "~normalize.css";
+@import "logo";
+
+
+@import "~@material/layout-grid/mdc-layout-grid";
+@import "~@material/button/mdc-button";
+@import "~@material/typography/mdc-typography";
+@import "~@material/theme/mdc-theme";
+@import "~@material/card/mdc-card";
+
+
+body{
+  background: #f2f2f2;
+  font-family: $mdc-typography-font-family;
+}
+
+.mdc-card {
+  padding: 0 20px;
+}
+
+.auth-title {
+  text-align: center;
+}
+
+.logo{
+  margin: 0 auto;
+  display: block;
+  transform: scale(2);
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

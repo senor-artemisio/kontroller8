@@ -21,3 +21,7 @@ $routes = [
 foreach ($routes as $route) {
     Route::get($route, 'AppController@index');
 }
+
+Route::get('/auth', function (){
+    return view('auth');
+});

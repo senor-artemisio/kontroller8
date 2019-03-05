@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Dashboard from './pages/Dashboard';
 import Items from './pages/Items';
 import Calendar from './pages/Calendar';
+import store from './store';
 
 Vue.use(VueRouter);
 Vue.component(Dashboard);
@@ -15,11 +16,19 @@ const router = new VueRouter({
         {path: '/', redirect: '/dashboard'},
         {path: '/dashboard', component: Dashboard, name: "dashboard"},
         {path: '/calendar', component: Calendar, name: "calendar"},
-        {path: '/items', component: Items, name: "items"}
+        {path: '/items', component: Items, name: "items"},
     ],
     mode: "history",
     linkActiveClass: "mdc-list-item--activated"
 });
 
+// router.beforeEach(function (to, from, next) {
+//     const name = to.name;
+//     if (store.getters.user === null) {
+//         location.href = '/auth';
+//     } else {
+//         next();
+//     }
+// });
 
 export default router;
