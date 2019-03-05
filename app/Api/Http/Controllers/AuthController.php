@@ -3,14 +3,15 @@
 namespace App\Api\Http\Controllers;
 
 use App\Api\DTO\UserDTO;
+use App\Api\Http\Requests\LoginRequest;
 use App\Api\Http\Requests\SignupRequest;
 use App\Api\Http\Resources\UserResource;
 use App\Api\Repositories\UserRepository;
 use App\Api\Services\UserService;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Validation\UnauthorizedException;
 
 /**
  * API for users.
@@ -37,6 +38,7 @@ class AuthController extends Controller
      * Signup for unauthorized users.
      *
      * @param SignupRequest $request
+     *
      * @return UserResource
      * @throws \App\Api\DTO\DTOException
      */
@@ -56,26 +58,24 @@ class AuthController extends Controller
     /**
      * Login user and create token.
      *
-     * @param Request $request
+     * @param LoginRequest $request
+     *
      * @return \Illuminate\Http\JsonResponse [string] access_token
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-            'remember_me' => 'boolean'
-        ]);
-        $credentials = request(['email', 'password']);
+        $credentials = $request->only('email', 'password');
+
         if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
+            throw new UnauthorizedException('Invalid credentials.');
         }
+
         $user = $request->user();
+
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
-        if ($request->remember_me) {
+
+        if ($request->get('remember_me')) {
             $token->expires_at = Carbon::now()->addWeeks(1);
         }
         $token->save();

@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Api\DTO\UserDTO;
-use App\Api\Http\Controllers\AuthController;
 use App\Api\Models\User;
 use App\Api\Services\UserService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -11,24 +10,25 @@ use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 /**
- * @see AuthController
+ * @covers \App\Api\Http\Controllers\AuthController
  */
 class AuthApiTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * @see AuthController::signup()
+     * @covers \App\Api\Http\Controllers\AuthController::signup()
      */
-    public function testSignup(): void
+    public function testSignupUnauthorized(): void
     {
-        $this->postJson('/api/auth/signup', ['name' => 'boo'])->assertStatus(422);
-
         $data = [
             'name' => 'Boo',
             'email' => 'foo@foo.foo',
             'password' => 'secret'
         ];
+
+        $this->postJson('/api/auth/signup', ['name' => 'boo'])
+            ->assertStatus(422);
 
         $response = $this->postJson('/api/auth/signup', $data);
         $response->assertStatus(201);
@@ -39,10 +39,23 @@ class AuthApiTest extends TestCase
     }
 
     /**
-     * @see AuthController::login()
+     * @covers \App\Api\Http\Controllers\AuthController::signup()
+     */
+    public function testSignupAuthorized(): void
+    {
+        $this->actingAs(factory(User::class)->create())
+            ->postJson('/api/auth/signup', [
+                'name' => 'Boo',
+                'email' => 'foo@foo.foo',
+                'password' => 'secret'
+            ])->assertStatus(403);
+    }
+
+    /**
+     * @covers \App\Api\Http\Controllers\AuthController::login()
      * @throws \App\Api\DTO\DTOException
      */
-    public function testLogin(): void
+    public function testLoginUnauthorized(): void
     {
         Artisan::call('passport:client', ['--personal' => 1, '--name' => 'web']);
         /** @var UserService $userService */
@@ -62,11 +75,25 @@ class AuthApiTest extends TestCase
             'remember_me' => false
         ]);
 
+        $response->assertStatus(200);
+
         $data = $response->decodeResponseJson();
         $this->assertNotNull($data);
 
         $this->assertArrayHasKey('access_token', $data);
         $this->assertArrayHasKey('token_type', $data);
         $this->assertArrayHasKey('expires_at', $data);
+    }
+
+    /**
+     * @covers \App\Api\Http\Controllers\AuthController::login()
+     */
+    public function testLoginAuthorized(): void
+    {
+        $this->actingAs(factory(User::class)->create())
+            ->postJson('/api/auth/login', [
+                'email' => 'foo@foo.foo',
+                'password' => 'secret'
+            ])->assertStatus(403);
     }
 }
