@@ -69,6 +69,13 @@ class AuthApiTest extends TestCase
         $userService->create($dto);
 
         $this->postJson('/api/auth/login', ['email' => 'foo@foo.foo'])->assertStatus(422);
+
+        $this->postJson('/api/auth/login', [
+            'email' => 'foo@foo.foo',
+            'password' => 'wrong',
+            'remember_me' => false
+        ])->assertStatus(401);
+
         $response = $this->postJson('/api/auth/login', [
             'email' => 'foo@foo.foo',
             'password' => 'secret',

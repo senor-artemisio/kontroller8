@@ -11,7 +11,7 @@ use App\Api\Services\UserService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Illuminate\Validation\UnauthorizedException;
+use Illuminate\Auth\AuthenticationException;
 
 /**
  * API for users.
@@ -25,13 +25,13 @@ class AuthController extends Controller
     private $repository;
 
     /**
-     * @param UserService $service
+     * @param UserService    $service
      * @param UserRepository $repository
      */
     public function __construct(UserService $service, UserRepository $repository)
     {
         $this->repository = $repository;
-        $this->service = $service;
+        $this->service    = $service;
     }
 
     /**
@@ -49,7 +49,7 @@ class AuthController extends Controller
 
         $this->service->create($dto);
 
-        $user = $this->repository->findById($dto->getId());
+        $user                     = $this->repository->findById($dto->getId());
         $user->wasRecentlyCreated = true;
 
         return UserResource::make($user);
@@ -61,19 +61,20 @@ class AuthController extends Controller
      * @param LoginRequest $request
      *
      * @return \Illuminate\Http\JsonResponse [string] access_token
+     * @throws AuthenticationException
      */
     public function login(LoginRequest $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('email','password');
 
         if (!Auth::attempt($credentials)) {
-            throw new UnauthorizedException('Invalid credentials.');
+            throw new AuthenticationException;
         }
 
         $user = $request->user();
 
         $tokenResult = $user->createToken('Personal Access Token');
-        $token = $tokenResult->token;
+        $token       = $tokenResult->token;
 
         if ($request->get('remember_me')) {
             $token->expires_at = Carbon::now()->addWeeks(1);
@@ -82,8 +83,8 @@ class AuthController extends Controller
 
         return response()->json([
             'access_token' => $tokenResult->accessToken,
-            'token_type' => 'Bearer',
-            'expires_at' => Carbon::parse(
+            'token_type'   => 'Bearer',
+            'expires_at'   => Carbon::parse(
                 $tokenResult->token->expires_at
             )->toDateTimeString()
         ]);
