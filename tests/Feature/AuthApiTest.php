@@ -84,7 +84,7 @@ class AuthApiTest extends TestCase
 
         $response->assertStatus(200);
 
-        $data = $response->decodeResponseJson();
+        $data = $response->decodeResponseJson('data');
         $this->assertNotNull($data);
 
         $this->assertArrayHasKey('access_token', $data);

@@ -6,7 +6,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * Json-адаптер для сущности «продукт».
+ * Json adapter for user.
  *
  * @property string $id
  * @property string $name

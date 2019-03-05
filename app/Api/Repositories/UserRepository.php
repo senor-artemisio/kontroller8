@@ -4,9 +4,10 @@ namespace App\Api\Repositories;
 
 use App\Api\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Passport\PersonalAccessTokenResult;
 
 /**
- * Working with database
+ * Working with users database data.
  */
 class UserRepository
 {
@@ -38,5 +39,14 @@ class UserRepository
     public function create(array $attributes): User
     {
         return $this->user->create($attributes);
+    }
+
+    /**
+     * @param User $user
+     * @return PersonalAccessTokenResult
+     */
+    public function token(User $user): PersonalAccessTokenResult
+    {
+        return $user->createToken('Personal Access Token');
     }
 }

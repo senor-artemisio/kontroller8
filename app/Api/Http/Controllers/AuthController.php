@@ -5,12 +5,13 @@ namespace App\Api\Http\Controllers;
 use App\Api\DTO\UserDTO;
 use App\Api\Http\Requests\LoginRequest;
 use App\Api\Http\Requests\SignupRequest;
+use App\Api\Http\Resources\TokenResource;
 use App\Api\Http\Resources\UserResource;
 use App\Api\Repositories\UserRepository;
+use App\Api\Services\TokenService;
 use App\Api\Services\UserService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 use Illuminate\Auth\AuthenticationException;
 
 /**
@@ -19,19 +20,24 @@ use Illuminate\Auth\AuthenticationException;
 class AuthController extends Controller
 {
     /** @var UserService */
-    private $service;
+    private $userService;
 
     /** @var UserRepository */
-    private $repository;
+    private $userRepository;
+
+    /** @var TokenService */
+    protected $tokenService;
 
     /**
-     * @param UserService    $service
-     * @param UserRepository $repository
+     * @param UserService $userService
+     * @param UserRepository $userRepository
+     * @param TokenService $tokenService
      */
-    public function __construct(UserService $service, UserRepository $repository)
+    public function __construct(UserService $userService, UserRepository $userRepository, TokenService $tokenService)
     {
-        $this->repository = $repository;
-        $this->service    = $service;
+        $this->userRepository = $userRepository;
+        $this->userService = $userService;
+        $this->tokenService = $tokenService;
     }
 
     /**
@@ -47,9 +53,9 @@ class AuthController extends Controller
         $dto = new UserDTO($request->all());
         $dto->setId(\Ulid::generate());
 
-        $this->service->create($dto);
+        $this->userService->create($dto);
 
-        $user                     = $this->repository->findById($dto->getId());
+        $user = $this->userRepository->findById($dto->getId());
         $user->wasRecentlyCreated = true;
 
         return UserResource::make($user);
@@ -59,34 +65,21 @@ class AuthController extends Controller
      * Login user and create token.
      *
      * @param LoginRequest $request
-     *
-     * @return \Illuminate\Http\JsonResponse [string] access_token
+     * @return TokenResource
      * @throws AuthenticationException
      */
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): TokenResource
     {
-        $credentials = $request->only('email','password');
+        $credentials = $request->only('email', 'password');
 
         if (!Auth::attempt($credentials)) {
             throw new AuthenticationException;
         }
 
-        $user = $request->user();
+        $tokenResult = $this->userRepository->token($request->user());
 
-        $tokenResult = $user->createToken('Personal Access Token');
-        $token       = $tokenResult->token;
+        $this->tokenService->create($tokenResult, (bool)$request->get('remember_me'));
 
-        if ($request->get('remember_me')) {
-            $token->expires_at = Carbon::now()->addWeeks(1);
-        }
-        $token->save();
-
-        return response()->json([
-            'access_token' => $tokenResult->accessToken,
-            'token_type'   => 'Bearer',
-            'expires_at'   => Carbon::parse(
-                $tokenResult->token->expires_at
-            )->toDateTimeString()
-        ]);
+        return TokenResource::make($tokenResult);
     }
 }
