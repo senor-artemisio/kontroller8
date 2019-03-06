@@ -1,5 +1,8 @@
-$mdc-typography-font-family :'Oswald';
-$mdc-theme-primary :#2c353e;
+$mdc-typography-font-family: 'Oswald';
+$mdc-theme-primary: #2c353e;
+$background: #f2f2f2;
+$foreground: #34b0cb;
+$mdc-text-field-background: $background;
 
 @import url('https://fonts.googleapis.com/css?family=Oswald:400,700&subset=cyrillic');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
@@ -10,30 +13,40 @@ $mdc-theme-primary :#2c353e;
 @import "logo";
 
 
-@import "~@material/layout-grid/mdc-layout-grid";
 @import "~@material/button/mdc-button";
 @import "~@material/typography/mdc-typography";
-@import "~@material/theme/mdc-theme";
-@import "~@material/card/mdc-card";
+@import "~@material/textfield/mdc-text-field";
+@import "~@material/switch/mdc-switch";
 
-
-body{
-  background: #f2f2f2;
+body {
+  background: $background;
   font-family: $mdc-typography-font-family;
 }
 
-.mdc-card {
-  padding: 0 20px;
+.mdc-text-field {
+  border-radius: 0;
 }
 
-.auth-title {
+.mdc-button{
+  margin-top: 26px;
+  border-radius: 0;
+  background: $foreground !important;
+  color: $background !important;
+  width: 188px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.auth-form {
   text-align: center;
 }
 
-.logo{
-  margin: 0 auto;
+.logo {
   display: block;
   transform: scale(2);
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin: 40px auto 20px auto;
+}
+
+.hidden{
+  display: none;
 }

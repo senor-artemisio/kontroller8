@@ -13,7 +13,6 @@
         <div class="mdc-layout-grid__inner">
             <div class="mdc-layout-grid__cell--span-4"></div>
             <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-4">
-
                 <span class="logo dark logo-k8">
                         <span class="k k1"></span>
                         <span class="k k2"></span>
@@ -26,16 +25,15 @@
                         <span class="k k9"></span>
                         <span class="k k10"></span>
                     </span>
-
-                <h2 class="mdc-typography mdc-typography--headline6 auth-title">
-                    Sign in to Kontroller8
-                </h2>
-                <div class="mdc-card">
-                    <div class="mdc-card__primary-action" tabindex="0">
-                        boo
-                    </div>
-                    <!-- ... content ... -->
+                <div class="auth-form">
+                    <h2 class="mdc-typography mdc-typography--headline6">
+                        Kontroller8
+                    </h2>
+                    <sign-in></sign-in>
+                    <sign-up></sign-up>
+                    <switcher></switcher>
                 </div>
+
             </div>
         </div>
     </div>
