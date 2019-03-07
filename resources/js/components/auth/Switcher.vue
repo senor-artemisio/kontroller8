@@ -42,6 +42,6 @@
         margin-top: 20px;
     }
     .switch-sign-in{
-        margin-top: 76px;
+        margin-top: 95px;
     }
 </style>

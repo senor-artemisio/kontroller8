@@ -18,8 +18,9 @@ Route::middleware(['json'])->group(function () {
     Route::middleware(['auth:api'])->group(function () {
         Route::resource('items', 'ItemController')
             ->only('index', 'show', 'store', 'destroy', 'update');
+        Route::get('users/me', 'UserController@me');
     });
-    Route::post('auth/login', 'AuthController@login');
+    Route::post('auth/signin', 'AuthController@signin');
     Route::post('auth/signup', 'AuthController@signup');
 });
 

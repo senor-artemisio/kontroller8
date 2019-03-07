@@ -27,8 +27,8 @@ body {
   border-radius: 0;
 }
 
-.mdc-button{
-  margin-top: 26px;
+.mdc-button {
+  margin-top: 5px;
   border-radius: 0;
   background: $foreground !important;
   color: $background !important;
@@ -47,6 +47,14 @@ body {
   margin: 40px auto 20px auto;
 }
 
-.hidden{
+.hidden {
   display: none;
+}
+
+.mdc-text-field-helper-text {
+  color: #34b0cb;
+  width: 176px;
+  text-align: left;
+  padding-left: 16px;
+  white-space: pre;
 }

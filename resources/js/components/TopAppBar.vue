@@ -23,7 +23,7 @@
                 </span>
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
-                <span class="mdc-top-app-bar__title">Artem Yarygin</span>
+                <span class="mdc-top-app-bar__title">{{ user.name }}</span>
                 <span class="mdc-top-app-bar__title">
                     <button class="material-icons mdc-top-app-bar__action-item" aria-label="Logout">lock_open</button>
                 </span>
@@ -43,7 +43,11 @@
             topAppBar.listen('MDCTopAppBar:nav', function () {
                 drawer.open = !drawer.open;
             });
-
+        },
+        computed: {
+            user() {
+                return this.$store.getters.user;
+            }
         }
     }
 </script>

@@ -3,11 +3,13 @@ import router from './router';
 import store from './store';
 import './components';
 
-require('./bootstrap');
 window.Vue = Vue;
 
 const app = new Vue({
     el: '#app',
     store,
-    router
+    router,
+    mounted:function () {
+        this.$store.dispatch('user');
+    }
 });

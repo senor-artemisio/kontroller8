@@ -21,7 +21,7 @@ class Json
         $type = 'application/json';
         $acceptHeader = $request->header('Accept');
 
-        if ($acceptHeader !== $type) {
+        if (strpos($acceptHeader, $type) === false) {
             return $this->badRequestResponse();
         }
 

@@ -16,3 +16,4 @@ docker-compose exec mysql mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS 
 
 docker-compose exec workspace php artisan migrate
 docker-compose exec workspace php artisan db:seed
+docker-compose exec workspace php artisan passport:client --personal --name=web

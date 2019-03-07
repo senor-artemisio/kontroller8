@@ -22,13 +22,13 @@ const router = new VueRouter({
     linkActiveClass: "mdc-list-item--activated"
 });
 
-// router.beforeEach(function (to, from, next) {
-//     const name = to.name;
-//     if (store.getters.user === null) {
-//         location.href = '/auth';
-//     } else {
-//         next();
-//     }
-// });
+router.beforeEach(function (to, from, next) {
+    const name = to.name;
+    if (store.getters.token === null) {
+        location.href = '/auth';
+    } else {
+        next();
+    }
+});
 
 export default router;

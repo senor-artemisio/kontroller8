@@ -11,11 +11,8 @@
     },
     "devDependencies": {
         "@material/button": "^0.44.1",
-        "@material/card": "^0.44.1",
-        "@material/dialog": "^0.44.1",
         "@material/drawer": "^0.44.1",
         "@material/form-field": "^0.44.1",
-        "@material/layout-grid": "^0.41.0",
         "@material/switch": "^0.44.1",
         "@material/textfield": "^0.44.1",
         "@material/top-app-bar": "^0.44.1",

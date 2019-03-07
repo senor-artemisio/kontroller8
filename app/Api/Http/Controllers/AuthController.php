@@ -41,7 +41,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Signup for unauthorized users.
+     * Sign up for unauthorized users.
      *
      * @param SignupRequest $request
      *
@@ -62,13 +62,13 @@ class AuthController extends Controller
     }
 
     /**
-     * Login user and create token.
+     * Sign in user and create token.
      *
      * @param LoginRequest $request
      * @return TokenResource
      * @throws AuthenticationException
      */
-    public function login(LoginRequest $request): TokenResource
+    public function signin(LoginRequest $request): TokenResource
     {
         $credentials = $request->only('email', 'password');
 
