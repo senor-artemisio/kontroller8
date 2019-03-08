@@ -24,7 +24,7 @@
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
                 <span class="mdc-top-app-bar__title">{{ user.name }}</span>
-                <span class="mdc-top-app-bar__title">
+                <span class="mdc-top-app-bar__title" v-on:click="logout">
                     <button class="material-icons mdc-top-app-bar__action-item" aria-label="Logout">lock_open</button>
                 </span>
             </section>
@@ -47,6 +47,12 @@
         computed: {
             user() {
                 return this.$store.getters.user;
+            }
+        },
+        methods:{
+            logout:function () {
+                this.$store.commit('clearToken');
+                location.href='/auth';
             }
         }
     }

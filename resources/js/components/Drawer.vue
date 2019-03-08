@@ -1,5 +1,5 @@
 <template>
-    <aside class="mdc-drawer mdc-drawer--dismissible mdc-drawer--open">
+    <aside class="mdc-drawer mdc-drawer--dismissible">
         <div class="mdc-drawer__header">
             <h3 class="mdc-drawer__title">{{ user.name }}</h3>
             <h6 class="mdc-drawer__subtitle">{{ user.email }}</h6>

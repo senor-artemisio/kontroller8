@@ -41,12 +41,8 @@ cookies.set = function (sName, sValue, options) {
     document.cookie = sCookie;
 };
 
-cookies.remove = function (sName, options) {
-    if (!options) {
-        let options = {};
-    }
-    options.expires = new Date();
-    setCookie(sName, '', options);
+cookies.remove = function (sName) {
+    this.set(sName, '', new Date());
 };
 
 export default cookies;

@@ -19,6 +19,10 @@ export default new Vuex.Store({
         },
         user(state, user) {
             state.user = user;
+        },
+        clearToken(state) {
+            cookies.remove('X-AUTH-TOKEN');
+            state.token = null;
         }
     },
     getters: {
