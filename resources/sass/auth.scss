@@ -15,6 +15,7 @@ $mdc-text-field-background: $background;
 
 @import "~@material/button/mdc-button";
 @import "~@material/typography/mdc-typography";
+@import "~@material/theme/mdc-theme";
 @import "~@material/textfield/mdc-text-field";
 @import "~@material/switch/mdc-switch";
 
@@ -52,7 +53,6 @@ body {
 }
 
 .mdc-text-field-helper-text {
-  color: #34b0cb;
   width: 176px;
   text-align: left;
   padding-left: 16px;

@@ -34,6 +34,7 @@ class ItemResource extends JsonResource
             'carbohydrates' => $this->carbohydrates,
             'fiber' => $this->fiber,
             'user_id' => $this->user_id,
+            'type' => $this->type,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];

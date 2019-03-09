@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $carbohydrates
  * @property float $fiber
  * @property string $user_id
+ * @property string $type
+ * @property string $created_at
+ * @property string $updated_at
  */
 class Item extends Model
 {
@@ -39,5 +42,30 @@ class Item extends Model
         ];
 
         parent::__construct($attributes);
+    }
+
+    /**
+     * Get item type, depends from dominant component.
+     *
+     * @return string
+     */
+    public function getTypeAttribute(): string
+    {
+        if ($this->protein === $this->fat && $this->protein === $this->carbohydrates) {
+            return null;
+        }
+
+        $max = max($this->protein, $this->fat, $this->carbohydrates);
+
+        switch ($max) {
+            case $this->protein:
+                return 'protein';
+            case $this->carbohydrates:
+                return 'carbohydrates';
+            case $this->fat:
+                return 'fat';
+        }
+
+        return null;
     }
 }

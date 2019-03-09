@@ -13,6 +13,7 @@ use App\Api\Services\UserService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Validation\ValidationException;
 
 /**
  * API for users.
@@ -73,7 +74,9 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (!Auth::attempt($credentials)) {
-            throw new AuthenticationException;
+            throw ValidationException::withMessages([
+                'password' => ['Incorrect credentials.'],
+            ]);
         }
 
         $tokenResult = $this->userRepository->token($request->user());

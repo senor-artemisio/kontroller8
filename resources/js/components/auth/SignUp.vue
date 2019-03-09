@@ -64,7 +64,6 @@
                     }).then(response => {
                         let token = null;
                         let expiresAt = null;
-                        console.log(response);
                         if (response.data) {
                             if (response.data.data.access_token) {
                                 token = response.data.data.access_token;

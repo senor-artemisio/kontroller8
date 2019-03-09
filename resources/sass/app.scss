@@ -1,12 +1,31 @@
+@import "~normalize.css";
 $mdc-typography-font-family :'Oswald';
 $mdc-theme-primary :#2c353e;
+$background: #f2f2f2;
+$foreground: #34b0cb;
+
+@import "~@material/theme/mdc-theme";
+
+body{
+  font-family: $mdc-typography-font-family;
+}
+
+.list-items{
+  border: 1px solid var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.54));
+}
+
+.text-decoration-none{
+  text-decoration: none;
+}
 
 @import url('https://fonts.googleapis.com/css?family=Oswald:400,700&subset=cyrillic');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-@import "~normalize.css";
-@import "logo";
 @import "~@material/top-app-bar/mdc-top-app-bar";
 @import "~@material/drawer/mdc-drawer";
 @import "~@material/list/mdc-list";
+@import "~@material/layout-grid/mdc-layout-grid";
+@import "~@material/fab/mdc-fab";
+@import "logo";
 @import "list";
+
 
