@@ -1,42 +1,12 @@
 <template>
-    <div id="auth-sign-up" class="hidden">
-        <div class="mdc-text-field">
-            <input type="text" id="sign-up-email" class="mdc-text-field__input">
-            <label class="mdc-floating-label" for="sign-up-email">E-mail</label>
-            <div class="mdc-line-ripple"></div>
-        </div>
-        <div></div>
-        <div id="sign-up-email-helper" class="mdc-text-field-helper-line">
-            <div id="sign-up-email-message"
-                 class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent"></div>
-        </div>
-        <div></div>
-        <div class="mdc-text-field">
-            <input type="password" id="sign-up-password" class="mdc-text-field__input">
-            <label class="mdc-floating-label" for="sign-up-password">Password</label>
-            <div class="mdc-line-ripple"></div>
-        </div>
-        <div></div>
-        <div id="sign-up-password-helper" class="mdc-text-field-helper-line">
-            <div id="sign-up-password-message"
-                 class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent"></div>
-        </div>
-        <div></div>
-        <div class="mdc-text-field">
-            <input type="name" id="sign-up-name" class="mdc-text-field__input">
-            <label class="mdc-floating-label" for="sign-up-name">Name</label>
-            <div class="mdc-line-ripple"></div>
-        </div>
-        <div></div>
-        <div id="sign-up-name-helper" class="mdc-text-field-helper-line">
-            <div id="sign-up-name-message"
-                 class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent"></div>
-        </div>
-        <div></div>
-        <button id="auth-sign-up-button" class="mdc-button" v-on:click="signUp">
+    <form id="auth-sign-up" class="hidden" v-on:submit.prevent="onSubmit">
+        <text-field id="sign-up-email" title="E-mail" ref="email" type="text"></text-field>
+        <text-field id="sign-up-password" title="Password" ref="password" type="password"></text-field>
+        <text-field id="sign-up-name" title="Name" ref="name" type="text"></text-field>
+        <button id="auth-sign-up-button" class="mdc-button">
             <span class="mdc-button__label">Sign up</span>
         </button>
-    </div>
+    </form>
 </template>
 <script>
     import {MDCTextField} from '@material/textfield';
@@ -45,22 +15,26 @@
 
     export default {
         mounted() {
-            document.querySelectorAll('.mdc-text-field').forEach(function (field) {
-                new MDCTextField(field);
-            });
+            this.$data.button = document.querySelector('#auth-sign-up-button');
+        },
+        data() {
+            return {
+                button: null
+            };
         },
         methods: {
-            signUp: function (event) {
+            onSubmit: function () {
                 this.disableButton();
                 this.clearErrors();
+
                 api.post('/api/auth/signup', {
-                    'email': document.querySelector('#sign-up-email').value,
-                    'password': document.querySelector('#sign-up-password').value,
-                    'name': document.querySelector('#sign-up-name').value,
+                    'email': this.$refs.email.value(),
+                    'password': this.$refs.password.value(),
+                    'name': this.$refs.name.value(),
                 }).then(response => {
                     api.post('/api/auth/signin', {
-                        'email': document.querySelector('#sign-up-email').value,
-                        'password': document.querySelector('#sign-up-password').value,
+                        'email': this.$refs.email.value(),
+                        'password': this.$refs.password.value(),
                     }).then(response => {
                         let token = null;
                         let expiresAt = null;
@@ -93,26 +67,26 @@
                 });
             },
             disableButton: function () {
-                document.querySelector('#auth-sign-up-button').setAttribute('disabled', 'disabled');
+                this.$data.button.setAttribute('disabled', 'disabled');
             },
             enableButton: function () {
-                document.querySelector('#auth-sign-up-button').removeAttribute('disabled');
-            },
-            clearErrors: function () {
-                document.querySelectorAll('.mdc-text-field-helper-text').forEach(function (value) {
-                    value.innerHTML = '';
-                });
+                this.$data.button.removeAttribute('disabled');
             },
             processErrors: function (errors) {
                 if (errors.email && errors.email.length > 0) {
-                    document.querySelector('#sign-up-email-message').innerHTML = errors.email.pop();
+                    this.$refs.email.error(errors.email.pop());
                 }
                 if (errors.password && errors.password.length > 0) {
-                    document.querySelector('#sign-up-password-message').innerHTML = errors.password.pop();
+                    this.$refs.password.error(errors.password.pop());
                 }
                 if (errors.name && errors.name.length > 0) {
-                    document.querySelector('#sign-up-name-message').innerHTML = errors.name.pop();
+                    this.$refs.name.error(errors.name.pop());
                 }
+            },
+            clearErrors(){
+                this.$refs.email.clear();
+                this.$refs.password.clear();
+                this.$refs.name.clear();
             },
             storeToken: function (token, expiresAt) {
                 cookies.set('X-AUTH-TOKEN', token, {expires: new Date((new Date).getTime() + expiresAt * 1000)});
@@ -120,9 +94,3 @@
         }
     }
 </script>
-
-<style>
-    .mdc-text-field-helper-line {
-        display: inline-block;
-    }
-</style>

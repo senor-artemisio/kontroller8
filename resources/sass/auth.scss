@@ -12,30 +12,33 @@ $mdc-text-field-background: $background;
 @import "~normalize.css";
 @import "logo";
 
-
 @import "~@material/button/mdc-button";
 @import "~@material/typography/mdc-typography";
 @import "~@material/theme/mdc-theme";
 @import "~@material/textfield/mdc-text-field";
+@import "~@material/form-field/mdc-form-field";
 @import "~@material/switch/mdc-switch";
+
+@import "styles";
 
 body {
   background: $background;
   font-family: $mdc-typography-font-family;
 }
 
-.mdc-text-field {
-  border-radius: 0;
-}
-
 .mdc-button {
   margin-top: 5px;
-  border-radius: 0;
-  background: $foreground !important;
-  color: $background !important;
   width: 188px;
   padding-left: 0;
   padding-right: 0;
+  background: $foreground !important;
+  color: $background !important;
+}
+
+.mdc-text-field-helper-line{
+  width: 188px;
+  margin: 0 auto;
+  white-space: pre;
 }
 
 .auth-form {
@@ -46,15 +49,4 @@ body {
   display: block;
   transform: scale(2);
   margin: 40px auto 20px auto;
-}
-
-.hidden {
-  display: none;
-}
-
-.mdc-text-field-helper-text {
-  width: 176px;
-  text-align: left;
-  padding-left: 16px;
-  white-space: pre;
 }

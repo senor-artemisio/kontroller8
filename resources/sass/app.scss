@@ -4,7 +4,6 @@ $mdc-theme-primary :#2c353e;
 $background: #f2f2f2;
 $foreground: #34b0cb;
 
-@import "~@material/theme/mdc-theme";
 
 body{
   font-family: $mdc-typography-font-family;
@@ -18,6 +17,7 @@ body{
   text-decoration: none;
 }
 
+@import "~@material/theme/mdc-theme";
 @import url('https://fonts.googleapis.com/css?family=Oswald:400,700&subset=cyrillic');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import "~@material/top-app-bar/mdc-top-app-bar";
@@ -25,7 +25,8 @@ body{
 @import "~@material/list/mdc-list";
 @import "~@material/layout-grid/mdc-layout-grid";
 @import "~@material/fab/mdc-fab";
+@import "~@material/textfield/mdc-text-field";
 @import "logo";
 @import "list";
-
+@import "styles";
 
