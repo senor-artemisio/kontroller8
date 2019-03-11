@@ -41,6 +41,9 @@ export default new Vuex.Store({
             api.get('/api/users/me').then((response) => {
                 commit('user', response.data.data);
             }).catch((error) => {
+                if (error.response.status === 401) {
+                    location.href = '/auth';
+                }
                 console.log(error);
             });
         }

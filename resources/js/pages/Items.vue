@@ -13,11 +13,11 @@
                     <li class="mdc-list-item mdc-ripple-upgraded" v-for="(item, index) in items">
 
                         <span v-if="item.type === 'protein'" class="mdc-list-item__graphic material-icons"
-                              aria-hidden="true">crop_din</span>
+                              aria-hidden="true">group_work</span>
                         <span v-else-if="item.type === 'fat'" class="mdc-list-item__graphic material-icons"
-                              aria-hidden="true">panorama_fish_eye</span>
+                              aria-hidden="true">opacity</span>
                         <span v-else-if="item.type === 'carbohydrates'" class="mdc-list-item__graphic material-icons"
-                              aria-hidden="true">change_history</span>
+                              aria-hidden="true">flash_on</span>
                         <span v-else class="mdc-list-item__graphic material-icons" aria-hidden="true">category</span>
 
                         <span class="mdc-list-item__text">

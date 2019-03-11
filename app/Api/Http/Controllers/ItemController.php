@@ -41,7 +41,7 @@ class ItemController extends Controller
         $userId = Auth::user()->getAuthIdentifier();
         $items = $this->itemRepository->paginate()->findByOwner($userId);
 
-        return ResourceCollection::make($items);
+        return ItemResource::collection($items);
     }
 
     /**

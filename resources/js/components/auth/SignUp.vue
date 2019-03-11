@@ -1,15 +1,14 @@
 <template>
     <form id="auth-sign-up" class="hidden" v-on:submit.prevent="onSubmit">
-        <text-field id="sign-up-email" title="E-mail" ref="email" type="text"></text-field>
-        <text-field id="sign-up-password" title="Password" ref="password" type="password"></text-field>
-        <text-field id="sign-up-name" title="Name" ref="name" type="text"></text-field>
-        <button id="auth-sign-up-button" class="mdc-button">
+        <field-input id="sign-up-email" title="E-mail" ref="email" type="email"></field-input>
+        <field-input id="sign-up-password" title="Password" ref="password" type="password"></field-input>
+        <field-input id="sign-up-name" title="Name" ref="name" type="text"></field-input>
+        <button id="auth-sign-up-button" class="mdc-button form-button">
             <span class="mdc-button__label">Sign up</span>
         </button>
     </form>
 </template>
 <script>
-    import {MDCTextField} from '@material/textfield';
     import api from '../../api';
     import cookies from '../../cookies';
 

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div :id="id" class="mdc-text-field">
-            <input :type="type" :id="id + '-input'" class="mdc-text-field__input">
+            <input :type="type" :step="step" :id="id + '-input'" class="mdc-text-field__input">
             <label class="mdc-floating-label" :for="id">{{ title }}</label>
             <div class="mdc-line-ripple"></div>
         </div>
@@ -19,7 +19,22 @@
                 field: null
             };
         },
-        props: ['id', 'title', 'type'],
+        props: {
+            id: {
+                type: String,
+            },
+            title: {
+                type: String
+            },
+            type: {
+                type: String,
+                default: "text"
+            },
+            step: {
+                type: Number,
+                default: 1
+            }
+        },
         mounted() {
             this.$data.field = new MDCTextField(document.querySelector('#' + this.id));
             this.$data.field.useNativeValidation = false;
@@ -35,7 +50,7 @@
             },
             value() {
                 return this.$data.field.value;
-            }
+            },
         }
     }
 </script>
