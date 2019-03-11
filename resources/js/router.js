@@ -19,7 +19,7 @@ const router = new VueRouter({
         {path: '/dashboard', component: Dashboard, name: "dashboard"},
         {path: '/calendar', component: Calendar, name: "calendar"},
         {path: '/items', component: Items, name: "items"},
-        {path: '/items/edit', component: Item, name: "item"},
+        {path: '/items/:itemId', component: Item, name: "item"},
     ],
     mode: "history",
     linkActiveClass: "mdc-list-item--activated"

@@ -4,21 +4,23 @@
             <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6">
                 <h1 class="mdc-typography--subtitle1">
                     Items
-                    <router-link to="/items/edit" class="mdc-fab mdc-fab--mini text-decoration-none" aria-label="Favorite" aria-hidden="true">
+                    <router-link to="/items/new" class="mdc-fab mdc-fab--mini text-decoration-none"
+                                 aria-label="Favorite" aria-hidden="true">
                         <span class="mdc-fab__icon material-icons">add</span>
                     </router-link>
                 </h1>
                 <ul v-if="items.length > 0"
                     class="list-items mdc-list mdc-list--two-line mdc-list--avatar-list">
-                    <li class="mdc-list-item mdc-ripple-upgraded" v-for="(item, index) in items">
+                    <li class="mdc-list-item mdc-ripple-upgraded" v-for="(item, index) in items" aria-hidden="true"
+                        v-on:click="routeToItem(item)">
 
                         <span v-if="item.type === 'protein'" class="mdc-list-item__graphic material-icons"
-                              aria-hidden="true">group_work</span>
+                              aria-hidden="true">share</span>
                         <span v-else-if="item.type === 'fat'" class="mdc-list-item__graphic material-icons"
-                              aria-hidden="true">opacity</span>
+                              aria-hidden="true">bubble_chart</span>
                         <span v-else-if="item.type === 'carbohydrates'" class="mdc-list-item__graphic material-icons"
                               aria-hidden="true">flash_on</span>
-                        <span v-else class="mdc-list-item__graphic material-icons" aria-hidden="true">category</span>
+                        <span v-else class="mdc-list-item__graphic material-icons" aria-hidden="true">group_work</span>
 
                         <span class="mdc-list-item__text">
                             <span class="mdc-list-item__primary-text">{{ item.title }}</span>
@@ -50,6 +52,11 @@
                     component.items = response.data.data;
                 }
             });
+        },
+        methods: {
+            routeToItem(item) {
+                this.$router.push({name: 'item', params: {itemId: item.id}});
+            }
         }
     }
 </script>

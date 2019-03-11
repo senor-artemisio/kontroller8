@@ -1,7 +1,7 @@
 <template>
     <form id="auth-sign-in" v-on:submit.prevent="onSubmit">
-        <field-input id="sign-in-email" title="E-mail" ref="email" type="email"></field-input>
-        <field-input id="sign-in-password" title="Password" ref="password" type="password"></field-input>
+        <field-email id="sign-in-email" title="E-mail" ref="email"></field-email>
+        <field-password id="sign-in-password" title="Password" ref="password"></field-password>
         <button id="auth-sign-in-button" class="mdc-button form-button">
             <span class="mdc-button__label">Sign in</span>
         </button>

@@ -3,18 +3,20 @@
         <div class="mdc-layout-grid__inner">
             <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6">
                 <form v-on:submit.prevent="onSubmit">
-                    <h1 v-if="isNewItem" class="mdc-typography--subtitle1">
+                    <h1 v-if="isNewItem()" class="mdc-typography--subtitle1">
                         New item
                     </h1>
                     <h1 v-else class="mdc-typography--subtitle1">
                         {{ item.title }}
                     </h1>
-                    <field-input id="title" title="Title" ref="title" type="text"></field-input>
-                    <field-input id="protein" title="Protein" ref="protein" type="number" step="0.1"></field-input>
-                    <field-input id="fat" title="Fat" ref="fat" type="number" step="0.1"></field-input>
-                    <field-input id="carbohydrates" title="Carbohydrates" ref="carbohydrates" type="number"
-                                 step="0.1"></field-input>
-                    <field-input id="fiber" title="fiber" ref="fiber" type="number" step="0.1"></field-input>
+                    <field-text id="title" title="Title" ref="title" type="text"></field-text>
+                    <field-float id="protein" title="Protein" ref="protein" type="number"
+                                 v-bind:step="0.1"></field-float>
+                    <field-float id="fat" title="Fat" ref="fat" type="number" v-bind:step="0.1"
+                                 v-bind:min="0"></field-float>
+                    <field-float id="carbohydrates" title="Carbohydrates" ref="carbohydrates" type="number"
+                                 v-bind:step="0.1"></field-float>
+                    <field-float id="fiber" title="Fiber" ref="fiber" type="number" v-bind:step="0.1"></field-float>
 
                     <button id="item-submit-button" class="mdc-button form-button">
                         <span v-if="isNewItem" class="mdc-button__label">Create</span>
@@ -30,11 +32,14 @@
 
     export default {
         mounted() {
+            const itemId = this.$router.currentRoute.params.itemId;
+
+            this.$data.item.id = itemId;
             this.$data.button = document.querySelector('#item-submit-button');
         },
         data: function () {
             return {
-                item: {},
+                item: {id: 'new'},
                 button: null
             };
         },
@@ -45,7 +50,7 @@
         },
         methods: {
             isNewItem: function () {
-                return !!this.item.id;
+                return this.$data.item.id === 'new';
             },
             onSubmit() {
                 this.disableButton();
@@ -66,7 +71,7 @@
                     "carbohydrates": this.$refs.carbohydrates.value(),
                     "fiber": this.$refs.fiber.value()
                 }).then(response => {
-                    location.href='/items';
+                    location.href = '/items';
                 }).catch(error => {
                     if (error.response && error.response.status === 422) {
                         let data = error.response.data;

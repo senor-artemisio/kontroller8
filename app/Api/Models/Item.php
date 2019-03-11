@@ -49,7 +49,7 @@ class Item extends Model
      *
      * @return string
      */
-    public function getTypeAttribute(): string
+    public function getTypeAttribute(): ?string
     {
         if ($this->protein === $this->fat && $this->protein === $this->carbohydrates) {
             return null;
