@@ -15,13 +15,15 @@ $routes = [
     '/',
     '/dashboard',
     '/items',
-    '/items/edit',
+    '/items/new',
     '/calendar'
 ];
 
 foreach ($routes as $route) {
     Route::get($route, 'AppController@index');
 }
+
+Route::get('/items/{id}', 'AppController@index')->where('id', '[A-Za-z0-9]+');
 
 Route::get('/auth', function (){
     return view('auth');

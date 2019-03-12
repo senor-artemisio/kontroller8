@@ -1,19 +1,24 @@
 @import "~normalize.css";
-$mdc-typography-font-family :'Oswald';
-$mdc-theme-primary :#2c353e;
+
+$mdc-typography-font-family: 'Oswald';
+$mdc-theme-primary: #2c353e;
 $background: #f2f2f2;
 $foreground: #34b0cb;
 
 
-body{
+body {
   font-family: $mdc-typography-font-family;
 }
 
-.list-items{
+.entities-list {
   border: 1px solid var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.54));
 }
 
-.text-decoration-none{
+.entities-list li {
+  cursor: pointer;
+}
+
+.text-decoration-none {
   text-decoration: none;
 }
 

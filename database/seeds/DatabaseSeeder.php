@@ -2,6 +2,9 @@
 
 use Illuminate\Database\Seeder;
 
+/**
+ * Dummy data seeder
+ */
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -11,6 +14,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+        $user = factory(\App\Api\Models\User::class)->create(['email' => 'user@kntrl8.ru']);
+
+        factory(\App\Api\Models\Item::class, 53)->create(['user_id' => $user->id]);
+
     }
 }

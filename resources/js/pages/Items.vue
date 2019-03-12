@@ -10,7 +10,7 @@
                     </router-link>
                 </h1>
                 <ul v-if="items.length > 0"
-                    class="list-items mdc-list mdc-list--two-line mdc-list--avatar-list">
+                    class="entities-list mdc-list mdc-list--two-line mdc-list--avatar-list">
                     <li class="mdc-list-item mdc-ripple-upgraded" v-for="(item, index) in items" aria-hidden="true"
                         v-on:click="routeToItem(item)">
 
@@ -34,6 +34,14 @@
                     </li>
                 </ul>
             </div>
+            <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+                <button v-for="page in getPages()" v-bind:data="page" v-bind:key="number"
+                        v-on:click="routeToPage(page.number)"
+                        class="mdc-button mdc-button--outlined"
+                        :disabled="page.current" style="margin-right: 10px; margin-bottom: 10px">
+                    {{ page.number }}
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -43,19 +51,36 @@
 
     export default {
         data: function () {
-            return {items: []};
+            return {
+                items: [],
+                meta: {}
+            };
         },
         mounted() {
             const component = this;
             api.get('/api/items').then(function (response) {
                 if (response.data && response.data.data) {
                     component.items = response.data.data;
+                    component.meta = response.data.meta;
                 }
             });
         },
         methods: {
             routeToItem(item) {
                 this.$router.push({name: 'item', params: {itemId: item.id}});
+            },
+            getPages() {
+                let pages = [];
+                for (let i = 1; i <= this.meta.last_page; i++) {
+                    pages.push({number: i, current: this.meta.current_page === i});
+                }
+
+                console.log(pages);
+
+                return pages;
+            },
+            routeToPage(number){
+                console.log(number);
             }
         }
     }
