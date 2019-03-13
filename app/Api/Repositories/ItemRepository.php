@@ -34,7 +34,7 @@ class ItemRepository
      * @param int $perPage
      * @return ItemRepository
      */
-    public function paginate(?int $perPage = 10): ItemRepository
+    public function paginate(int $perPage): ItemRepository
     {
         $this->perPage = $perPage;
 

@@ -2,25 +2,12 @@
 
 $mdc-typography-font-family: 'Oswald';
 $mdc-theme-primary: #2c353e;
+
+$mdc-theme-secondary: #34b0cb;
+$mdc-theme-on-secondary: #f2f2f2;
+
 $background: #f2f2f2;
 $foreground: #34b0cb;
-
-
-body {
-  font-family: $mdc-typography-font-family;
-}
-
-.entities-list {
-  border: 1px solid var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.54));
-}
-
-.entities-list li {
-  cursor: pointer;
-}
-
-.text-decoration-none {
-  text-decoration: none;
-}
 
 @import "~@material/theme/mdc-theme";
 @import url('https://fonts.googleapis.com/css?family=Oswald:400,700&subset=cyrillic');

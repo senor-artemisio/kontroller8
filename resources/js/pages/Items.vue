@@ -4,7 +4,7 @@
             <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6">
                 <h1 class="mdc-typography--subtitle1">
                     Items
-                    <router-link to="/items/new" class="mdc-fab mdc-fab--mini text-decoration-none"
+                    <router-link to="/item" class="mdc-fab mdc-fab--mini text-decoration-none"
                                  aria-label="Favorite" aria-hidden="true">
                         <span class="mdc-fab__icon material-icons">add</span>
                     </router-link>
@@ -35,10 +35,9 @@
                 </ul>
             </div>
             <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
-                <button v-for="page in getPages()" v-bind:data="page" v-bind:key="number"
-                        v-on:click="routeToPage(page.number)"
-                        class="mdc-button mdc-button--outlined"
-                        :disabled="page.current" style="margin-right: 10px; margin-bottom: 10px">
+                <button v-for="page in getPages()"
+                        class="mdc-button mdc-button--raised page-button" :disabled="page.current"
+                        v-on:click="routeToPage(page.number)">
                     {{ page.number }}
                 </button>
             </div>
@@ -50,6 +49,16 @@
     import api from '../api';
 
     export default {
+        props: {
+            page: {
+                type: Number,
+                default: 1
+            },
+            limit: {
+                type: Number,
+                default: 10
+            }
+        },
         data: function () {
             return {
                 items: [],
@@ -57,13 +66,7 @@
             };
         },
         mounted() {
-            const component = this;
-            api.get('/api/items').then(function (response) {
-                if (response.data && response.data.data) {
-                    component.items = response.data.data;
-                    component.meta = response.data.meta;
-                }
-            });
+            this.loadData();
         },
         methods: {
             routeToItem(item) {
@@ -75,12 +78,24 @@
                     pages.push({number: i, current: this.meta.current_page === i});
                 }
 
-                console.log(pages);
-
-                return pages;
+                return pages.length > 1 ? pages : [];
             },
-            routeToPage(number){
-                console.log(number);
+            routeToPage(number) {
+                this.$router.push({name: 'items', params: {page: number}});
+                this.loadData();
+            },
+            loadData() {
+                const component = this;
+                let page = this.$router.currentRoute.params.page;
+                if (!page) {
+                    page = 1;
+                }
+                api.get('/api/items?page=' + page).then(function (response) {
+                    if (response.data && response.data.data) {
+                        component.items = response.data.data;
+                        component.meta = response.data.meta;
+                    }
+                });
             }
         }
     }

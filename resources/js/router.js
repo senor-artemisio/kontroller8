@@ -18,8 +18,10 @@ const router = new VueRouter({
         {path: '/', redirect: '/dashboard'},
         {path: '/dashboard', component: Dashboard, name: "dashboard"},
         {path: '/calendar', component: Calendar, name: "calendar"},
-        {path: '/items', component: Items, name: "items"},
-        {path: '/items/:itemId', component: Item, name: "item"},
+        {path: '/items', component: Items},
+        {path: '/items/:page', component: Items, name: "items"},
+        {path: '/item/:itemId', component: Item, name: "item"},
+        {path: '/item', component: Item},
     ],
     mode: "history",
     linkActiveClass: "mdc-list-item--activated"

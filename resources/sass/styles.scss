@@ -18,3 +18,29 @@
   background: $foreground !important;
   color: $background !important;
 }
+
+body {
+  font-family: $mdc-typography-font-family;
+}
+
+.entities-list {
+  border: 1px solid var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.54));
+}
+
+.page-button:not(:disabled){
+  background: $foreground;
+  color: $background;
+}
+
+.page-button{
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.entities-list li {
+  cursor: pointer;
+}
+
+.text-decoration-none {
+  text-decoration: none;
+}
