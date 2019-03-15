@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ ! -d laradock ]; then
-    git clone https://github.com/Laradock/laradock.git
+    git clone --branch "v7.14" https://github.com/Laradock/laradock.git
 else
     cd laradock
     git pull

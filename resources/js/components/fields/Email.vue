@@ -1,7 +1,7 @@
 <template>
     <div>
         <div :id="id" class="mdc-text-field">
-            <input type="email" :id="id + '-input'" class="mdc-text-field__input" autocomplete="off">
+            <input type="email" :id="id + '-input'" class="mdc-text-field__input" autocomplete="off" v-model="value">
             <label class="mdc-floating-label" :for="id">{{ title }}</label>
             <div class="mdc-line-ripple"></div>
         </div>

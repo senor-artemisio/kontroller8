@@ -10,6 +10,7 @@
 <body>
 <div id="app">
     <drawer></drawer>
+    <div class="mdc-drawer-scrim"></div>
     <div class="mdc-drawer-app-content">
         <top-app-bar></top-app-bar>
         <main class="main-content" id="main-content">

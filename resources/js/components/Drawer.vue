@@ -1,5 +1,5 @@
 <template>
-    <aside class="mdc-drawer mdc-drawer--dismissible">
+    <aside class="mdc-drawer mdc-drawer--modal">
         <div class="mdc-drawer__header">
             <h3 class="mdc-drawer__title">{{ user.name }}</h3>
             <h6 class="mdc-drawer__subtitle">{{ user.email }}</h6>
@@ -28,9 +28,14 @@
 
     export default {
         mounted() {
-            const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
+            const element = document.querySelector('.mdc-drawer');
+            const drawer = MDCDrawer.attachTo(element);
             this.$store.commit('drawer', drawer);
-            const route = this.$route.name;
+
+            // auto close after click to menu item
+            element.addEventListener('click', (event) => {
+                drawer.open = false;
+            });
         },
         computed: {
             user() {

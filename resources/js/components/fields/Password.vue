@@ -2,7 +2,7 @@
     <div>
         <div :id="id" class="mdc-text-field">
             <input type="password" :id="id + '-input'" class="mdc-text-field__input" autocomplete="off">
-            <label class="mdc-floating-label" :for="id">{{ title }}</label>
+            <label class="mdc-floating-label" :for="id" v-bind:class="{ 'mdc-floating-label--float-above': value }">{{ title }}</label>
             <div class="mdc-line-ripple"></div>
         </div>
         <div :id="id + '-helper'" class="mdc-text-field-helper-line">

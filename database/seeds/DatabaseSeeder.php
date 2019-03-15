@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $user = factory(\App\Api\Models\User::class)->create(['email' => 'user@kntrl8.ru']);
+        $user = factory(\App\Api\Models\User::class)->create(['email' => 'user@kntrl8.com']);
 
         factory(\App\Api\Models\Item::class, 53)->create(['user_id' => $user->id]);
 

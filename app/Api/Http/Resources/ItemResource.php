@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
  * @property float $carbohydrates
  * @property float $fiber
  * @property string $user_id
+ * @property string $type
  * @property Carbon created_at
  * @property Carbon updated_at
  */
@@ -29,10 +30,10 @@ class ItemResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'protein' => $this->protein,
-            'fat' => $this->fat,
-            'carbohydrates' => $this->carbohydrates,
-            'fiber' => $this->fiber,
+            'protein' => number_format($this->protein, 1),
+            'fat' => number_format($this->fat, 1),
+            'carbohydrates' => number_format($this->carbohydrates, 1),
+            'fiber' => number_format($this->fiber, 1),
             'user_id' => $this->user_id,
             'type' => $this->type,
             'created_at' => $this->created_at->toDateTimeString(),

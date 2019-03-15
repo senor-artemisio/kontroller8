@@ -14,14 +14,15 @@ class Field {
                 },
                 title: {
                     type: String
-                }
+                },
+                value: {}
             },
             mounted() {
                 this.$data.field = new MDCTextField(document.querySelector('#' + this.id));
                 this.$data.field.useNativeValidation = false;
             },
             methods: {
-                error(message) {
+                setError(message) {
                     this.$data.field.valid = false;
                     this.$data.field.helperTextContent = message;
                 },
@@ -29,7 +30,7 @@ class Field {
                     this.$data.field.valid = true;
                     this.$data.field.helperTextContent = '';
                 },
-                value() {
+                getValue() {
                     return this.$data.field.value;
                 },
             }

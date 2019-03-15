@@ -9,14 +9,15 @@
                     <h1 v-else class="mdc-typography--subtitle1">
                         {{ item.title }}
                     </h1>
-                    <field-text id="title" title="Title" ref="title" type="text"></field-text>
+                    <field-text id="title" title="Title" ref="title" type="text" v-model="item.title"></field-text>
                     <field-float id="protein" title="Protein" ref="protein" type="number"
-                                 v-bind:step="0.1"></field-float>
+                                 v-bind:step="0.1" v-model="item.protein"></field-float>
                     <field-float id="fat" title="Fat" ref="fat" type="number" v-bind:step="0.1"
-                                 v-bind:min="0"></field-float>
+                                 v-bind:min="0" v-model="item.fat"></field-float>
                     <field-float id="carbohydrates" title="Carbohydrates" ref="carbohydrates" type="number"
-                                 v-bind:step="0.1"></field-float>
-                    <field-float id="fiber" title="Fiber" ref="fiber" type="number" v-bind:step="0.1"></field-float>
+                                 v-bind:step="0.1" v-model="item.carbohydrates"></field-float>
+                    <field-float id="fiber" title="Fiber" ref="fiber" type="number" v-bind:step="0.1"
+                                 v-model="item.fiber"></field-float>
 
                     <button id="item-submit-button" class="mdc-button form-button">
                         <span v-if="isNewItem" class="mdc-button__label">Create</span>
@@ -36,6 +37,10 @@
 
             this.$data.item.id = itemId;
             this.$data.button = document.querySelector('#item-submit-button');
+
+            if (itemId) {
+                this.loadData();
+            }
         },
         data: function () {
             return {
@@ -49,6 +54,16 @@
             }
         },
         methods: {
+            loadData() {
+                const component = this;
+                api.get('/api/items/' + this.$data.item.id).then(function (response) {
+                    if (response.data.data.id === component.$data.item.id) {
+                        component.$data.item = response.data.data;
+                    }
+                }).catch(error => {
+                    error.log(error);
+                })
+            },
             isNewItem: function () {
                 return this.$data.item.id === 'new';
             },
@@ -65,11 +80,11 @@
                 }
 
                 method(url, {
-                    "title": this.$refs.title.value(),
-                    "protein": this.$refs.protein.value(),
-                    "fat": this.$refs.fat.value(),
-                    "carbohydrates": this.$refs.carbohydrates.value(),
-                    "fiber": this.$refs.fiber.value()
+                    "title": this.$refs.title.getValue(),
+                    "protein": this.$refs.protein.getValue(),
+                    "fat": this.$refs.fat.getValue(),
+                    "carbohydrates": this.$refs.carbohydrates.getValue(),
+                    "fiber": this.$refs.fiber.getValue()
                 }).then(response => {
                     location.href = '/items';
                 }).catch(error => {
@@ -87,23 +102,23 @@
             },
             processErrors(errors) {
                 if (errors.email && errors.email.length > 0) {
-                    this.$refs.email.error(errors.email.pop());
+                    this.$refs.email.setError(errors.email.pop());
                 }
 
                 if (errors.title && errors.title.length > 0) {
-                    this.$refs.title.error(errors.title.pop());
+                    this.$refs.title.setError(errors.title.pop());
                 }
                 if (errors.protein && errors.protein.length > 0) {
-                    this.$refs.protein.error(errors.protein.pop());
+                    this.$refs.protein.setError(errors.protein.pop());
                 }
                 if (errors.fat && errors.fat.length > 0) {
-                    this.$refs.fat.error(errors.fat.pop());
+                    this.$refs.fat.setError(errors.fat.pop());
                 }
                 if (errors.carbohydrates && errors.carbohydrates.length > 0) {
-                    this.$refs.carbohydrates.error(errors.carbohydrates.pop());
+                    this.$refs.carbohydrates.setError(errors.carbohydrates.pop());
                 }
                 if (errors.fiber && errors.fiber.length > 0) {
-                    this.$refs.fiber.error(errors.fiber.pop());
+                    this.$refs.fiber.setError(errors.fiber.pop());
                 }
             },
             clearErrors() {
