@@ -52,7 +52,7 @@ class AuthApiTest extends TestCase
     }
 
     /**
-     * @covers \App\Api\Http\Controllers\AuthController::login()
+     * @covers \App\Api\Http\Controllers\AuthController::signin()
      * @throws \App\Api\DTO\DTOException
      */
     public function testLoginUnauthorized(): void

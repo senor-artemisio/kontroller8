@@ -1,39 +1,29 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+
 import Dashboard from './pages/Dashboard';
-import Items from './pages/Items';
-import Item from './pages/Item';
-import Calendar from './pages/Calendar';
-import store from './store';
+import Auth from './pages/Auth';
 
 Vue.use(VueRouter);
-Vue.component(Dashboard);
-Vue.component(Items);
-Vue.component(Item);
-Vue.component(Calendar);
 
+Vue.component('dashboard', Dashboard);
+Vue.component('auth', Auth);
 
 const router = new VueRouter({
     routes: [
         {path: '/', redirect: '/dashboard'},
         {path: '/dashboard', component: Dashboard, name: "dashboard"},
-        {path: '/calendar', component: Calendar, name: "calendar"},
-        {path: '/items', component: Items},
-        {path: '/items/:page', component: Items, name: "items"},
-        {path: '/item/:itemId', component: Item, name: "item"},
-        {path: '/item', component: Item},
+        {path: '/auth', component: Auth, name: "auth"},
     ],
-    mode: "history",
-    linkActiveClass: "mdc-list-item--activated"
+    mode: "history"
 });
 
-router.beforeEach(function (to, from, next) {
-    const name = to.name;
-    if (store.getters.token === null) {
-        location.href = '/auth';
-    } else {
-        next();
-    }
-});
+// router.beforeEach(function (to, from, next) {
+//     if (store.getters.token === null && from.name !== "auth") {
+//         location.href = '/auth';
+//     } else {
+//         next();
+//     }
+// });
 
 export default router;

@@ -12,10 +12,6 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
-    .js('resources/js/auth.js', 'public/js')
-   .sass('resources/sass/app.scss', 'public/css', {
-       includePaths: ['node_modules']
-   })
-   .sass('resources/sass/auth.scss', 'public/css', {
-       includePaths: ['node_modules']
-   });
+    .sass('resources/sass/app.scss', 'public/css', {
+        includePaths: ['node_modules']
+    });

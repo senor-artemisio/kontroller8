@@ -20,8 +20,8 @@ Route::middleware(['json'])->group(function () {
             ->only('index', 'show', 'store', 'destroy', 'update');
         Route::get('users/me', 'UserController@me');
     });
-    Route::post('auth/signin', 'AuthController@signin');
-    Route::post('auth/signup', 'AuthController@signup');
+    Route::post('auth/sign-in', 'AuthController@signin');
+    Route::post('auth/sign-up', 'AuthController@signup');
 });
 
 

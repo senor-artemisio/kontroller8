@@ -13,23 +13,27 @@
   width: 18px;
   top: 6px;
   left: 3px;
-  background: #f2f2f2;
+  background: $body-bg;
   height: 24px;
 }
 
-.logo.dark .k1{
-  background: #2c353e;
+.logo-k8.dark .k1 {
+  background: $dark;
 }
 
 .k2, .k3 {
   width: 3px;
   height: 3px;
-  background-color: #2c353e;
+  background-color: $dark;
   bottom: 0;
 }
 
-.logo.dark .k2, .logo.dark .k3{
-  background-color: #f2f2f2;
+.logo-k8.dark .k2, .logo-k8.dark .k3 {
+  background-color: $body-bg;
+}
+
+.logo-k8.dark.on-white .k2, .logo-k8.dark.on-white .k3 {
+  background-color: $white;
 }
 
 .k2 {
@@ -43,12 +47,16 @@
 .k4, .k5 {
   width: 6px;
   height: 3px;
-  background: #2c353e;
+  background: $dark;
   left: 9px;
 }
 
-.logo.dark .k4, .logo.dark .k5 {
-  background: #f2f2f2;
+.logo-k8.dark .k4, .logo-k8.dark .k5 {
+  background: $body-bg;
+}
+
+.logo-k8.dark.on-white .k4, .logo-k8.dark.on-white .k5 {
+  background: $white;
 }
 
 .k4 {
@@ -60,12 +68,13 @@
 }
 
 .k6, .k7, .k8, .k9, .k10 {
-  background: #34b0cb;
+  background: $blue;
 }
 
 .k6 {
   width: 100%;
   top: 6px;
+  left: 0;
   height: 3px;
 }
 
