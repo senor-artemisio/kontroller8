@@ -3,6 +3,7 @@ require('./bootstrap');
 import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
 import router from './router';
+import store from './store'
 
 Vue.use(BootstrapVue);
 
@@ -14,5 +15,6 @@ Vue.use(BootstrapVue);
 
 const app = new Vue({
     el: '#app',
-    router
+    router,
+    store
 });

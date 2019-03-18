@@ -2,18 +2,38 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 import Dashboard from './pages/Dashboard';
+import Items from './pages/Items';
 import Auth from './pages/Auth';
+
+import Menu from './components/Menu';
 
 Vue.use(VueRouter);
 
-Vue.component('dashboard', Dashboard);
-Vue.component('auth', Auth);
+Vue.component(Dashboard);
+Vue.component(Auth);
+Vue.component(Menu);
 
 const router = new VueRouter({
+    linkActiveClass: 'active',
     routes: [
-        {path: '/', redirect: '/dashboard'},
-        {path: '/dashboard', component: Dashboard, name: "dashboard"},
         {path: '/auth', component: Auth, name: "auth"},
+        {path: '/', redirect: '/dashboard'},
+        {
+            path: '/dashboard',
+            components: {
+                default: Dashboard,
+                menu: Menu
+            },
+            name: "dashboard"
+        },
+        {
+            path: '/items',
+            components: {
+                default: Items,
+                menu: Menu
+            },
+            name: "items"
+        },
     ],
     mode: "history"
 });

@@ -8,9 +8,10 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-<b-container id="app" class="h-100">
+<div id="app" class="h-100">
+    <router-view name="menu"></router-view>
     <router-view></router-view>
-</b-container>
+</div>
 <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>
