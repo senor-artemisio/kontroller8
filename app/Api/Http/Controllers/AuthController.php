@@ -51,7 +51,7 @@ class AuthController extends Controller
      */
     public function signup(SignupRequest $request): UserResource
     {
-        $dto = new UserDTO($request->all());
+        $dto = new UserDTO($request->all(['name','email','password']));
         $dto->setId(\Ulid::generate());
 
         $this->userService->create($dto);

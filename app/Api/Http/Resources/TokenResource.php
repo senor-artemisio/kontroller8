@@ -23,7 +23,7 @@ class TokenResource extends JsonResource
         return [
             'access_token' => $this->accessToken,
             'token_type' => 'Bearer',
-            'expires_at' => Carbon::parse($this->token->expires_at)->diffInSeconds(Carbon::now())
+            'expires_at' => Carbon::parse($this->token->expires_at)->diffInDays(Carbon::now())
         ];
     }
 }

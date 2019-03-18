@@ -19,7 +19,7 @@ class TokenService
         $token = $result->token;
 
         if (!$rememberMe) {
-            $token->expires_at = Carbon::now()->addWeeks(1);
+            $token->expires_at = Carbon::now()->addWeeks(2);
         }
 
         $token->save();
