@@ -129,8 +129,10 @@
                             options.expires = response.data.data.expires_at;
                         }
                         if (token) {
-                            Cookies.set('X-AUTH-TOKEN', token, options);
+                            this.$store.commit('setToken', token);
                             component.$router.push({name: "dashboard"});
+                        } else {
+                            throw 'token not found';
                         }
                     } else {
                         this.buttonDisabled = false;

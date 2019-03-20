@@ -18,14 +18,12 @@
 
                 <b-nav-item-dropdown text="Lang" right>
                     <b-dropdown-item href="#">EN</b-dropdown-item>
-                    <b-dropdown-item href="#">ES</b-dropdown-item>
                     <b-dropdown-item href="#">RU</b-dropdown-item>
-                    <b-dropdown-item href="#">FA</b-dropdown-item>
                 </b-nav-item-dropdown>
 
                 <b-nav-item-dropdown right>
                     <template slot="button-content"><b>{{ user.name }}</b></template>
-                    <b-dropdown-item href="#">Profile</b-dropdown-item>
+                    <b-dropdown-item to="/profiile">Profile</b-dropdown-item>
                     <b-dropdown-item v-on:click="signOut()">Signout</b-dropdown-item>
                 </b-nav-item-dropdown>
             </b-navbar-nav>
@@ -46,20 +44,11 @@
             };
         },
         mounted() {
-            api.get('users/me').then(response => {
-                if (response.data) {
-                    this.user = response.data.data;
-                } else {
-                    throw response;
-                }
-            }).catch(error => {
-                this.$router.push({name: 'auth'});
-            });
+            this.$store.actions.user();
         },
         methods: {
-            signOut() {
-                Cookies.remove('X-AUTH-TOKEN');
-                this.$router.push({name: 'auth'});
+            logOut() {
+                this.$store.actions.logout();
             }
         }
     }

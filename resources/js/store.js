@@ -5,11 +5,11 @@ import api from './api';
 
 Vue.use(Vuex);
 
-const token = Cookies.get('X-AUTH-TOKEN');
+const cookieName = 'X-AUTH-TOKEN';
+const token = Cookies.get(cookieName);
 
 export default new Vuex.Store({
     state: {
-        drawer: null,
         user: {"name": "", "email": ""},
         token
     },
@@ -18,8 +18,11 @@ export default new Vuex.Store({
             state.user = user;
         },
         clearToken(state) {
-            cookies.remove('X-AUTH-TOKEN');
+            Cookies.remove(cookieName);
             state.token = null;
+        },
+        setToken(state, token) {
+            state.token = token;
         }
     },
     getters: {
@@ -40,6 +43,10 @@ export default new Vuex.Store({
                 }
                 throw error;
             });
+        },
+        logout({commit}) {
+            commit('clearToken');
+            this.$router.push({name: 'auth'});
         }
     }
 });
