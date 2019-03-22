@@ -1,28 +1,32 @@
-import Cookies from 'js-cookie';
+import store from './store';
+
 import axios from 'axios';
 
 
-let headers = {
-    "X-Requested-With": "XMLHttpRequest",
+export default {
+    client() {
+        let headers = {
+            "X-Requested-With": "XMLHttpRequest",
+        };
+
+
+        const CSRFToken = document.head.querySelector('meta[name="csrf-token"]');
+
+        if (CSRFToken) {
+            headers['X-CSRF-TOKEN'] = CSRFToken.content;
+        } else {
+            console.error('CSRF token not found.');
+        }
+
+        const authToken = store.getters.token;
+
+        if (authToken) {
+            headers['Authorization'] = 'Bearer ' + authToken;
+        }
+
+        return axios.create({
+            baseURL: '/api',
+            headers
+        });
+    }
 };
-
-
-const csrfToken = document.head.querySelector('meta[name="csrf-token"]');
-
-if (csrfToken) {
-    headers['X-CSRF-TOKEN'] = csrfToken.content;
-} else {
-    console.error('CSRF token not found.');
-}
-
-const authToken = Cookies.get('X-AUTH-TOKEN');
-
-if (authToken) {
-    headers['Authorization'] = 'Bearer ' + authToken;
-}
-
-
-export default axios.create({
-    baseURL: '/api',
-    headers
-});

@@ -24,7 +24,7 @@
                 <b-nav-item-dropdown right>
                     <template slot="button-content"><b>{{ user.name }}</b></template>
                     <b-dropdown-item to="/profiile">Profile</b-dropdown-item>
-                    <b-dropdown-item v-on:click="signOut()">Signout</b-dropdown-item>
+                    <b-dropdown-item v-on:click="logOut()">Signout</b-dropdown-item>
                 </b-nav-item-dropdown>
             </b-navbar-nav>
         </b-collapse>
@@ -32,23 +32,22 @@
 </template>
 
 <script>
-    import api from '../api';
-    import Cookies from 'js-cookie';
-
     export default {
         data() {
             return {
                 user: {
-                    name: "..."
+                    name: ""
                 }
             };
         },
         mounted() {
-            this.$store.actions.user();
+            this.$store.dispatch('user').then(() => {
+                this.user.name = this.$store.getters.user.name;
+            });
         },
         methods: {
             logOut() {
-                this.$store.actions.logout();
+                this.$store.dispatch('logout');
             }
         }
     }

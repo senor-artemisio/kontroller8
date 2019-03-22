@@ -1,28 +1,30 @@
 import Vuex from "vuex";
 import Vue from "vue";
 import Cookies from 'js-cookie';
-import api from './api';
+import Api from './api';
 
 Vue.use(Vuex);
 
 const cookieName = 'X-AUTH-TOKEN';
-const token = Cookies.get(cookieName);
 
 export default new Vuex.Store({
     state: {
-        user: {"name": "", "email": ""},
-        token
+        user: {name: "...", email: "..."},
+        token: null
     },
     mutations: {
         user(state, user) {
-            state.user = user;
+            state.user.name = user.name;
+            state.user.email = user.email;
         },
-        clearToken(state) {
-            Cookies.remove(cookieName);
-            state.token = null;
-        },
-        setToken(state, token) {
-            state.token = token;
+        token(state, token) {
+            if (token) {
+                state.token = token;
+                Cookies.set(cookieName, token);
+            } else {
+                state.token = null;
+                Cookies.remove(cookieName);
+            }
         }
     },
     getters: {
@@ -30,23 +32,26 @@ export default new Vuex.Store({
             return state.user;
         },
         token: (state, getters) => {
-            return state.token;
+            return state.token ? state.token : Cookies.get(cookieName);
         }
     },
     actions: {
         user({commit}) {
-            api.get('/api/users/me').then((response) => {
-                commit('user', response.data.data);
-            }).catch((error) => {
-                if (error.response && error.response.status === 401) {
-                    this.$router.push({name: 'auth'});
-                }
-                throw error;
+            return new Promise((resolve, reject) => {
+                Api.client().get('users/me').then((response) => {
+                    commit('user', response.data.data);
+                    resolve();
+                }).catch((error) => {
+                    if (error.response && error.response.status === 401) {
+                        location.href = '/auth'
+                    }
+                    reject();
+                });
             });
         },
         logout({commit}) {
-            commit('clearToken');
-            this.$router.push({name: 'auth'});
+            commit('token', null);
+            location.href = '/auth';
         }
     }
 });

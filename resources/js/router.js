@@ -6,12 +6,15 @@ import Items from './pages/Items';
 import Auth from './pages/Auth';
 
 import Menu from './components/Menu';
+import Logo from './components/Logo';
 
 Vue.use(VueRouter);
 
 Vue.component(Dashboard);
 Vue.component(Auth);
 Vue.component(Menu);
+
+Vue.component('logo', Logo);
 
 const router = new VueRouter({
     linkActiveClass: 'active',
