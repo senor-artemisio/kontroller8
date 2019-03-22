@@ -1,7 +1,7 @@
 <template>
-    <div :class="'logo-k8 '+ cssClass " :style="getStyle()">
+    <span :class="'logo-k8 '+ cssClass " :style="getStyle()">
         <span :class="'k k'+n" v-for="n in 10"></span>
-    </div>
+    </span>
 </template>
 <script>
     export default {

@@ -1,6 +1,8 @@
 <template>
-    <b-navbar toggleable="sm" type="dark" variant="primary">
-        <b-navbar-brand>Kontroller8</b-navbar-brand>
+    <b-navbar toggleable="sm" type="dark" variant="dark">
+        <b-navbar-brand>
+            <logo></logo>
+        </b-navbar-brand>
 
         <b-navbar-toggle target="nav_collapse"/>
 
