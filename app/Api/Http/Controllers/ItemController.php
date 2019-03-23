@@ -39,7 +39,7 @@ class ItemController extends Controller
     public function index(): ResourceCollection
     {
         $userId = Auth::user()->getAuthIdentifier();
-        $items = $this->itemRepository->paginate(6)->findByOwner($userId);
+        $items = $this->itemRepository->paginate(10)->findByOwner($userId);
 
         return ItemResource::collection($items);
     }

@@ -29,20 +29,22 @@ const router = new VueRouter({
             },
             name: "dashboard"
         },
+        {path: '/items', redirect: '/items/1'},
         {
-            path: '/items',
+            path: '/items/:page',
             components: {
                 default: Items,
                 menu: Menu
             },
-            name: "items"
+            name: "items",
+            props: {default: true}
         },
     ],
     mode: "history"
 });
 
 // router.beforeEach(function (to, from, next) {
-//     if (store.getters.token === null && from.name !== "auth") {
+//     if (this.$store.getters.token === null && from.name !== "auth") {
 //         location.href = '/auth';
 //     } else {
 //         next();

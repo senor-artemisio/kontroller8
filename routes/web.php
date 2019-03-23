@@ -15,6 +15,7 @@ $routes = [
     '/',
     '/dashboard',
     '/items',
+    '/items/{page}',
     '/auth',
 ];
 
