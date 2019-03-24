@@ -1,6 +1,11 @@
 <template>
     <b-container>
-        <h1 class="mt-3">Items</h1>
+        <h1 class="mt-3">
+            Items
+            <b-button size="sm" variant="primary" to="/item/new">
+                <i class="fas fa-plus"></i>
+            </b-button>
+        </h1>
         <div v-if="loaded">
             <b-table responsive stacked="sm" striped hover :no-local-sorting="true"
                      :items="items"
