@@ -4,6 +4,7 @@ namespace App\Api\Http\Controllers;
 
 use App\Api\DTO\ItemDTO;
 use App\Api\Http\Requests\ItemRequest;
+use App\Api\Http\Requests\ItemsRequest;
 use App\Api\Http\Resources\ItemResource;
 use App\Api\Repositories\ItemRepository;
 use App\Api\Services\ItemService;
@@ -36,10 +37,14 @@ class ItemController extends Controller
     /**
      * @return ResourceCollection
      */
-    public function index(): ResourceCollection
+    public function index(ItemsRequest $request): ResourceCollection
     {
         $userId = Auth::user()->getAuthIdentifier();
-        $items = $this->itemRepository->paginate(10)->findByOwner($userId);
+
+        $items = $this->itemRepository
+            ->paginate($request->getPerPage())
+            ->sort($request->getSortBy(), $request->getSortDirection())
+            ->findByOwner($userId);
 
         return ItemResource::collection($items);
     }

@@ -19,6 +19,12 @@ class ItemRepository
     /** @var int */
     private $perPage;
 
+    /** @var string */
+    protected $sortBy;
+
+    /** @var string */
+    protected $sortDirection;
+
     /** @var array */
     private $columns = ['*'];
 
@@ -37,6 +43,19 @@ class ItemRepository
     public function paginate(int $perPage): ItemRepository
     {
         $this->perPage = $perPage;
+
+        return $this;
+    }
+
+    /**
+     * @param string $attribute
+     * @param string $direction
+     * @return ItemRepository
+     */
+    public function sort(string $attribute, string $direction): ItemRepository
+    {
+        $this->sortBy = $attribute;
+        $this->sortDirection = $direction;
 
         return $this;
     }
@@ -100,6 +119,10 @@ class ItemRepository
     public function findByOwner(string $id)
     {
         $query = $this->item->where('user_id', $id);
+
+        if ($this->sortBy !== null) {
+            $query = $query->orderBy(snake_case($this->sortBy), $this->sortDirection);
+        }
 
         if ($this->perPage !== null) {
             return $query->paginate($this->perPage, $this->columns);

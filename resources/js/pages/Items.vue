@@ -1,14 +1,22 @@
 <template>
     <b-container>
-        <b-table responsive striped hover :no-local-sorting="true"
-                 :items="items"
-                 :fields="fields"
-                 @sort-changed="sortChanged"/>
-        <div class="overflow-auto">
-            <b-pagination-nav id="items-pagination" use-router no-page-detect ref="pagination" base-url="/items/"
-                              :number-of-pages="lastPage"
-                              v-model="currentPage"
-            />
+        <h1 class="mt-3">Items</h1>
+        <div v-if="loaded">
+            <b-table responsive stacked="sm" striped hover :no-local-sorting="true"
+                     :items="items"
+                     :fields="fields"
+                     :sort-by.sync="sortBy" :sort-desc.sync="sortDesc"
+                     @sort-changed="sortChanged"/>
+            <div class="overflow-auto">
+                <b-pagination-nav class="d-inline-block" use-router no-page-detect ref="pagination" base-url="/items/"
+                                  :number-of-pages="lastPage"
+                                  first-text="⇤"
+                                  last-text="⇥"
+                                  next-text="→"
+                                  prev-text="←"
+                                  v-model="currentPage"/>
+                <b-form-select class="ml-5 w-auto" size="sm" :options="perPageOptions" v-model="perPage" v-on:change="perPageChanged" />
+            </div>
         </div>
     </b-container>
 </template>
@@ -19,8 +27,11 @@
         data() {
             return {
                 currentPage: this.$router.currentRoute.params.page,
-                lastPage: 999,
-                sortBy: null,
+                lastPage: null,
+                perPage: 10,
+                perPageOptions:[5,10,20,50],
+                sortBy: 'title',
+                sortDesc: false,
                 items: [],
                 fields: [
                     {
@@ -31,30 +42,53 @@
                         key: 'protein',
                         sortable: true
                     },
-                    'fat',
-                    'carbohydrates',
-                    'fiber'
-                ]
+                    {
+                        key: 'fat',
+                        sortable: true
+                    },
+                    {
+                        key: 'carbohydrates',
+                        sortable: true
+                    },
+                    {
+                        key: 'fiber',
+                        sortable: true
+                    }
+                ],
+                loaded: false
             };
         },
         methods: {
             sortChanged(ctx) {
                 this.sortBy = ctx.sortBy;
+                this.sortDesc = ctx.sortDesc;
+                this.load();
+            },
+            perPageChanged(){
+                this.currentPage=1;
+                this.load();
             },
             getPageLink(pageNumber) {
                 return '/items/' + pageNumber;
             },
             load() {
-                Api.client().get('items?page=' + this.currentPage).then((response) => {
+                Api.client().get(this.buildUrl()).then((response) => {
                     const result = response.data;
                     this.items = result.data;
                     this.lastPage = result.meta.last_page;
                     this.perPage = result.meta.per_page
-                    // dirty hack because b-pagination component does not switch current page correctly
-                    if (this.currentPage != 1) {
-                        this.$refs.pagination.currentPage = this.currentPage;
-                    }
+                    this.loaded = true;
                 });
+            },
+            buildUrl() {
+                let url = '';
+
+                url += 'items?page=' + this.currentPage;
+                url += '&perPage=' + this.perPage;
+                url += '&sortBy=' + this.sortBy;
+                url += '&sortDirection=' + (this.sortDesc ? 'desc' : 'asc');
+
+                return url;
             }
         },
         mounted() {
