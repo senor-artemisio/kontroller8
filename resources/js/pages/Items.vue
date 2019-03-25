@@ -7,11 +7,12 @@
             </b-button>
         </h1>
         <div v-if="loaded">
-            <b-table responsive stacked="sm" striped hover :no-local-sorting="true"
+            <b-table responsive stacked="sm" hover tbody-tr-class="cursor-pointer" :no-local-sorting="true"
                      :items="items"
                      :fields="fields"
                      :sort-by.sync="sortBy" :sort-desc.sync="sortDesc"
-                     @sort-changed="sortChanged"/>
+                     @sort-changed="sortChanged"
+                     @row-clicked="toItem"/>
             <div class="overflow-auto">
                 <b-pagination-nav class="float-md-left" use-router no-page-detect ref="pagination" base-url="/items/"
                                   :number-of-pages="lastPage"
@@ -65,6 +66,9 @@
             };
         },
         methods: {
+            toItem(item, index, button) {
+                this.$router.push('/item/' + item.id);
+            },
             sortChanged(ctx) {
                 this.sortBy = ctx.sortBy;
                 this.sortDesc = ctx.sortDesc;
@@ -85,7 +89,7 @@
                     this.perPage = result.meta.per_page;
                     if (this.currentPage > this.lastPage) {
                         console.log(this.currentPage);
-                        this.$router.push('/items/'+this.lastPage);
+                        this.$router.push('/items/' + this.lastPage);
                     }
                     this.loaded = true;
                 });
