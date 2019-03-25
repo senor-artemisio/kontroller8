@@ -2,38 +2,38 @@
     <b-container class="h-100">
         <b-row align-v="center" class="h-100">
             <b-col md="4" offset-md="4" align="center">
-                <b-form @submit="onSubmit" class="mr-auto ml-auto mt-2 w-100">
+                <b-form @submit="onSubmitAuth" class="mr-auto ml-auto mt-2 w-100">
                     <b-card>
                         <logo size="2" css-class="dark on-white mt-3 mb-3"></logo>
 
                         <h1 class="h3 mb-3 font-weight-normal" v-if="isRegister">Join Kontroller8</h1>
                         <h1 class="h3 mb-3 font-weight-normal" v-else>Sign in to Kontroller8</h1>
 
-                        <b-form-group id="login-group-name" v-if="isRegister">
-                            <b-form-input type="text" id="login-name" required placeholder="Name"
-                                          v-model="form.name"/>
+                        <b-form-group v-if="isRegister">
+                            <b-form-input type="text" required placeholder="Name" v-model="form.name"/>
                         </b-form-group>
-                        <b-form-group id="login-group-email"
-                                      :state="getFieldState('email')"
+                        <b-form-group :state="getFieldState('email')"
                                       :invalid-feedback="getFieldError('email')">
-                            <b-form-input id="login-email" type="email" required placeholder="E-mail"
+                            <b-form-input type="email" required placeholder="E-mail"
                                           v-model="form.email"
                                           :state="getFieldState('email')"/>
                         </b-form-group>
-                        <b-form-group id="login-group-password"
-                                      :state="getFieldState('password')"
-                                      :invalid-feedback="getFieldError('password')">
-                            <b-form-input id="login-password" type="password" required placeholder="Password"
+                        <b-form-group
+                                :state="getFieldState('password')"
+                                :invalid-feedback="getFieldError('password')">
+                            <b-form-input type="password" required placeholder="Password"
                                           v-model="form.password"
                                           :state="getFieldState('password')"/>
                         </b-form-group>
-                        <b-form-group id="login-group-password-repeat" v-if="isRegister">
-                            <b-form-input id="login-repeat-password" type="password" required
+                        <b-form-group v-if="isRegister">
+                            <b-form-input type="password" required
                                           placeholder="Repeat password"
                                           v-model="form.passwordRepeat"/>
                         </b-form-group>
 
-                        <button v-if="isRegister" class="btn btn-lg btn-primary btn-block" type="submit">Sign up
+                        <button v-if="isRegister" class="btn btn-lg btn-primary btn-block" type="submit"
+                                :disabled="buttonDisabled">
+                            Sign up
                         </button>
                         <button v-else class="btn btn-lg btn-primary btn-block" type="submit"
                                 :disabled="buttonDisabled">
@@ -57,8 +57,10 @@
 
 <script>
     import Api from '../api';
+    import form from '../mixins/form';
 
     export default {
+        mixins: [form],
         data: function () {
             return {
                 isRegister: false,
@@ -68,12 +70,11 @@
                     password: '',
                     passwordRepeat: '',
                 },
-                errors: {},
                 buttonDisabled: false
             };
         },
         methods: {
-            onSubmit(evt) {
+            onSubmitAuth(evt) {
                 evt.preventDefault();
                 this.buttonDisabled = true;
                 if (this.isRegister) {
@@ -128,31 +129,6 @@
                         throw response;
                     }
                 }).catch(this.processError);
-            },
-            getFieldState(field) {
-                if (this.errors[field] && this.errors[field].length > 0) {
-                    return false;
-                }
-                return null;
-            },
-            getFieldError(field) {
-                if (this.errors[field] && this.errors[field].length > 0) {
-                    return this.errors[field].join('<br>');
-                }
-                return null;
-            },
-            processError(error) {
-                this.buttonDisabled = false;
-
-                if (error.response && error.response.data) {
-                    if (error.response.status === 422) {
-                        this.errors = error.response.data.errors;
-                        return;
-                    }
-                    return console.error(error.response);
-
-                }
-                console.error(error);
             }
         }
     }

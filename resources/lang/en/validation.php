@@ -128,8 +128,14 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'protein' => [
+            'ratio' => 'Incorrect ratio - sum of values cannot be more than 100',
+        ],
+        'carbohydrates' => [
+            'ratio' => 'Incorrect ratio - sum of values cannot be more than 100',
+        ],
+        'fat' => [
+            'ratio' => 'Incorrect ratio - sum of values cannot be more than 100',
         ],
     ],
 

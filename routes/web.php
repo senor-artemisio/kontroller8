@@ -11,14 +11,4 @@
 |
 */
 
-$routes = [
-    '/',
-    '/dashboard',
-    '/items',
-    '/items/{page}',
-    '/auth',
-];
-
-foreach ($routes as $route) {
-    Route::get($route, 'AppController@index');
-}
+Route::any('{all}', 'AppController@index')->where(['all' => '.*']);

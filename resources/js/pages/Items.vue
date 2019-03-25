@@ -13,14 +13,15 @@
                      :sort-by.sync="sortBy" :sort-desc.sync="sortDesc"
                      @sort-changed="sortChanged"/>
             <div class="overflow-auto">
-                <b-pagination-nav class="d-inline-block" use-router no-page-detect ref="pagination" base-url="/items/"
+                <b-pagination-nav class="float-md-left" use-router no-page-detect ref="pagination" base-url="/items/"
                                   :number-of-pages="lastPage"
                                   first-text="⇤"
                                   last-text="⇥"
                                   next-text="→"
                                   prev-text="←"
                                   v-model="currentPage"/>
-                <b-form-select class="ml-5 w-auto" size="sm" :options="perPageOptions" v-model="perPage" v-on:change="perPageChanged" />
+                <b-form-select class="float-md-right w-auto mb-3" size="sm" :options="perPageOptions" v-model="perPage"
+                               v-on:change="perPageChanged"/>
             </div>
         </div>
     </b-container>
@@ -34,7 +35,7 @@
                 currentPage: this.$router.currentRoute.params.page,
                 lastPage: null,
                 perPage: 10,
-                perPageOptions:[5,10,20,50],
+                perPageOptions: [2, 5, 10, 20, 50],
                 sortBy: 'title',
                 sortDesc: false,
                 items: [],
@@ -69,23 +70,27 @@
                 this.sortDesc = ctx.sortDesc;
                 this.load();
             },
-            perPageChanged(){
-                this.currentPage=1;
+            perPageChanged() {
+                this.currentPage = 1;
                 this.load();
             },
             getPageLink(pageNumber) {
                 return '/items/' + pageNumber;
             },
             load() {
-                Api.client().get(this.buildUrl()).then((response) => {
+                Api.client().get(this.buildApiUrl()).then((response) => {
                     const result = response.data;
                     this.items = result.data;
                     this.lastPage = result.meta.last_page;
-                    this.perPage = result.meta.per_page
+                    this.perPage = result.meta.per_page;
+                    if (this.currentPage > this.lastPage) {
+                        console.log(this.currentPage);
+                        this.$router.push('/items/'+this.lastPage);
+                    }
                     this.loaded = true;
                 });
             },
-            buildUrl() {
+            buildApiUrl() {
                 let url = '';
 
                 url += 'items?page=' + this.currentPage;

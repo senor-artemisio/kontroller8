@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 
 import Dashboard from './pages/Dashboard';
 import Items from './pages/Items';
+import Item from './pages/Item';
 import Auth from './pages/Auth';
 
 import Menu from './components/Menu';
@@ -37,6 +38,15 @@ const router = new VueRouter({
                 menu: Menu
             },
             name: "items",
+            props: {default: true}
+        },
+        {
+            path: '/item/:id',
+            components: {
+                default: Item,
+                menu: Menu
+            },
+            name: "item",
             props: {default: true}
         },
     ],

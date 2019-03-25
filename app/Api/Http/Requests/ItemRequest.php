@@ -18,10 +18,10 @@ class ItemRequest extends FormRequest
     {
         $rules = [
             'title' => 'string|required|max:255',
-            'protein' => 'numeric|required',
-            'fat' => 'numeric|required',
-            'carbohydrates' => 'numeric|required',
-            'fiber' => 'numeric|required',
+            'protein' => 'numeric|required|min:0|max:100|ratio',
+            'fat' => 'numeric|required|min:0|max:100|ratio',
+            'carbohydrates' => 'numeric|required|min:0|max:100|ratio',
+            'fiber' => 'numeric|required|min:0|max:100',
         ];
 
         if ($this->getMethod() === 'PATCH') {
