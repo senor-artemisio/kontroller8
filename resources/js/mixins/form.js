@@ -10,8 +10,8 @@ export default {
     },
     methods: {
         save() {
-            let method, url;
             const client = Api.client();
+            let method, url;
 
             if (this.isNew()) {
                 method = client.post;

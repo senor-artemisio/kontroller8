@@ -4,7 +4,7 @@
             <b-col md="6">
                 <b-form @submit="onSubmit">
                     <b-form-group label-align="right" label-cols="4" label-cols-lg="4">
-                        <h2 class="mt-3" v-if="isNew">New item</h2>
+                        <h2 class="mt-3" v-if="isNew()">New item</h2>
                         <h2 class="mt-3" v-else>Item {{form.title}}</h2>
                     </b-form-group>
                     <b-form-group label-align="right" label-cols="4" label-cols-lg="4" label="Title"
@@ -47,10 +47,13 @@
                     </b-form-group>
 
                     <b-form-group label-align="right" label-cols="4" label-cols-lg="4">
-                        <button v-if="isNew" class="btn btn-lg btn-primary" type="submit">Create</button>
-                        <button v-else class="btn btn-lg btn-primary" type="submit" :disabled="buttonDisabled">
+                        <b-button v-if="isNew()" variant="primary" size="lg" :disabled="buttonDisabled" type="submit">
+                            Create
+                        </b-button>
+                        <b-button v-else size="lg" variant="primary" :disabled="buttonDisabled" type="submit">
                             Update
-                        </button>
+                        </b-button>
+                        <b-button to="/items" size="lg">Cancel</b-button>
                     </b-form-group>
                 </b-form>
             </b-col>
@@ -59,6 +62,7 @@
 </template>
 <script>
     import form from '../mixins/form';
+    import Api from '../api';
 
     export default {
         mixins: [form],
@@ -74,10 +78,15 @@
                 }
             }
         },
-        methods: {
-            mounted() {
-
-            },
+        mounted() {
+            Api.client().get('/' + this.url + '/' + this.form.id).then((response) => {
+                const data = response.data.data
+                this.form.title = data.title;
+                this.form.protein = data.protein;
+                this.form.fat = data.fat;
+                this.form.carbohydrates = data.carbohydrates;
+                this.form.fiber = data.fiber;
+            });
         }
     }
 </script>

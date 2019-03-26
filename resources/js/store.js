@@ -17,10 +17,10 @@ export default new Vuex.Store({
             state.user.name = user.name;
             state.user.email = user.email;
         },
-        token(state, token) {
+        token(state, token, expires) {
             if (token) {
                 state.token = token;
-                Cookies.set(cookieName, token);
+                Cookies.set(cookieName, token, {expires});
             } else {
                 state.token = null;
                 Cookies.remove(cookieName);

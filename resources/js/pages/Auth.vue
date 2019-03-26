@@ -110,16 +110,16 @@
                     password: this.form.password
                 }).then(response => {
                     let token = null;
-                    let options = {};
+                    let expires = null;
                     if (response.data) {
                         if (response.data.data.access_token) {
                             token = response.data.data.access_token;
                         }
                         if (response.data.data.expires_at) {
-                            options.expires = response.data.data.expires_at;
+                            expires = response.data.data.expires_at;
                         }
                         if (token) {
-                            this.$store.commit('token', token);
+                            this.$store.commit('token', token, expires);
                             location.href = '/dashboard';
                         } else {
                             throw 'token not found';
