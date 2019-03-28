@@ -14,13 +14,14 @@
                      @sort-changed="sortChanged"
                      @row-clicked="toItem"/>
             <div class="overflow-auto">
-                <b-pagination-nav class="float-md-left" use-router no-page-detect ref="pagination" base-url="/items/"
+                <b-pagination-nav class="float-md-left" use-router
+                                  base-url="/items/"
                                   :number-of-pages="lastPage"
                                   first-text="⇤"
                                   last-text="⇥"
                                   next-text="→"
                                   prev-text="←"
-                                  v-model="currentPage"/>
+                                  v-model="currentPage"></b-pagination-nav>
                 <b-form-select class="float-md-right w-auto mb-3" size="sm" :options="perPageOptions" v-model="perPage"
                                v-on:change="perPageChanged"/>
             </div>
@@ -33,7 +34,7 @@
     export default {
         data() {
             return {
-                currentPage: this.$router.currentRoute.params.page,
+                currentPage: parseInt(this.$router.currentRoute.params.page),
                 lastPage: null,
                 perPage: 10,
                 perPageOptions: [2, 5, 10, 20, 50],
@@ -78,17 +79,13 @@
                 this.currentPage = 1;
                 this.load();
             },
-            getPageLink(pageNumber) {
-                return '/items/' + pageNumber;
-            },
             load() {
                 Api.client().get(this.buildApiUrl()).then((response) => {
                     const result = response.data;
                     this.items = result.data;
-                    this.lastPage = result.meta.last_page;
-                    this.perPage = result.meta.per_page;
+                    this.lastPage = parseInt(result.meta.last_page);
+                    this.perPage = parseInt(result.meta.per_page);
                     if (this.currentPage > this.lastPage) {
-                        console.log(this.currentPage);
                         this.$router.push('/items/' + this.lastPage);
                     }
                     this.loaded = true;
@@ -110,7 +107,6 @@
         },
         watch: {
             '$route.params.page'(to, from) {
-                this.currentPage = to;
                 this.load();
             }
         }
