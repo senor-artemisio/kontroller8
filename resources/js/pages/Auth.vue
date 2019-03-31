@@ -119,7 +119,7 @@
                             expires = response.data.data.expires_at;
                         }
                         if (token) {
-                            this.$store.commit('token', token, expires);
+                            this.$store.commit('token', {token, expires});
                             location.href = '/dashboard';
                         } else {
                             throw 'token not found';

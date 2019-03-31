@@ -17,10 +17,10 @@ export default new Vuex.Store({
             state.user.name = user.name;
             state.user.email = user.email;
         },
-        token(state, token, expires) {
-            if (token) {
-                state.token = token;
-                Cookies.set(cookieName, token, {expires});
+        token(state, payload) {
+            if (payload.token) {
+                state.token = payload.token;
+                Cookies.set(cookieName, payload.token, {expires: payload.expires});
             } else {
                 state.token = null;
                 Cookies.remove(cookieName);
@@ -50,7 +50,7 @@ export default new Vuex.Store({
             });
         },
         logout({commit}) {
-            commit('token', null);
+            commit('token', {});
             location.href = '/auth';
         }
     }

@@ -1,23 +1,26 @@
-
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
-
 // Variables
 @import 'variables';
-
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
-
 // Vue bootstrap
 @import '~bootstrap-vue/src/index.scss';
-
+// Full calendar
+@import '~@fullcalendar/core/main.css';
+@import '~@fullcalendar/daygrid/main.css';
+@import '~@fullcalendar/bootstrap/main.css';
 // Logo
 @import "logo";
 
-body,html {
+body, html {
   height: 100%;
 }
 
-.cursor-pointer{
+.cursor-pointer {
   cursor: pointer;
+}
+
+.secondary-hover:hover {
+  background: $gray-200;
 }

@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 import Dashboard from './pages/Dashboard';
+import Days from './pages/Days';
 import Items from './pages/Items';
 import Item from './pages/Item';
 import Auth from './pages/Auth';
@@ -49,6 +50,14 @@ const router = new VueRouter({
             name: "item",
             props: {default: true}
         },
+        {
+            path: '/days',
+            components: {
+                default: Days,
+                menu: Menu
+            },
+            name: "days"
+        }
     ],
     mode: "history"
 });

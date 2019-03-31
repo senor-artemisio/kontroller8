@@ -10,6 +10,7 @@
             <b-navbar-nav>
                 <b-nav-item to="/dashboard">Dashboard</b-nav-item>
                 <b-nav-item to="/items">Items</b-nav-item>
+                <b-nav-item to="/days">Days</b-nav-item>
             </b-navbar-nav>
 
             <b-navbar-nav class="ml-auto">
