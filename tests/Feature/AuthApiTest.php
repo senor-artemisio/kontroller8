@@ -19,21 +19,25 @@ class AuthApiTest extends TestCase
     /**
      * @covers \App\Api\Http\Controllers\AuthController::signup()
      */
-    public function testSignupUnauthorized(): void
+    public function testSignUpUnauthorized(): void
     {
+        $this->postJson('/api/auth/sign-up', ['name' => 'boo'])
+            ->assertStatus(422);
+
         $data = [
             'name' => 'Boo',
             'email' => 'foo@foo.foo',
-            'password' => 'secret'
+            'password' => 'secret',
         ];
+        $response = $this->postJson('/api/auth/sign-up', $data);
+        $response->assertStatus(422);
 
-        $this->postJson('/api/auth/signup', ['name' => 'boo'])
-            ->assertStatus(422);
+        $data['password_confirmation'] = $data['password'];
 
-        $response = $this->postJson('/api/auth/signup', $data);
+        $response = $this->postJson('/api/auth/sign-up', $data);
         $response->assertStatus(201);
 
-        unset($data['password']);
+        unset($data['password'], $data['password_confirmation']);
 
         $this->assertDatabaseHas(factory(User::class)->make()->getTable(), $data);
     }
@@ -41,10 +45,10 @@ class AuthApiTest extends TestCase
     /**
      * @covers \App\Api\Http\Controllers\AuthController::signup()
      */
-    public function testSignupAuthorized(): void
+    public function testSignUpAuthorized(): void
     {
         $this->actingAs(factory(User::class)->create())
-            ->postJson('/api/auth/signup', [
+            ->postJson('/api/auth/sign-up', [
                 'name' => 'Boo',
                 'email' => 'foo@foo.foo',
                 'password' => 'secret'
@@ -55,7 +59,7 @@ class AuthApiTest extends TestCase
      * @covers \App\Api\Http\Controllers\AuthController::signin()
      * @throws \App\Api\DTO\DTOException
      */
-    public function testLoginUnauthorized(): void
+    public function testSignInUnauthorized(): void
     {
         Artisan::call('passport:client', ['--personal' => 1, '--name' => 'web']);
         /** @var UserService $userService */
@@ -68,15 +72,14 @@ class AuthApiTest extends TestCase
         ]);
         $userService->create($dto);
 
-        $this->postJson('/api/auth/login', ['email' => 'foo@foo.foo'])->assertStatus(422);
+        $this->postJson('/api/auth/sign-in', ['email' => 'foo@foo.foo'])->assertStatus(422);
 
-        $this->postJson('/api/auth/login', [
+        $this->postJson('/api/auth/sign-in', [
             'email' => 'foo@foo.foo',
-            'password' => 'wrong',
-            'remember_me' => false
-        ])->assertStatus(401);
+            'password' => 'wrong'
+        ])->assertStatus(422);
 
-        $response = $this->postJson('/api/auth/login', [
+        $response = $this->postJson('/api/auth/sign-in', [
             'email' => 'foo@foo.foo',
             'password' => 'secret',
             'remember_me' => false
@@ -95,10 +98,10 @@ class AuthApiTest extends TestCase
     /**
      * @covers \App\Api\Http\Controllers\AuthController::login()
      */
-    public function testLoginAuthorized(): void
+    public function testSignInAuthorized(): void
     {
         $this->actingAs(factory(User::class)->create())
-            ->postJson('/api/auth/login', [
+            ->postJson('/api/auth/sign-in', [
                 'email' => 'foo@foo.foo',
                 'password' => 'secret'
             ])->assertStatus(403);

@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * API for users.
@@ -51,7 +52,7 @@ class AuthController extends Controller
      */
     public function signup(SignupRequest $request): UserResource
     {
-        $dto = new UserDTO($request->all(['name','email','password']));
+        $dto = new UserDTO($request->all(['name', 'email', 'password']));
         $dto->setId(\Ulid::generate());
 
         $this->userService->create($dto);
@@ -71,6 +72,10 @@ class AuthController extends Controller
      */
     public function signin(LoginRequest $request): TokenResource
     {
+        if (Auth::check()) {
+            throw new AccessDeniedHttpException('Already authorized');
+        }
+
         $credentials = $request->only('email', 'password');
 
         if (!Auth::attempt($credentials)) {
@@ -81,7 +86,7 @@ class AuthController extends Controller
 
         $tokenResult = $this->userRepository->token($request->user());
 
-        $this->tokenService->create($tokenResult, (bool)$request->get('remember_me'));
+        $this->tokenService->create($tokenResult, (bool)$request->get('remember_me', false));
 
         return TokenResource::make($tokenResult);
     }

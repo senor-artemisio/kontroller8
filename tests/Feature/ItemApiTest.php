@@ -54,8 +54,11 @@ class ItemApiTest extends TestCase
         $items = factory(Item::class, 5)->create(['user_id' => $user->id]);
         factory(Item::class, 10)->create();
 
-        $response = $this->actingAs($user, 'api')->getJson('/api/items');
+        $response = $this->actingAs($user, 'api')->getJson(
+            '/api/items?page=1&perPage=10&sortBy=title&sortDirection=asc'
+        );
         $response->assertStatus(200);
+
 
         $data = $response->decodeResponseJson('data');
         $this->assertNotNull($data);
@@ -113,6 +116,8 @@ class ItemApiTest extends TestCase
         $response->assertStatus(200);
         $data = $response->decodeResponseJson('data');
 
+        unset($data['type']);
+
         $this->assertNotNull($data);
         $this->assertEquals($item->toArray(), $data);
     }
@@ -130,7 +135,9 @@ class ItemApiTest extends TestCase
         /** @var Collection $items */
         $items = factory(Item::class, 35)->create(['user_id' => $user->id]);
 
-        $response = $this->actingAs($user, 'api')->getJson('/api/items');
+        $response = $this->actingAs($user, 'api')->getJson(
+            '/api/items?page=1&perPage=20&sortBy=title&sortDirection=asc'
+        );
         $response->assertStatus(200);
 
         $data = $response->decodeResponseJson('data');
@@ -169,6 +176,8 @@ class ItemApiTest extends TestCase
         $itemData['user_id'] = $user->id;
         $itemData['created_at'] = $data['created_at'];
         $itemData['updated_at'] = $data['updated_at'];
+
+        unset($data['type']);
 
         $this->assertEquals($data, $itemData);
         $this->assertDatabaseHas($this->item->getTable(), $data);
