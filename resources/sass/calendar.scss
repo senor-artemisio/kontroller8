@@ -1,0 +1,19 @@
+@media (max-width: 575px) {
+  .calendar .caption {
+    font-size: 1rem;
+  }
+  .calendar .day h5 {
+    background-color: #f8f9fa;
+    padding: 3px 5px 5px;
+    margin: -8px -8px 8px -8px;
+  }
+  .calendar .date {
+    padding-left: 4px;
+  }
+}
+
+@media (min-width: 576px) {
+  .calendar .day {
+    height: 70vh;
+  }
+}

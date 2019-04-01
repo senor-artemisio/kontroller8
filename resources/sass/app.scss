@@ -6,12 +6,10 @@
 @import '~bootstrap/scss/bootstrap';
 // Vue bootstrap
 @import '~bootstrap-vue/src/index.scss';
-// Full calendar
-@import '~@fullcalendar/core/main.css';
-@import '~@fullcalendar/daygrid/main.css';
-@import '~@fullcalendar/bootstrap/main.css';
 // Logo
 @import "logo";
+// Calendar
+@import "calendar";
 
 body, html {
   height: 100%;
@@ -19,8 +17,4 @@ body, html {
 
 .cursor-pointer {
   cursor: pointer;
-}
-
-.secondary-hover:hover {
-  background: $gray-200;
 }
