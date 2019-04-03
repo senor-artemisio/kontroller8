@@ -89,10 +89,33 @@ class DayDTO extends BaseDTO
     }
 
     /**
+     * @return string
+     */
+    public function getDate(): string
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param string $date
+     */
+    public function setDate(string $date): void
+    {
+        $this->date = $date;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getChangeableAttributes(): array
     {
-        return [];
+        return [
+            'protein',
+            'fat',
+            'carbohydrates',
+            'fiber',
+            'weight',
+            'weight_eaten',
+        ];
     }
 }

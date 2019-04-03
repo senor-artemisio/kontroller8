@@ -5,7 +5,7 @@ namespace App\Api\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * HTTP request for day entity.
+ * HTTP request for day.
  */
 class DayRequest extends FormRequest
 {

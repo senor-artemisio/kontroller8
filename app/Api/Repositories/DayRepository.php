@@ -7,14 +7,15 @@ use App\Api\Models\Day;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 
 /**
- * Repository for day entity.
+ * Repository for day.
  */
 class DayRepository
 {
-    use ApiRepository;
+    use Rest;
 
     /** @var Builder */
     private $day;
@@ -38,12 +39,12 @@ class DayRepository
 
     /**
      * @param Day $day
-     * @param DayDTO $dto
+     * @param array $attributes
      * @return Day|Model
      */
-    public function update(Day $day, DayDTO $dto): Day
+    public function update(Day $day, array $attributes): Day
     {
-        $day->update($dto->getChangedValues());
+        $day->update($attributes);
 
         return $day;
     }
@@ -61,7 +62,7 @@ class DayRepository
     /**
      * @param string $id
      * @return Day|Model
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws ModelNotFoundException
      */
     public function findById(string $id): Day
     {

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Api\DTO\DTOException;
 use App\Api\DTO\ItemDTO;
 use App\Api\Models\User;
 use App\Api\Services\ItemService;
@@ -34,9 +35,9 @@ class ItemServiceTest extends TestCase
     }
 
     /**
-     * @see ItemService::create()
      * @return void
-     * @throws \App\Api\DTO\DTOException
+     * @throws DTOException
+     * @see ItemService::create()
      */
     public function testCreate(): void
     {
@@ -50,15 +51,15 @@ class ItemServiceTest extends TestCase
         unset($attributes['created_at'], $attributes['updated_at'], $attributes['user_id']);
 
         $dto = new ItemDTO($attributes);
-        $this->itemService->create($dto);
+        $this->itemService->create($dto, $user->id);
 
         $attributes['user_id'] = $user->id;
         $this->assertDatabaseHas($this->item->getTable(), $attributes);
     }
 
     /**
+     * @throws DTOException
      * @see ItemService::update()
-     * @throws \App\Api\DTO\DTOException
      */
     public function testUpdate(): void
     {
@@ -77,8 +78,8 @@ class ItemServiceTest extends TestCase
     }
 
     /**
-     * @see ItemService::delete()
      * @throws \Exception
+     * @see ItemService::delete()
      */
     public function testDelete(): void
     {

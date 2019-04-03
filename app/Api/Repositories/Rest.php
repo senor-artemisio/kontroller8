@@ -3,9 +3,9 @@
 namespace App\Api\Repositories;
 
 /**
- * Api repository.
+ * REST features for repository.
  */
-trait ApiRepository
+trait Rest
 {
     /** @var int */
     protected $perPage;
@@ -23,7 +23,7 @@ trait ApiRepository
      * @param int $perPage
      * @return static
      */
-    public function paginate(int $perPage): ApiRepository
+    public function paginate(int $perPage)
     {
         $this->perPage = $perPage;
 
@@ -35,7 +35,7 @@ trait ApiRepository
      * @param string $direction
      * @return static
      */
-    public function sort(string $attribute, string $direction): ApiRepository
+    public function sort(string $attribute, string $direction)
     {
         $this->sortBy = $attribute;
         $this->sortDirection = $direction;
@@ -47,7 +47,7 @@ trait ApiRepository
      * @param array $columns
      * @return static
      */
-    public function columns(array $columns): ApiRepository
+    public function columns(array $columns)
     {
         $this->columns = $columns;
 

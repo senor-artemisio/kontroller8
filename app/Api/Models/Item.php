@@ -5,7 +5,7 @@ namespace App\Api\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Model for item entity.
+ * Model for item.
  *
  * @property string $id
  * @property string $title

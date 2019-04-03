@@ -5,7 +5,17 @@ namespace App\Api\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Model for day entity.
+ * Model for day.
+ *
+ * @property string $id
+ * @property string $date
+ * @property float $protein
+ * @property float $fat
+ * @property float $carbohydrates
+ * @property float $fiber
+ * @property float $weight
+ * @property float $weight_eaten
+ * @property string $user_id
  */
 class Day extends Model
 {

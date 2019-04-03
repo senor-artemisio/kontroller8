@@ -3,7 +3,7 @@
 namespace App\Api\Http\Requests;
 
 /**
- * HTTP request for item entity list.
+ * HTTP request for items list.
  */
 class ItemsRequest extends BaseListRequest
 {

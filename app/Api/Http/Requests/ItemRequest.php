@@ -5,7 +5,7 @@ namespace App\Api\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * HTTP request for item entity.
+ * HTTP request for item.
  */
 class ItemRequest extends FormRequest
 {

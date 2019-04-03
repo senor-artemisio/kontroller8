@@ -13,7 +13,7 @@ use Illuminate\Support\Collection;
  */
 class ItemRepository
 {
-    use ApiRepository;
+    use Rest;
 
     /** @var Builder */
     private $item;

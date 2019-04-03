@@ -25,10 +25,11 @@ class ItemService
 
     /**
      * @param ItemDTO $dto
+     * @param string $userId
      */
-    public function create(ItemDTO $dto): void
+    public function create(ItemDTO $dto, string $userId): void
     {
-        $dto->setUserId(Auth::user()->getAuthIdentifier());
+        $dto->setUserId($userId);
         $this->itemRepository->create([
             'id' => $dto->getId(),
             'title' => $dto->getTitle(),

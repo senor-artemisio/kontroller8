@@ -71,7 +71,7 @@ class ItemController extends Controller
         $dto = new ItemDTO($request->all());
         $dto->setId(\Ulid::generate());
 
-        $this->itemService->create($dto);
+        $this->itemService->create($dto, Auth::user()->getAuthIdentifier());
         $item = $this->itemRepository->findById($dto->getId());
         $item->wasRecentlyCreated = true;
 
