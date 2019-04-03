@@ -28,7 +28,7 @@ class Init extends Migration
             $table->index('user_id');
         });
 
-        Schema::create('day', function (Blueprint $table) {
+        Schema::create('days', function (Blueprint $table) {
             $table->char('id', 26)->nullable(false);
             $table->date('date')->nullable(false);
             $table->float('protein')->nullable(false);

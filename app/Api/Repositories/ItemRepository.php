@@ -13,20 +13,10 @@ use Illuminate\Support\Collection;
  */
 class ItemRepository
 {
+    use ApiRepository;
+
     /** @var Builder */
     private $item;
-
-    /** @var int */
-    private $perPage;
-
-    /** @var string */
-    protected $sortBy;
-
-    /** @var string */
-    protected $sortDirection;
-
-    /** @var array */
-    private $columns = ['*'];
 
     /**
      * Init repo.
@@ -34,41 +24,6 @@ class ItemRepository
     public function __construct()
     {
         $this->item = Item::query();
-    }
-
-    /**
-     * @param int $perPage
-     * @return ItemRepository
-     */
-    public function paginate(int $perPage): ItemRepository
-    {
-        $this->perPage = $perPage;
-
-        return $this;
-    }
-
-    /**
-     * @param string $attribute
-     * @param string $direction
-     * @return ItemRepository
-     */
-    public function sort(string $attribute, string $direction): ItemRepository
-    {
-        $this->sortBy = $attribute;
-        $this->sortDirection = $direction;
-
-        return $this;
-    }
-
-    /**
-     * @param array $columns
-     * @return ItemRepository
-     */
-    public function columns(array $columns): ItemRepository
-    {
-        $this->columns = $columns;
-
-        return $this;
     }
 
     /**

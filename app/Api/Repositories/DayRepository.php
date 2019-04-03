@@ -2,6 +2,7 @@
 
 namespace App\Api\Repositories;
 
+use App\Api\DTO\DayDTO;
 use App\Api\Models\Day;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,92 +14,58 @@ use Illuminate\Support\Collection;
  */
 class DayRepository
 {
+    use ApiRepository;
+
     /** @var Builder */
-    private $item;
-
-    /** @var int */
-    private $perPage;
-
-    /** @var array */
-    private $columns = ['*'];
+    private $day;
 
     /**
      * Init repo.
      */
     public function __construct()
     {
-        $this->item = Day::query();
+        $this->day = Day::query();
     }
 
     /**
-     * @param int $perPage
-     * @return DayRepository
+     * @param array $attributes
+     * @return Day|Model
      */
-    public function paginate(?int $perPage = 20): DayRepository
+    public function create(array $attributes): Day
     {
-        $this->perPage = $perPage;
-
-        return $this;
+        return $this->day->create($attributes);
     }
 
     /**
-     * @param array $columns
-     * @return DayRepository
+     * @param Day $day
+     * @param DayDTO $dto
+     * @return Day|Model
      */
-    public function columns(array $columns): DayRepository
+    public function update(Day $day, DayDTO $dto): Day
     {
-        $this->columns = $columns;
+        $day->update($dto->getChangedValues());
 
-        return $this;
+        return $day;
     }
 
     /**
-     * @param ItemSnapshot $snapshot
-     * @return Item|Model
-     */
-    public function create(ItemSnapshot $snapshot): Item
-    {
-        return $this->item->create([
-            'id' => $snapshot->getId(),
-            'title' => $snapshot->getTitle(),
-            'protein' => $snapshot->getProtein(),
-            'fat' => $snapshot->getFat(),
-            'carbohydrates' => $snapshot->getCarbohydrates(),
-            'fiber' => $snapshot->getFiber(),
-            'user_id' => $snapshot->getUserId(),
-        ]);
-    }
-
-    /**
-     * @param Item $item
-     * @param ItemSnapshot $snapshot
-     * @return Item|Model
-     */
-    public function update(Item $item, ItemSnapshot $snapshot): Item
-    {
-        $item->update($snapshot->getAttributes());
-
-        return $item;
-    }
-
-    /**
-     * @param Item $item
+     * @param Day $day
      * @return bool|null
      * @throws \Exception
      */
-    public function delete(Item $item): ?bool
+    public function delete(Day $day): ?bool
     {
-        return $item->delete($item);
+        return $day->delete();
     }
 
     /**
      * @param string $id
-     * @return Item|Model
+     * @return Day|Model
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
-    public function findById(string $id): Item
+    public function findById(string $id): Day
     {
-        return $this->item->findOrFail($id);
+        return $this->day->findOrFail($id);
     }
 
     /**
@@ -107,7 +74,11 @@ class DayRepository
      */
     public function findByOwner(string $id)
     {
-        $query = $this->item->where('user_id', $id);
+        $query = $this->day->where('user_id', $id);
+
+        if ($this->sortBy !== null) {
+            $query = $query->orderBy(snake_case($this->sortBy), $this->sortDirection);
+        }
 
         if ($this->perPage !== null) {
             return $query->paginate($this->perPage, $this->columns);
