@@ -4,7 +4,6 @@ namespace App\Api\Services;
 
 use App\Api\DTO\DayDTO;
 use App\Api\Models\Day;
-use App\Api\Models\Item;
 use App\Api\Repositories\DayRepository;
 
 /**
@@ -31,15 +30,15 @@ class DayService
     {
         $dto->setUserId($userId);
         $this->dayRepository->create([
-            'id' => $dto->getId(),
-            'date' => $dto->getDate(),
+            'id' => $dto->id,
+            'date' => $dto->date,
             'protein' => 0,
             'fat' => 0,
             'carbohydrates' => 0,
             'fiber' => 0,
             'weight' => 0,
             'weight_eaten' => 0,
-            'user_id' => $dto->getUserId()
+            'user_id' => $dto->userId
         ]);
     }
 
@@ -57,10 +56,10 @@ class DayService
             'weight_eaten' => 0
         ];
         foreach ($day->dayItems as $dayItem) {
-            $attributes['protein'] += $dayItem->protein;
-            $attributes['fat'] += $dayItem->fat;
-            $attributes['carbohydrates'] += $dayItem->carbohydrates;
-            $attributes['fiber'] = $dayItem->fiber;
+            $attributes['protein'] += $dayItem->protein_total;
+            $attributes['fat'] += $dayItem->fat_total;
+            $attributes['carbohydrates'] += $dayItem->carbohydrates_total;
+            $attributes['fiber'] = $dayItem->fiber_total;
             $attributes['weight'] = $dayItem->weight;
             $attributes['weight_eaten'] = $dayItem->weight_eaten;
         }

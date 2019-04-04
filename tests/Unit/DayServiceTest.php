@@ -50,14 +50,18 @@ class DayServiceTest extends TestCase
         ]);
 
         $this->dayService->create($dto, $user->id);
+
         $this->assertDatabaseHas('days', [
-            'id' => $dto->getId(),
-            'date' => $dto->getDate(),
+            'id' => $dto->id,
+            'date' => $dto->date,
             'protein' => 0,
             'fat' => 0,
             'fiber' => 0,
             'weight' => 0,
-            'weight_eaten' => 0,
+            'protein_eaten' => 0,
+            'fat_eaten' => 0,
+            'fiber_eaten' => 0,
+            'weight_eaten' => 0
         ]);
     }
 }

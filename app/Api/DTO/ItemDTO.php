@@ -4,6 +4,14 @@ namespace App\Api\DTO;
 
 /**
  * Data transfer object for item.
+ *
+ * @property string $id
+ * @property string $title
+ * @property string $userId
+ * @property float $protein
+ * @property float $fat
+ * @property float $carbohydrates
+ * @property float $fiber
  */
 class ItemDTO extends BaseDTO
 {

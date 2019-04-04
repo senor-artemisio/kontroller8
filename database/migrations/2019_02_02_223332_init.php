@@ -31,12 +31,19 @@ class Init extends Migration
         Schema::create('days', function (Blueprint $table) {
             $table->char('id', 26)->nullable(false);
             $table->date('date')->nullable(false);
+
             $table->float('protein')->nullable(false);
             $table->float('fat')->nullable(false);
             $table->float('carbohydrates')->nullable(false);
             $table->float('fiber')->nullable(false);
-            $table->float('weight')->nullable(false);
-            $table->float('weight_eaten')->nullable(false);
+            $table->integer('weight')->nullable(false);
+
+            $table->integer('protein_eaten')->nullable(false);
+            $table->integer('fat_eaten')->nullable(false);
+            $table->integer('carbohydrates_eaten')->nullable(false);
+            $table->integer('fiber_eaten')->nullable(false);
+            $table->integer('weight_eaten')->nullable(false);
+
             $table->char('user_id', 26)->nullable(false);
 
             $table->timestamps();
@@ -48,14 +55,18 @@ class Init extends Migration
         Schema::create('day_items', function (Blueprint $table) {
             $table->char('id', 26)->nullable(false);
             $table->char('day_id', 26);
+
+            $table->string('title')->nullable(false);
             $table->float('protein')->nullable(false);
             $table->float('fat')->nullable(false);
             $table->float('carbohydrates')->nullable(false);
             $table->float('fiber')->nullable(false);
-            $table->float('weight')->nullable(false);
-            $table->float('weight_eaten')->nullable(false);
+            $table->integer('weight')->nullable(false);
+
             $table->boolean('eaten')->nullable(false);
-            $table->time('eat_before')->nullable();
+
+            $table->time('time_plan')->nullable();
+            $table->time('time_eaten')->nullable();
 
             $table->primary('id');
         });

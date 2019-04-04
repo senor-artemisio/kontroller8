@@ -2,6 +2,9 @@
 
 namespace App\Api\DTO;
 
+/**
+ * Models contains nutrition attributes.
+ */
 trait NutritionAttributes
 {
     /** @var float */

@@ -69,10 +69,10 @@ class ItemController extends Controller
     public function store(ItemRequest $request): ItemResource
     {
         $dto = new ItemDTO($request->all());
-        $dto->setId(\Ulid::generate());
+        $dto->id = \Ulid::generate();
 
         $this->itemService->create($dto, Auth::user()->getAuthIdentifier());
-        $item = $this->itemRepository->findById($dto->getId());
+        $item = $this->itemRepository->findById($dto->id);
         $item->wasRecentlyCreated = true;
 
         return ItemResource::make($item);

@@ -14,13 +14,39 @@ abstract class BaseDTO
     public function __construct(array $attributes)
     {
         foreach ($attributes as $name => $value) {
-            $setter = camel_case("set_$name");
-            if (method_exists($this, $setter)) {
-                $this->$setter($value);
-            } else {
-                throw new DTOException($name);
-            }
+            $this->__set($name, $value);
         }
+    }
+
+    /**
+     * @param $name
+     * @return mixed
+     * @throws DTOException
+     */
+    public function __get($name)
+    {
+        $getter = camel_case("get_$name");
+        if (method_exists($this, $getter)) {
+            return $this->$getter();
+        }
+
+        throw new DTOException($name);
+    }
+
+    /**
+     * @param $name
+     * @param $value
+     * @throws DTOException
+     */
+    public function __set($name, $value)
+    {
+        $setter = camel_case("set_$name");
+        if (method_exists($this, $setter)) {
+            $this->$setter($value);
+            return;
+        }
+
+        throw new DTOException($name);
     }
 
     /**
@@ -41,5 +67,5 @@ abstract class BaseDTO
     /**
      * @return array list of changeable attributes
      */
-    abstract protected function getChangeableAttributes():array;
+    abstract protected function getChangeableAttributes(): array;
 }

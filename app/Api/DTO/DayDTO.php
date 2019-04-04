@@ -4,6 +4,21 @@ namespace App\Api\DTO;
 
 /**
  * Data transfer object for day.
+ *
+ * @property string $id
+ * @property string $date
+ * @property float $protein
+ * @property float $fat
+ * @property float $carbohydrates
+ * @property float $fiber
+ * @property integer $proteinEaten
+ * @property integer $fatEaten
+ * @property integer $carbohydratesEaten
+ * @property integer $fiberEaten
+ * @property integer $weightEaten
+ * @property integer $weight
+ *
+ * @property string $userId
  */
 class DayDTO extends BaseDTO
 {
@@ -18,11 +33,23 @@ class DayDTO extends BaseDTO
     /** @var string */
     protected $userId;
 
-    /** @var float */
+    /** @var integer */
     protected $weight;
 
-    /** @var float */
-    protected $weight_eaten;
+    /** @var integer */
+    protected $weightEaten;
+
+    /** @var integer */
+    protected $proteinEaten;
+
+    /** @var integer */
+    protected $fatEaten;
+
+    /** @var integer */
+    protected $carbohydratesEaten;
+
+    /** @var integer */
+    protected $fiberEaten;
 
     /**
      * @return string
@@ -43,54 +70,6 @@ class DayDTO extends BaseDTO
     /**
      * @return string
      */
-    public function getUserId(): string
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @param string $userId
-     */
-    public function setUserId(string $userId): void
-    {
-        $this->userId = $userId;
-    }
-
-    /**
-     * @return float
-     */
-    public function getWeight(): float
-    {
-        return $this->weight;
-    }
-
-    /**
-     * @param float $weight
-     */
-    public function setWeight(float $weight): void
-    {
-        $this->weight = $weight;
-    }
-
-    /**
-     * @return float
-     */
-    public function getWeightEaten(): float
-    {
-        return $this->weight_eaten;
-    }
-
-    /**
-     * @param float $weightEaten
-     */
-    public function setWeightEaten(float $weightEaten): void
-    {
-        $this->weight_eaten = $weightEaten;
-    }
-
-    /**
-     * @return string
-     */
     public function getDate(): string
     {
         return $this->date;
@@ -105,6 +84,118 @@ class DayDTO extends BaseDTO
     }
 
     /**
+     * @return int
+     */
+    public function getProteinEaten(): int
+    {
+        return $this->proteinEaten;
+    }
+
+    /**
+     * @param int $proteinEaten
+     */
+    public function setProteinEaten(int $proteinEaten): void
+    {
+        $this->proteinEaten = $proteinEaten;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFatEaten(): int
+    {
+        return $this->fatEaten;
+    }
+
+    /**
+     * @param int $fatEaten
+     */
+    public function setFatEaten(int $fatEaten): void
+    {
+        $this->fatEaten = $fatEaten;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCarbohydratesEaten(): int
+    {
+        return $this->carbohydratesEaten;
+    }
+
+    /**
+     * @param int $carbohydratesEaten
+     */
+    public function setCarbohydratesEaten(int $carbohydratesEaten): void
+    {
+        $this->carbohydratesEaten = $carbohydratesEaten;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFiberEaten(): int
+    {
+        return $this->fiberEaten;
+    }
+
+    /**
+     * @param int $fiberEaten
+     */
+    public function setFiberEaten(int $fiberEaten): void
+    {
+        $this->fiberEaten = $fiberEaten;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWeightEaten(): int
+    {
+        return $this->weightEaten;
+    }
+
+    /**
+     * @param int $weightEaten
+     */
+    public function setWeightEaten(int $weightEaten): void
+    {
+        $this->weightEaten = $weightEaten;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWeight(): int
+    {
+        return $this->weight;
+    }
+
+    /**
+     * @param int $weight
+     */
+    public function setWeight(int $weight): void
+    {
+        $this->weight = $weight;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserId(): string
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param string $userId
+     */
+    public function setUserId(string $userId): void
+    {
+        $this->userId = $userId;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getChangeableAttributes(): array
@@ -115,7 +206,12 @@ class DayDTO extends BaseDTO
             'carbohydrates',
             'fiber',
             'weight',
-            'weight_eaten',
+
+            'proteinEaten',
+            'fatEaten',
+            'carbohydratesEaten',
+            'fiberEaten',
+            'weightEaten',
         ];
     }
 }

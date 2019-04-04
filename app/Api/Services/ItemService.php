@@ -5,7 +5,6 @@ namespace App\Api\Services;
 use App\Api\DTO\ItemDTO;
 use App\Api\Repositories\ItemRepository;
 use App\Api\Models\Item;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Business logic for item.
@@ -29,15 +28,15 @@ class ItemService
      */
     public function create(ItemDTO $dto, string $userId): void
     {
-        $dto->setUserId($userId);
+        $dto->userId=$userId;
         $this->itemRepository->create([
-            'id' => $dto->getId(),
-            'title' => $dto->getTitle(),
-            'user_id' => $dto->getUserId(),
-            'protein' => $dto->getProtein(),
-            'fat' => $dto->getFat(),
-            'carbohydrates' => $dto->getCarbohydrates(),
-            'fiber' => $dto->getFiber(),
+            'id' => $dto->id,
+            'title' => $dto->title,
+            'user_id' => $dto->userId,
+            'protein' => $dto->protein,
+            'fat' => $dto->fat,
+            'carbohydrates' => $dto->carbohydrates,
+            'fiber' => $dto->fiber,
         ]);
     }
 

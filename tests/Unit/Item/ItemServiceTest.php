@@ -1,22 +1,24 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Item;
 
-use App\Api\Repositories\ItemRepository;
-use App\Api\DTO\ItemSnapshot;
+use App\Api\DTO\DTOException;
+use App\Api\DTO\ItemDTO;
+use App\Api\Models\User;
+use App\Api\Services\ItemService;
 use App\Api\Models\Item;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
- * @see ItemRepository
+ * @see ItemService
  */
-class ItemRepositoryTest extends TestCase
+class ItemServiceTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @var ItemRepository */
-    protected $itemRepository;
+    /** @var ItemService */
+    protected $itemService;
 
     /** @var Item */
     protected $item;
@@ -28,36 +30,46 @@ class ItemRepositoryTest extends TestCase
     {
         parent::setUp();
 
-        $this->itemRepository = $this->app->make(ItemRepository::class);
+        $this->itemService = $this->app->make(ItemService::class);
         $this->item = new Item();
     }
 
     /**
-     * @see ItemRepository::create()
      * @return void
+     * @throws DTOException
+     * @see ItemService::create()
      */
     public function testCreate(): void
     {
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
+
         /** @var Item $item */
         $item = factory(Item::class)->make();
         $attributes = $item->attributesToArray();
+        unset($attributes['created_at'], $attributes['updated_at'], $attributes['user_id']);
 
-        $this->itemRepository->create($attributes);
+        $dto = new ItemDTO($attributes);
+        $this->itemService->create($dto, $user->id);
 
+        $attributes['user_id'] = $user->id;
         $this->assertDatabaseHas($this->item->getTable(), $attributes);
     }
 
     /**
-     * @see ItemRepository::update()
+     * @throws DTOException
+     * @see ItemService::update()
      */
     public function testUpdate(): void
     {
-        /** @var Item $item */
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
         $item = factory(Item::class)->create();
-        $attributes = $item->attributesToArray();
-        $attributes['title'] = 'chicken breast';
+        $attributes = ['title' => 'chicken breast'];
+        $dto = new ItemDTO($attributes);
 
-        $this->itemRepository->update($item, $attributes);
+        $this->itemService->update($item, $dto);
 
         $this->assertDatabaseHas($this->item->getTable(), [
             'id' => $item->id,
@@ -66,13 +78,13 @@ class ItemRepositoryTest extends TestCase
     }
 
     /**
-     * @see ItemRepository::delete()
      * @throws \Exception
+     * @see ItemService::delete()
      */
     public function testDelete(): void
     {
         $item = factory(Item::class)->create();
-        $this->itemRepository->delete($item);
+        $this->itemService->delete($item);
         $this->assertDatabaseMissing($this->item->getTable(), ['id' => $item->id]);
     }
 }

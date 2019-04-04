@@ -2,7 +2,6 @@
 
 namespace App\Api\Repositories;
 
-use App\Api\DTO\DayDTO;
 use App\Api\Models\Day;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
