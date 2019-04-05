@@ -3,31 +3,31 @@
 namespace App\Api\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
- * Model for day.
+ * Day arrange all stats and meals for a date.
  *
  * @property string $id
- * @property string $date
- *
- * @property float $protein
- * @property float $fat
- * @property float $carbohydrates
- * @property float $fiber
+ * @property string|Carbon $date
+ * @property integer $protein
+ * @property integer $fat
+ * @property integer $carbohydrates
+ * @property integer $fiber
  * @property integer $weight
- *
- * @property float $protein_eaten
- * @property float $fat_eaten
- * @property float $carbohydrates_eaten
- * @property float $fiber_eaten
+ * @property integer $protein_eaten
+ * @property integer $fat_eaten
+ * @property integer $carbohydrates_eaten
+ * @property integer $fiber_eaten
  * @property integer $weight_eaten
- *
  * @property string $user_id
+ * @property string|Carbon $created_at
+ * @property string|Carbon $updated_at
  */
 class Day extends Model
 {
     /**
-     * {@inheritdoc}
+     * @param array $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -36,46 +36,23 @@ class Day extends Model
         $this->fillable = [
             'id',
             'date',
-
             'protein',
             'fat',
             'carbohydrates',
             'fiber',
             'weight',
-
             'protein_eaten',
             'fat_eaten',
             'carbohydrates_eaten',
             'fiber_eaten',
             'weight_eaten',
-
             'user_id',
         ];
-
         $this->dates = [
             'created_at',
             'updated_at',
             'date'
         ];
-
-        $this->casts = [
-            'id' => 'string',
-
-            'protein' => 'float',
-            'fat' => 'float',
-            'carbohydrates' => 'float',
-            'fiber' => 'float',
-            'weight' => 'float',
-
-            'protein_eaten' => 'integer',
-            'fat_eaten' => 'integer',
-            'carbohydrates_eaten' => 'integer',
-            'fiber_eaten' => 'integer',
-            'weight_eaten' => 'integer',
-
-            'user_id' => 'string',
-        ];
-
         parent::__construct($attributes);
     }
 }

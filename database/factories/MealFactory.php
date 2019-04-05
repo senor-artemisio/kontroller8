@@ -1,8 +1,11 @@
 <?php
 
+use App\Api\Models\Meal;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
 
-$factory->define(\App\Api\Models\Item::class, function (Faker $faker) {
+/** @var Factory $factory */
+$factory->define(Meal::class, function (Faker $faker) {
 
     return [
         'id' => Ulid::generate(),

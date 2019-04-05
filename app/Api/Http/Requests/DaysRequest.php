@@ -3,11 +3,12 @@
 namespace App\Api\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Carbon;
 
 /**
- * HTTP-request for week in days page.
+ * HTTP-request for days request.
  */
-class WeekRequest extends FormRequest
+class DaysRequest extends FormRequest
 {
     /**
      * @return array
@@ -17,5 +18,13 @@ class WeekRequest extends FormRequest
         return [
             'date' => 'date|required'
         ];
+    }
+
+    /**
+     * @return Carbon
+     */
+    public function getDate(): Carbon
+    {
+        return $this->get('date');
     }
 }

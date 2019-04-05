@@ -3,10 +3,11 @@
 namespace App\Api\Repositories;
 
 use App\Api\Models\Day;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 /**
@@ -14,10 +15,11 @@ use Illuminate\Support\Collection;
  */
 class DayRepository
 {
-    use Rest;
-
     /** @var Builder */
     private $day;
+
+    /** @var array */
+    private $columns = ['*'];
 
     /**
      * Init repo.
@@ -51,7 +53,7 @@ class DayRepository
     /**
      * @param Day $day
      * @return bool|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function delete(Day $day): ?bool
     {
@@ -69,21 +71,40 @@ class DayRepository
     }
 
     /**
-     * @param string $id
-     * @return Collection|LengthAwarePaginator
+     * Make collection of 7 days from a date.
+     * For not existing days make empty day model.
+     *
+     * @param string $userId
+     * @param Carbon $date
+     * @return Collection
      */
-    public function findByOwner(string $id)
+    public function findWeekByOwner(string $userId, Carbon $date)
     {
-        $query = $this->day->where('user_id', $id);
-
-        if ($this->sortBy !== null) {
-            $query = $query->orderBy(snake_case($this->sortBy), $this->sortDirection);
+        // get existing days from database
+        $query = $this->day->where('user_id', $userId)
+            ->whereBetween('date', [
+                $date->copy()->subDays(3),
+                $date->copy()->addDays(3)
+            ]);
+        $existsDays = $query->get($this->columns);
+        $days = [];
+        // set cursor to first day of week
+        $dateCursor = $date->copy()->subDays(3);
+        for ($i = 1; $i <= 7; $i++) {
+            // find day in existing days
+            $existDay = $existsDays->filter(function (Day $day) use ($dateCursor) {
+                return $day->date->toDateString() === $dateCursor->toDateString();
+            })->first();
+            // if day not found replace it by new empty day model
+            if ($existDay) {
+                $days[] = $existDay;
+            } else {
+                $days[] = new Day(['date' => $dateCursor]);
+            }
+            // seek cursor to next day
+            $dateCursor->addDay();
         }
 
-        if ($this->perPage !== null) {
-            return $query->paginate($this->perPage, $this->columns);
-        }
-
-        return $query->get($this->columns);
+        return collect($days);
     }
 }

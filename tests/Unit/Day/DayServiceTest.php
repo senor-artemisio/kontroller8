@@ -1,8 +1,9 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Day;
 
 use App\Api\DTO\DayDTO;
+use App\Api\DTO\DTOException;
 use App\Api\Models\Day;
 use App\Api\Models\User;
 use App\Api\Services\DayService;
@@ -18,10 +19,13 @@ class DayServiceTest extends TestCase
     use RefreshDatabase;
 
     /** @var DayService */
-    protected $dayService;
+    private $dayService;
 
     /** @var Day */
-    protected $day;
+    private $day;
+
+    /** @var User */
+    private $user;
 
     /**
      * {@inheritdoc}
@@ -32,24 +36,21 @@ class DayServiceTest extends TestCase
 
         $this->dayService = $this->app->make(DayService::class);
         $this->day = new Day();
+        $this->user = factory(User::class)->create();
     }
 
     /**
      * @covers \App\Api\Services\DayService::create()
-     * @throws \App\Api\DTO\DTOException
+     * @throws DTOException
      */
     public function testCreate(): void
     {
-        /** @var User $user */
-        $user = factory(User::class)->create();
-        $this->actingAs($user);
-
         $dto = new DayDTO([
             'id' => \Ulid::generate(),
             'date' => Carbon::now()->format('Y-m-d')
         ]);
 
-        $this->dayService->create($dto, $user->id);
+        $this->dayService->create($dto, $this->user->id);
 
         $this->assertDatabaseHas('days', [
             'id' => $dto->id,

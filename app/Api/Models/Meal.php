@@ -3,9 +3,10 @@
 namespace App\Api\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
- * Model for item.
+ * Meal is basic nutrition element, contains info about meal nutrition attributes.
  *
  * @property string $id
  * @property string $title
@@ -15,10 +16,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $fiber
  * @property string $user_id
  * @property string $type
- * @property string $created_at
- * @property string $updated_at
+ * @property string|Carbon $created_at
+ * @property string|Carbon $updated_at
  */
-class Item extends Model
+class Meal extends Model
 {
     /**
      * {@inheritdoc}
@@ -26,7 +27,7 @@ class Item extends Model
     public function __construct(array $attributes = [])
     {
         $this->incrementing = false;
-        $this->table = 'items';
+        $this->table = 'meals';
         $this->fillable = [
             'id',
             'title',
@@ -54,7 +55,7 @@ class Item extends Model
     }
 
     /**
-     * Get item type, depends from dominant component.
+     * Get meal type, depends from dominant component.
      *
      * @return string
      */

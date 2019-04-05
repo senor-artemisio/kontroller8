@@ -3,7 +3,7 @@
 namespace App\Api\DTO;
 
 /**
- * Data transfer object for item.
+ * Data transfer object for meal.
  *
  * @property string $id
  * @property string $title
@@ -13,7 +13,7 @@ namespace App\Api\DTO;
  * @property float $carbohydrates
  * @property float $fiber
  */
-class ItemDTO extends BaseDTO
+class MealDTO extends BaseDTO
 {
     use NutritionAttributes;
 

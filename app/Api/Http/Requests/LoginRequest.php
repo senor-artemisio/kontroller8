@@ -27,7 +27,7 @@ class LoginRequest extends FormRequest
     /**
      * Only for unauthorized users.
      *
-     * @see \App\Api\Http\Controllers\ItemController
+     * @see \App\Api\Http\Controllers\MealController
      * @return bool
      */
     public function authorize(): bool

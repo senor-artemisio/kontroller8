@@ -5,12 +5,12 @@ namespace App\Api\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * HTTP request for item.
+ * HTTP request for meal.
  */
-class ItemRequest extends FormRequest
+class MealRequest extends FormRequest
 {
     /**
-     * Validation rules for item.
+     * Validation rules for meal.
      *
      * @return array
      */
@@ -36,7 +36,7 @@ class ItemRequest extends FormRequest
     /**
      * Check access locate in controller.
      *
-     * @see \App\Api\Http\Controllers\ItemController
+     * @see \App\Api\Http\Controllers\MealController
      * @return bool
      */
     public function authorize(): bool

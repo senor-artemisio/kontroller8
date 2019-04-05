@@ -10,7 +10,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class DayRequest extends FormRequest
 {
     /**
-     * Validation rules for item.
+     * Validation rules for day.
      *
      * @return array
      */
@@ -39,7 +39,7 @@ class DayRequest extends FormRequest
     /**
      * Check access locate in controller.
      *
-     * @see \App\Api\Http\Controllers\ItemController
+     * @see \App\Api\Http\Controllers\MealController
      * @return bool
      */
     public function authorize(): bool

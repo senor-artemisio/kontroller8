@@ -1,6 +1,8 @@
 <?php
 
+use App\Api\Models\User;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +15,8 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(\App\Api\Models\User::class, function (Faker $faker) {
+/** @var Factory $factory */
+$factory->define(User::class, function (Faker $faker) {
     return [
         'id' => Ulid::generate(),
         'name' => $faker->name,

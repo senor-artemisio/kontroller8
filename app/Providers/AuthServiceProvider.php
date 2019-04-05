@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Api\Policies\ItemPolicy;
+use App\Api\Policies\MealPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
-use App\Api\Models\Item;
+use App\Api\Models\Meal;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -15,7 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        Item::class => ItemPolicy::class,
+        Meal::class => MealPolicy::class,
     ];
 
     /**

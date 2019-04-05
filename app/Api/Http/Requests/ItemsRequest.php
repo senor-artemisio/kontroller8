@@ -2,16 +2,57 @@
 
 namespace App\Api\Http\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
 /**
- * HTTP request for items list.
+ * Base HTTP request for any elements list.
  */
-class ItemsRequest extends BaseListRequest
+abstract class ItemsRequest extends FormRequest
 {
     /**
-     * {@inheritdoc}
+     * @return array list of sortable attributes
      */
-    protected function getSortableAttributes(): array
+    abstract protected function getSortableAttributes(): array;
+
+    /**
+     * Validation rules for any elements list.
+     *
+     * @return array
+     */
+    public function rules(): array
     {
-        return ['title', 'protein', 'fat', 'fiber', 'carbohydrates', 'createdAt'];
+        $rules = [
+            'page' => 'integer|required',
+            'perPage' => 'integer|required',
+            'sortBy' => ['string', 'required', Rule::in($this->getSortableAttributes())],
+            'sortDirection' => 'string|required|in:asc,desc',
+        ];
+
+        return $rules;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPerPage(): int
+    {
+        return (int)$this->get('perPage');
+    }
+
+    /**
+     * @return string
+     */
+    public function getSortBy(): string
+    {
+        return $this->get('sortBy');
+    }
+
+    /**
+     * @return string
+     */
+    public function getSortDirection(): string
+    {
+        return $this->get('sortDirection');
     }
 }

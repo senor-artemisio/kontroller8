@@ -2,78 +2,79 @@
 
 namespace App\Api\Repositories;
 
-use App\Api\Models\Item;
+use App\Api\Models\Meal;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 
 /**
- * Repository for item.
+ * Repository for meal.
  */
-class ItemRepository
+class MealRepository
 {
     use Rest;
 
     /** @var Builder */
-    private $item;
+    private $meal;
 
     /**
      * Init repo.
      */
     public function __construct()
     {
-        $this->item = Item::query();
+        $this->meal = Meal::query();
     }
 
     /**
      * @param array $attributes
-     * @return Item|Model
+     * @return Meal|Model
      */
-    public function create(array $attributes): Item
+    public function create(array $attributes): Meal
     {
-        return $this->item->create($attributes);
+        return $this->meal->create($attributes);
     }
 
     /**
-     * @param Item $item
+     * @param Meal $meal
      * @param array $attributes
-     * @return Item|Model
+     * @return Meal|Model
      */
-    public function update(Item $item, array $attributes): Item
+    public function update(Meal $meal, array $attributes): Meal
     {
-        $item->update($attributes);
+        $meal->update($attributes);
 
-        return $item;
+        return $meal;
     }
 
     /**
-     * @param Item $item
+     * @param Meal $meal
      * @return bool|null
      * @throws \Exception
      */
-    public function delete(Item $item): ?bool
+    public function delete(Meal $meal): ?bool
     {
-        return $item->delete();
+        return $meal->delete();
     }
 
     /**
      * @param string $id
-     * @return Item|Model
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @return Meal|Model
+     * @throws ModelNotFoundException
      */
-    public function findById(string $id): Item
+    public function findById(string $id): Meal
     {
-        return $this->item->findOrFail($id);
+        return $this->meal->findOrFail($id);
     }
 
     /**
-     * @param string $id
+     * @param string $userId
      * @return Collection|LengthAwarePaginator
      */
-    public function findByOwner(string $id)
+    public function findByOwner(string $userId)
     {
-        $query = $this->item->where('user_id', $id);
+        $query = $this->meal->where('user_id', $userId);
 
         if ($this->sortBy !== null) {
             $query = $query->orderBy(snake_case($this->sortBy), $this->sortDirection);
