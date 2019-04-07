@@ -3,6 +3,7 @@
 namespace App\Api\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -23,6 +24,7 @@ use Illuminate\Support\Carbon;
  * @property string $user_id
  * @property string|Carbon $created_at
  * @property string|Carbon $updated_at
+ * @property Portion $portions
  */
 class Day extends Model
 {
@@ -31,6 +33,7 @@ class Day extends Model
      */
     public function __construct(array $attributes = [])
     {
+        $this->timestamps = true;
         $this->incrementing = false;
         $this->table = 'days';
         $this->fillable = [
@@ -48,11 +51,15 @@ class Day extends Model
             'weight_eaten',
             'user_id',
         ];
-        $this->dates = [
-            'created_at',
-            'updated_at',
-            'date'
-        ];
+        $this->dates = ['date'];
         parent::__construct($attributes);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function portions(): HasMany
+    {
+        return $this->hasMany(Portion::class, 'day_id', 'id');
     }
 }

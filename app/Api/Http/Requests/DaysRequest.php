@@ -21,10 +21,27 @@ class DaysRequest extends FormRequest
     }
 
     /**
-     * @return Carbon
+     * @return Carbon|null
      */
-    public function getDate(): Carbon
+    public function getDate(): ?Carbon
     {
-        return $this->get('date');
+        $date = $this->all(['date'])['date'] ?? null;
+        if ($date === null) {
+            return null;
+        }
+
+        return Carbon::parse($date);
+    }
+
+    /**
+     * @param null $keys
+     * @return array
+     */
+    public function all($keys = null)
+    {
+        $data = parent::all($keys);
+        $data['date'] = $this->route('date');
+
+        return $data;
     }
 }

@@ -47,6 +47,7 @@ class DayService
     }
 
     /**
+     * Refresh all stats for day
      * @param Day $day
      */
     public function refresh(Day $day): void
@@ -57,16 +58,20 @@ class DayService
             'carbohydrates' => 0,
             'fiber' => 0,
             'weight' => 0,
+            'protein_eaten' => 0,
+            'fat_eaten' => 0,
+            'carbohydrates_eaten' => 0,
+            'fiber_eaten' => 0,
             'weight_eaten' => 0
         ];
-        foreach ($day->dayMeals as $dayMeal) {
-            $attributes['protein'] += $dayMeal->protein_total;
-            $attributes['fat'] += $dayMeal->fat_total;
-            $attributes['carbohydrates'] += $dayMeal->carbohydrates_total;
-            $attributes['fiber'] = $dayMeal->fiber_total;
-            $attributes['weight'] = $dayMeal->weight;
-            $attributes['weight_eaten'] = $dayMeal->weight_eaten;
-        }
+//        foreach ($day->dayMeals as $dayMeal) {
+//            $attributes['protein'] += $dayMeal->protein_total;
+//            $attributes['fat'] += $dayMeal->fat_total;
+//            $attributes['carbohydrates'] += $dayMeal->carbohydrates_total;
+//            $attributes['fiber'] = $dayMeal->fiber_total;
+//            $attributes['weight'] = $dayMeal->weight;
+//            $attributes['weight_eaten'] = $dayMeal->weight_eaten;
+//        }
         $this->dayRepository->update($day, $attributes);
     }
 }

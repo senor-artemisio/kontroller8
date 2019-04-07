@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
@@ -71,7 +72,7 @@ class DayRepository
     }
 
     /**
-     * Make collection of 7 days from a date.
+     * Make collection of 7 days for a date.
      * For not existing days make empty day model.
      *
      * @param string $userId
@@ -80,27 +81,48 @@ class DayRepository
      */
     public function findWeekByOwner(string $userId, Carbon $date)
     {
-        // get existing days from database
-        $query = $this->day->where('user_id', $userId)
+        // get existing days with portions from database
+        $query = $this->day
+            ->with(['portions' => function (HasMany $query) {
+                $query->orderBy('time_plan', 'asc');
+            }])
+            ->where('user_id', $userId)
             ->whereBetween('date', [
                 $date->copy()->subDays(3),
                 $date->copy()->addDays(3)
             ]);
+
         $existsDays = $query->get($this->columns);
         $days = [];
         // set cursor to first day of week
         $dateCursor = $date->copy()->subDays(3);
         for ($i = 1; $i <= 7; $i++) {
             // find day in existing days
-            $existDay = $existsDays->filter(function (Day $day) use ($dateCursor) {
+            $day = $existsDays->filter(function (Day $day) use ($dateCursor) {
                 return $day->date->toDateString() === $dateCursor->toDateString();
             })->first();
+
             // if day not found replace it by new empty day model
-            if ($existDay) {
-                $days[] = $existDay;
-            } else {
-                $days[] = new Day(['date' => $dateCursor]);
+            if ($day === null) {
+                $day = new Day([
+                    'protein' => 0,
+                    'fat' => 0,
+                    'carbohydrates' => 0,
+                    'fiber' => 0,
+                    'weight' => 0,
+                    'protein_eaten' => 0,
+                    'fat_eaten' => 0,
+                    'carbohydrates_eaten' => 0,
+                    'fiber_eaten' => 0,
+                    'weight_eaten' => 0,
+                    'date' => $dateCursor,
+                ]);
+                $day->created_at = $dateCursor;
+                $day->updated_at = $dateCursor;
             }
+
+            $days[] = $day;
+
             // seek cursor to next day
             $dateCursor->addDay();
         }

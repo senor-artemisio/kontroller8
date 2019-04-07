@@ -1,7 +1,7 @@
 <?php
 
 use App\Api\Models\Day;
-use App\Api\Models\DayMeal;
+use App\Api\Models\Portion;
 use App\Api\Models\Meal;
 use App\Api\Models\User;
 use Carbon\Carbon;
@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             ]);
             factory(Meal::class, 5)->create(['user_id' => $user->id])
                 ->each(function (Meal $meal) use ($user, $day) {
-                    factory(DayMeal::class, 5)->create([
+                    factory(Portion::class, 5)->create([
                         'user_id' => $user->id,
                         'day_id' => $day->id,
                         'meal_id' => $meal->id

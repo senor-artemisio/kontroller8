@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Api\Http\Controllers\MealController;
 use App\Api\Models\User;
 use App\Api\Models\Meal;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,7 +11,7 @@ use Tests\TestCase;
 /**
  * Feature test for meal API.
  *
- * @see MealController
+ * @covers \App\Api\Http\Controllers\MealController
  */
 class MealApiTest extends TestCase
 {
@@ -37,7 +36,7 @@ class MealApiTest extends TestCase
     /**
      * Check view meals list for unauthorized user.
      *
-     * @see MealController::index()
+     * @covers  \App\Api\Http\Controllers\MealController::index()
      */
     public function testIndexUnauthorized(): void
     {
@@ -47,7 +46,7 @@ class MealApiTest extends TestCase
     /**
      * Check view meals list for authorized user.
      *
-     * @see MealController::index()
+     * @covers \App\Api\Http\Controllers\MealController::index()
      */
     public function testIndexAuthorized(): void
     {
@@ -79,7 +78,7 @@ class MealApiTest extends TestCase
     /**
      * Check view meal for unauthorized user.
      *
-     * @see MealController::show()
+     * @covers  \App\Api\Http\Controllers\MealController::show()
      */
     public function testShowUnauthorized(): void
     {
@@ -90,7 +89,7 @@ class MealApiTest extends TestCase
     /**
      * Check view meal for authorized user.
      *
-     * @see MealController::show()
+     * @covers  \App\Api\Http\Controllers\MealController::show()
      */
     public function testShowAuthorized(): void
     {
@@ -103,7 +102,7 @@ class MealApiTest extends TestCase
     /**
      * Check view meal for owner.
      *
-     * @see MealController::show()
+     * @covers  \App\Api\Http\Controllers\MealController::show()
      */
     public function testShowOwner(): void
     {
@@ -124,7 +123,7 @@ class MealApiTest extends TestCase
     /**
      * Check pagination for meals.
      *
-     * @see MealController::index()
+     * @covers  \App\Api\Http\Controllers\MealController::index()
      */
     public function testPagination(): void
     {
@@ -150,7 +149,7 @@ class MealApiTest extends TestCase
     /**
      * Check create meal for authorized user.
      *
-     * @see MealController::store()
+     * @covers  \App\Api\Http\Controllers\MealController::store()
      */
     public function testCreateAuthorized(): void
     {
@@ -180,7 +179,7 @@ class MealApiTest extends TestCase
     /**
      * Check create meal for unauthorized user.
      *
-     * @see MealController::store()
+     * @covers  \App\Api\Http\Controllers\MealController::store()
      */
     public function testCreateUnauthorized(): void
     {
@@ -198,7 +197,7 @@ class MealApiTest extends TestCase
     /**
      * Check update meals for authorized user.
      *
-     * @see MealController::update()
+     * @covers  \App\Api\Http\Controllers\MealController::update()
      */
     public function testUpdateAuthorized(): void
     {
@@ -212,7 +211,7 @@ class MealApiTest extends TestCase
     /**
      * Check update meal for owner.
      *
-     * @see MealController::update()
+     * @covers  \App\Api\Http\Controllers\MealController::update()
      */
     public function testUpdateOwner(): void
     {
@@ -236,7 +235,7 @@ class MealApiTest extends TestCase
     /**
      * Check update meal for unauthorized user.
      *
-     * @see MealController::update()
+     * @covers  \App\Api\Http\Controllers\MealController::update()
      */
     public function testUpdateUnauthorized(): void
     {
@@ -250,7 +249,7 @@ class MealApiTest extends TestCase
     /**
      * Check delete meal for authorized user.
      *
-     * @see MealController::destroy()
+     * @covers  \App\Api\Http\Controllers\MealController::destroy()
      */
     public function testDeleteAuthorized(): void
     {
@@ -262,7 +261,7 @@ class MealApiTest extends TestCase
     /**
      * Check delete meal for owner.
      *
-     * @see MealController::destroy()
+     * @covers  \App\Api\Http\Controllers\MealController::destroy()
      */
     public function testDeleteOwner(): void
     {
@@ -275,7 +274,7 @@ class MealApiTest extends TestCase
     /**
      * Check delete meal for unauthorized user.
      *
-     * @see MealController::destroy()
+     * @covers  \App\Api\Http\Controllers\MealController::destroy()
      */
     public function testDeleteUnauthorized(): void
     {

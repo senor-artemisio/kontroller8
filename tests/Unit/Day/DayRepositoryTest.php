@@ -109,14 +109,17 @@ class DayRepositoryTest extends TestCase
         foreach ($this->weekDates as $date) {
             $expectedDays->push(factory(Day::class)->create([
                 'user_id' => $this->user->id,
-                'date' => Carbon::parse($date)
+                'date' => Carbon::parse($date),
             ]));
         }
 
         $days = $this->dayRepository->findWeekByOwner($this->user->id, Carbon::parse('2000-01-01'));
 
-        $expectedDays->each(function (Day $day, int $key) use ($days) {
-            $this->assertEquals($day->toArray(), $days->get($key)->toArray());
+        $expectedDays->each(function (Day $expectedDay, int $key) use ($days) {
+            $expectedDayData = $expectedDay->toArray();
+            $dayData = $days->get($key)->toArray();
+            unset($expectedDayData['portions'], $dayData['portions']);
+            $this->assertEquals($expectedDayData, $dayData);
         });
     }
 
@@ -129,7 +132,21 @@ class DayRepositoryTest extends TestCase
 
         foreach ($this->weekDates as $key => $date) {
             if ($key === 3 || $key === 5) {
-                $expectedDay = new Day(['date' => Carbon::parse($date)]);
+                $expectedDay = new Day([
+                    'date' => Carbon::parse($date),
+                    'protein' => 0,
+                    'fat' => 0,
+                    'carbohydrates' => 0,
+                    'fiber' => 0,
+                    'weight' => 0,
+                    'protein_eaten' => 0,
+                    'fat_eaten' => 0,
+                    'carbohydrates_eaten' => 0,
+                    'fiber_eaten' => 0,
+                    'weight_eaten' => 0,
+                ]);
+                $expectedDay->created_at = $expectedDay->date;
+                $expectedDay->updated_at = $expectedDay->date;
             } else {
                 $expectedDay = factory(Day::class)->create([
                     'user_id' => $this->user->id,
@@ -141,8 +158,11 @@ class DayRepositoryTest extends TestCase
 
         $days = $this->dayRepository->findWeekByOwner($this->user->id, Carbon::parse('2000-01-01'));
 
-        $expectedDays->each(function (Day $day, int $key) use ($days) {
-            $this->assertEquals($day->toArray(), $days->get($key)->toArray());
+        $expectedDays->each(function (Day $expectedDay, int $key) use ($days) {
+            $expectedDayData = $expectedDay->toArray();
+            $dayData = $days->get($key)->toArray();
+            unset($expectedDayData['portions'], $dayData['portions']);
+            $this->assertEquals($expectedDayData, $dayData);
         });
     }
 }

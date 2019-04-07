@@ -1,8 +1,8 @@
 <template>
     <b-container>
         <h1 class="mt-3">
-            Items
-            <b-button size="sm" variant="primary" to="/item/new">
+            Meals
+            <b-button size="sm" variant="primary" to="/meal/new">
                 <i class="fas fa-plus"></i>
             </b-button>
         </h1>
@@ -12,10 +12,10 @@
                      :fields="fields"
                      :sort-by.sync="sortBy" :sort-desc.sync="sortDesc"
                      @sort-changed="sortChanged"
-                     @row-clicked="toItem"/>
+                     @row-clicked="toMeal"/>
             <div class="overflow-auto">
                 <b-pagination-nav class="float-md-left" use-router
-                                  base-url="/items/"
+                                  base-url="/meals/"
                                   :number-of-pages="lastPage"
                                   first-text="⇤"
                                   last-text="⇥"
@@ -67,8 +67,8 @@
             };
         },
         methods: {
-            toItem(item, index, button) {
-                this.$router.push('/item/' + item.id);
+            toMeal(meal, index, button) {
+                this.$router.push('/meal/' + meal.id);
             },
             sortChanged(ctx) {
                 this.sortBy = ctx.sortBy;
@@ -86,7 +86,7 @@
                     this.lastPage = parseInt(result.meta.last_page);
                     this.perPage = parseInt(result.meta.per_page);
                     if (this.currentPage > this.lastPage) {
-                        this.$router.push('/items/' + this.lastPage);
+                        this.$router.push('/meals/' + this.lastPage);
                     }
                     this.loaded = true;
                 });
@@ -94,7 +94,7 @@
             buildApiUrl() {
                 let url = '';
 
-                url += 'items?page=' + this.currentPage;
+                url += 'meals?page=' + this.currentPage;
                 url += '&perPage=' + this.perPage;
                 url += '&sortBy=' + this.sortBy;
                 url += '&sortDirection=' + (this.sortDesc ? 'desc' : 'asc');

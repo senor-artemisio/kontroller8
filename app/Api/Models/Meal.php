@@ -26,6 +26,7 @@ class Meal extends Model
      */
     public function __construct(array $attributes = [])
     {
+        $this->timestamps = true;
         $this->incrementing = false;
         $this->table = 'meals';
         $this->fillable = [
@@ -36,10 +37,6 @@ class Meal extends Model
             'carbohydrates',
             'fiber',
             'user_id'
-        ];
-        $this->dates = [
-            'created_at',
-            'updated_at'
         ];
         $this->casts = [
             'id' => 'string',

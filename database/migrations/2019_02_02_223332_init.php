@@ -49,10 +49,10 @@ class Init extends Migration
             $table->index('user_id');
         });
 
-        Schema::create('day_meals', function (Blueprint $table) {
+        Schema::create('portions', function (Blueprint $table) {
             $table->char('id', 26)->nullable(false);
-            $table->char('day_id', 26);
-            $table->char('meal_id', 26);
+            $table->char('day_id', 26)->nullable(false);
+            $table->char('meal_id', 26)->nullable(false);
             $table->char('user_id', 26)->nullable(false);
             $table->integer('protein')->nullable(false);
             $table->integer('fat')->nullable(false);
@@ -77,7 +77,7 @@ class Init extends Migration
     public function down(): void
     {
         Schema::drop('meals');
-        Schema::drop('day');
-        Schema::drop('day_meals');
+        Schema::drop('days');
+        Schema::drop('portions');
     }
 }

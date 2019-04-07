@@ -2,10 +2,12 @@
 
 namespace App\Api\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Meal assigned to a day, can be eaten or not.
+ * Portion is a meal assigned to a day, can be eaten or not.
+ *
  * @property string $id
  * @property string $day_id
  * @property string $meal_id
@@ -19,22 +21,24 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $eaten
  * @property string $time_plan
  * @property string $time_eaten
- * @property string $created_at
- * @property string $updated_at
+ * @property string|Carbon $created_at
+ * @property string|Carbon $updated_at
  */
-class DayMeal extends Model
+class Portion extends Model
 {
     /**
      * @param array $attributes
      */
     public function __construct(array $attributes = [])
     {
-        $this->table = 'day_meals';
+        $this->timestamps = true;
+        $this->incrementing = false;
+        $this->table = 'portions';
         $this->fillable = [
             'id',
             'day_id',
             'meal_id',
-            'title',
+            'user_id',
             'protein',
             'fat',
             'carbohydrates',
@@ -43,11 +47,6 @@ class DayMeal extends Model
             'eaten',
             'time_plan',
             'time_eaten',
-            'user_id'
-        ];
-        $this->dates = [
-            'created_at',
-            'updated_at',
         ];
         $this->casts = [
             'eaten' => 'bool'

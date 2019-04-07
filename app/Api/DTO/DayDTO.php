@@ -206,7 +206,6 @@ class DayDTO extends BaseDTO
             'carbohydrates',
             'fiber',
             'weight',
-
             'proteinEaten',
             'fatEaten',
             'carbohydratesEaten',

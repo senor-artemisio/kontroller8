@@ -4,6 +4,7 @@ namespace App\Api\Http\Controllers;
 
 use App\Api\Http\Requests\DaysRequest;
 use App\Api\Http\Resources\DayResource;
+use App\Api\Models\Day;
 use App\Api\Repositories\DayRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -21,13 +22,16 @@ class DayController extends Controller
     }
 
     /**
+     * Return requested date with 3 days before and 3 days after.
+     * Not existing days replaced by empty models.
+     *
      * @param DaysRequest $request
      * @return ResourceCollection
      * @throws AuthorizationException
      */
-    public function index(DaysRequest $request): ResourceCollection
+    public function week(DaysRequest $request): ResourceCollection
     {
-        $this->authorize('list');
+        $this->authorize('week', Day::class);
         $date = $request->getDate();
         $userId = Auth::user()->getAuthIdentifier();
         $days = $this->dayRepository->findWeekByOwner($userId, $date);
