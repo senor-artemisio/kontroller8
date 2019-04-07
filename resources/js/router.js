@@ -3,16 +3,14 @@ import VueRouter from "vue-router";
 
 import Dashboard from './pages/Dashboard';
 import Days from './pages/Days';
-import Items from './pages/Items';
-import Item from './pages/Item';
+import Meals from './pages/Meals';
+import Meal from './pages/Meal';
 import Auth from './pages/Auth';
 import Menu from './components/Menu';
-
+import moment from 'moment';
 
 Vue.use(VueRouter);
-Vue.component(Dashboard);
-Vue.component(Auth);
-Vue.component(Menu);
+Vue.component('Menu', Menu);
 
 const router = new VueRouter({
     linkActiveClass: 'active',
@@ -27,32 +25,34 @@ const router = new VueRouter({
             },
             name: "dashboard"
         },
-        {path: '/items', redirect: '/items/1'},
+        {path: '/meals', redirect: '/meals/1'},
         {
-            path: '/items/:page',
+            path: '/meals/:page',
             components: {
-                default: Items,
+                default: Meals,
                 menu: Menu
             },
-            name: "items",
+            name: "meals",
             props: {default: true}
         },
         {
-            path: '/item/:id',
+            path: '/meal/:id',
             components: {
-                default: Item,
+                default: Meal,
                 menu: Menu
             },
-            name: "item",
+            name: "meal",
             props: {default: true}
         },
+        {path: '/days', redirect: '/days/' + moment().format('YYYY-MM-DD')},
         {
-            path: '/days',
+            path: '/days/:date',
             components: {
                 default: Days,
                 menu: Menu
             },
-            name: "days"
+            name: "days",
+            props: {default: true}
         }
     ],
     mode: "history"

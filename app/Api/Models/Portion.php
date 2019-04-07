@@ -4,6 +4,8 @@ namespace App\Api\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Portion is a meal assigned to a day, can be eaten or not.
@@ -23,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $time_eaten
  * @property string|Carbon $created_at
  * @property string|Carbon $updated_at
+ * @property Meal $meal
  */
 class Portion extends Model
 {
@@ -52,5 +55,13 @@ class Portion extends Model
             'eaten' => 'bool'
         ];
         parent::__construct($attributes);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function meal(): BelongsTo
+    {
+        return $this->belongsTo(Meal::class);
     }
 }

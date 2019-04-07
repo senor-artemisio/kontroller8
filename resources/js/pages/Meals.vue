@@ -34,7 +34,7 @@
     export default {
         data() {
             return {
-                currentPage: parseInt(this.$router.currentRoute.params.page),
+                currentPage: null,
                 lastPage: null,
                 perPage: 10,
                 perPageOptions: [2, 5, 10, 20, 50],
@@ -67,8 +67,8 @@
             };
         },
         methods: {
-            toMeal(meal, index, button) {
-                this.$router.push('/meal/' + meal.id);
+            toMeal(item, index, button) {
+                this.$router.push('/meal/' + item.id);
             },
             sortChanged(ctx) {
                 this.sortBy = ctx.sortBy;
@@ -103,10 +103,14 @@
             }
         },
         mounted() {
+            if (this.currentPage === null) {
+                this.currentPage = parseInt(this.$router.currentRoute.params.page);
+            }
             this.load();
         },
         watch: {
             '$route.params.page'(to, from) {
+                this.currentPage = to;
                 this.load();
             }
         }

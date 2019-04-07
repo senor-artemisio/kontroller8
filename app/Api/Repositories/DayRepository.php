@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
@@ -83,9 +84,12 @@ class DayRepository
     {
         // get existing days with portions from database
         $query = $this->day
-            ->with(['portions' => function (HasMany $query) {
-                $query->orderBy('time_plan', 'asc');
-            }])
+            ->with([
+                'portions' => function (HasMany $query) {
+                    $query->orderBy('time_plan', 'asc');
+                },
+                'portions.meal'
+            ])
             ->where('user_id', $userId)
             ->whereBetween('date', [
                 $date->copy()->subDays(3),

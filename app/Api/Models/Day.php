@@ -60,6 +60,6 @@ class Day extends Model
      */
     public function portions(): HasMany
     {
-        return $this->hasMany(Portion::class, 'day_id', 'id');
+        return $this->hasMany(Portion::class);
     }
 }

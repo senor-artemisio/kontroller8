@@ -19,6 +19,8 @@ class DayResource extends JsonResource
         $day = $this;
         return [
             'id' => $day->id,
+            'title' => "{$day->date->day} {$day->date->localeMonth}",
+            'dayOfWeek' => $day->date->localeDayOfWeek,
             'date' => $day->date->toDateString(),
             'protein' => $day->protein,
             'fat' => $day->fat,
