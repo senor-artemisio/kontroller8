@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 
 /**
- * Repository for meal.
+ * Working with meal database data.
  */
 class MealRepository
 {

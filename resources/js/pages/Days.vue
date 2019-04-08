@@ -2,11 +2,11 @@
     <div class="container-fluid calendar">
         <header>
             <h4 class="display-5 mb-3 mt-3 text-center caption">
-                <b-link to="getPrevUrl()">
+                <b-link :to="getPrevUrl()">
                     <i class="fas fa-arrow-left"></i>
                 </b-link>
                 {{ title }}
-                <b-link to="getNextUrl()">
+                <b-link :to="getNextUrl()">
                     <i class="fas fa-arrow-right"></i>
                 </b-link>
             </h4>
@@ -25,7 +25,9 @@
                 </h5>
                 <p v-if="isEmptyPortions(day)">No portions</p>
                 <div v-else>
-                    <p v-for="portion in day.portions" :class="getPortionCssClass(portion, day)">
+                    <p v-for="portion in day.portions" :class="getPortionCssClass(portion, day)"
+                       v-on:click.prevent="eatenToggle(portion)"
+                       :id="'p-'+portion.id">
                         <span class="text-capitalize">{{portion.meal.title}}</span><br>
                         <small>{{portion.weight}}g / {{portion.time_plan}}</small>
                     </p>
@@ -49,13 +51,20 @@
         mounted() {
             this.date = this.$router.currentRoute.params.date;
             this.title = moment(this.date, 'YYYY-MM-DD').format('MMMM Do YYYY');
-            this.load();
+            this.load(this.date);
+        },
+        watch: {
+            '$route.params.date'(to, from) {
+                this.load(to);
+            }
         },
         methods: {
-            load() {
+            load(date) {
                 const component = this;
-                Api.client().get('days/week/' + this.date).then(function (response) {
+                Api.client().get('days/week/' + date).then(function (response) {
                     component.items = response.data.data;
+                    component.date = date;
+                    component.title = moment(date, 'YYYY-MM-DD').format('MMMM Do YYYY');
                 });
             },
             getDayCssClass(day) {
@@ -69,7 +78,7 @@
                 return cssClass;
             },
             getPortionCssClass(portion, day) {
-                let cssClass = '';
+                let cssClass = 'cursor-pointer';
 
                 if (portion.eaten) {
                     cssClass += ' text-muted text-overline';
@@ -78,6 +87,25 @@
             },
             isEmptyPortions(item) {
                 return item.portions.length === 0;
+            },
+            getPrevUrl() {
+                return '/days/' + moment(this.date, 'YYYY-MM-DD').subtract(1, 'days').format('YYYY-MM-DD');
+            },
+            getNextUrl() {
+                return '/days/' + moment(this.date, 'YYYY-MM-DD').add(1, 'days').format('YYYY-MM-DD');
+            },
+            eatenToggle(portion) {
+                let p = this.$el.querySelector('#p-' + portion.id);
+                if (portion.eaten) {
+                    p.classList.remove('text-overline');
+                } else {
+                    p.classList.add('text-overline');
+                }
+                portion.eaten = !portion.eaten;
+
+                this.load(this.date);
+
+                console.log(portion.id, portion.eaten);
             }
         }
     }
