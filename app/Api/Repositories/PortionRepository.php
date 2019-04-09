@@ -23,6 +23,15 @@ class PortionRepository
     }
 
     /**
+     * @param string $id
+     * @return Portion|null
+     */
+    public function findById(string $id): ?Portion
+    {
+        return $this->portion->where('id', $id)->get()->first();
+    }
+
+    /**
      * @param string $dayId
      * @return Builder[]|Collection
      */
