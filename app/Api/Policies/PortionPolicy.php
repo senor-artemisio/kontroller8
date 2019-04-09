@@ -20,9 +20,9 @@ class PortionPolicy
      * @param User $user
      * @return bool
      */
-    public function markEaten(Portion $portion, User $user): bool
+    public function markEaten(User $user, Portion $portion): bool
     {
-        return $portion->user_id === $user->id;
+        return $portion->user_id === $user->getAuthIdentifier();
     }
 
     /**
@@ -32,8 +32,8 @@ class PortionPolicy
      * @param User $user
      * @return bool
      */
-    public function unmarkEaten(Portion $portion, User $user): bool
+    public function unmarkEaten(User $user, Portion $portion): bool
     {
-        return $portion->user_id === $user->id;
+        return $portion->user_id === $user->getAuthIdentifier();
     }
 }

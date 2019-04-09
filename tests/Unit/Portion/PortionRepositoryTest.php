@@ -32,6 +32,18 @@ class PortionRepositoryTest extends TestCase
     }
 
     /**
+     * @covers \App\Api\Repositories\PortionRepository::findById()
+     */
+    public function testFindById(): void
+    {
+        $portion = factory(Portion::class)->create();
+        $portionFounded = $this->repository->findById($portion->id);
+        $this->assertEquals($portion->id, $portionFounded->id);
+        $portionNotFounded = $this->repository->findById(\Ulid::generate());
+        $this->assertNull($portionNotFounded);
+    }
+
+    /**
      * @covers \App\Api\Repositories\PortionRepository::update()
      */
     public function testUpdate(): void
@@ -42,14 +54,14 @@ class PortionRepositoryTest extends TestCase
         $attributes = [
             'protein' => 10,
             'fat' => 10,
-            'carbohydrates' => 10
+            'carbohydrates' => 10,
+            'time_eaten' => '10:00'
         ];
 
         $this->repository->update($portion, $attributes);
         $attributes['id'] = $portion->id;
-        
+
         $this->assertDatabaseHas($this->portion->getTable(), $attributes);
         $this->assertDatabaseHas($this->portion->getTable(), $anotherPortion->attributesToArray());
-
     }
 }

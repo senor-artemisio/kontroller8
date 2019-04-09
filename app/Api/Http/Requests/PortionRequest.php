@@ -5,7 +5,7 @@ namespace App\Api\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * HTTP-request for change eaten field
+ * HTTP-request for portion.
  */
 class PortionRequest extends FormRequest
 {
@@ -14,16 +14,34 @@ class PortionRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'eaten' => 'required|bool'
+        $rules = [
+            'eaten' => 'required|bool',
+            'protein' => 'integer|required',
+            'fat' => 'integer|required',
+            'carbohydrates' => 'integer|required',
+            'fiber' => 'integer|require',
+            'weight' => 'integer|require',
         ];
+
+        if ($this->getMethod() === 'PATCH') {
+            $rules = array_map(function ($value) {
+                return $value . '|sometimes';
+            }, $rules);
+        }
+
+        $timeRules = [
+            'time_plan' => 'sometimes|date_format:H:i',
+            'time_eaten' => 'sometimes|date_format:H:i'
+        ];
+
+        return array_merge($rules, $timeRules);
     }
 
     /**
      * Check access locate in controller.
      *
-     * @see \App\Api\Http\Controllers\PortionController
      * @return bool
+     * @see \App\Api\Http\Controllers\PortionController
      */
     public function authorize(): bool
     {

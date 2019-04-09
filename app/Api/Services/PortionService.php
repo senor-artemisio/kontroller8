@@ -27,7 +27,7 @@ class PortionService
     {
         $this->portionRepository->update($portion, [
             'eaten' => true,
-            'time_eaten' => Carbon::now()->format('H:i:s')
+            'time_eaten' => Carbon::now()->format('H:i')
         ]);
     }
 

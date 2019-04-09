@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Api\Models\Day;
+use App\Api\Models\Portion;
 use App\Api\Policies\DayPolicy;
 use App\Api\Policies\MealPolicy;
+use App\Api\Policies\PortionPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
 use App\Api\Models\Meal;
@@ -19,6 +21,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Meal::class => MealPolicy::class,
         Day::class => DayPolicy::class,
+        Portion::class => PortionPolicy::class
     ];
 
     /**

@@ -37,7 +37,7 @@ class PortionRepository
      */
     public function findByDayId(string $dayId): Collection
     {
-        return $this->portion->where('day_id', $dayId)->orderBy('time_plan')->get(['*']);
+        return $this->portion->where('day_id', $dayId)->orderBy('time_plan')->get();
     }
 
     /**

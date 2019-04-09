@@ -5,7 +5,6 @@ namespace App\Api\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Portion is a meal assigned to a day, can be eaten or not.
@@ -21,8 +20,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property integer $fiber
  * @property integer $weight
  * @property bool $eaten
- * @property string $time_plan
- * @property string $time_eaten
+ * @property string|Carbon $time_plan
+ * @property string|Carbon $time_eaten
  * @property string|Carbon $created_at
  * @property string|Carbon $updated_at
  * @property Meal $meal
@@ -52,7 +51,9 @@ class Portion extends Model
             'time_eaten',
         ];
         $this->casts = [
-            'eaten' => 'bool'
+            'eaten' => 'bool',
+            'time_plan' => 'time',
+            'time_eaten' => 'time'
         ];
         parent::__construct($attributes);
     }

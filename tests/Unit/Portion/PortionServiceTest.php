@@ -4,6 +4,7 @@ namespace Tests\Unit\Portion;
 
 use App\Api\Models\Portion;
 use App\Api\Services\PortionService;
+use Carbon\Carbon;
 use Tests\TestCase;
 
 /**
@@ -35,10 +36,14 @@ class PortionServiceTest extends TestCase
         $hasEaten = factory(Portion::class)->create(['eaten' => true]);
         $notEaten = factory(Portion::class)->create(['eaten' => false]);
 
-        $portion = factory(Portion::class)->create(['eaten' => false]);
+        $portion = factory(Portion::class)->create(['eaten' => false, 'time_eaten' => '10:00']);
         $this->service->markEaten($portion);
 
-        $this->assertDatabaseHas($this->portion->getTable(), ['id' => $portion->id, 'eaten' => true]);
+        $this->assertDatabaseHas($this->portion->getTable(), [
+            'id' => $portion->id,
+            'eaten' => true,
+            'time_eaten' => Carbon::now()->format('H:i')
+        ]);
         $this->assertDatabaseHas($this->portion->getTable(), ['id' => $hasEaten->id, 'eaten' => true]);
         $this->assertDatabaseHas($this->portion->getTable(), ['id' => $notEaten->id, 'eaten' => false]);
     }
@@ -54,7 +59,12 @@ class PortionServiceTest extends TestCase
         $portion = factory(Portion::class)->create(['eaten' => true]);
         $this->service->unmarkEaten($portion);
 
-        $this->assertDatabaseHas($this->portion->getTable(), ['id' => $portion->id, 'eaten' => false]);
+        $this->assertDatabaseHas($this->portion->getTable(), [
+            'id' => $portion->id,
+            'eaten' => false,
+            'time_eaten' => null
+        ]);
+
         $this->assertDatabaseHas($this->portion->getTable(), ['id' => $hasEaten->id, 'eaten' => true]);
         $this->assertDatabaseHas($this->portion->getTable(), ['id' => $notEaten->id, 'eaten' => false]);
     }

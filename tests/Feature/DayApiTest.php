@@ -125,6 +125,11 @@ class DayApiTest extends TestCase
         });
     }
 
+    /**
+     * Check day with portions.
+     *
+     * @covers \App\Api\Http\Controllers\DayController::week()
+     */
     public function testWeekWithPortions(): void
     {
         /** @var Day $day */
@@ -132,17 +137,16 @@ class DayApiTest extends TestCase
             'user_id' => $this->user->id,
             'date' => '2000-01-01'
         ]);
+
         /** @var Collection $meals */
-        $meals = factory(Meal::class, 3)->create(['user_id' => $this->user->id]);
+        $meal = factory(Meal::class)->create(['user_id' => $this->user->id]);
+
         /** @var Collection $portions */
-        $portions = factory(Portion::class)->create([
+        $portion = factory(Portion::class)->create([
             'day_id' => $day->id,
             'user_id' => $this->user->id,
+            'meal_id' => $meal->id
         ]);
-        $portions->each(function (Portion $portion) use ($meals) {
-            $portion->update(['meal_id' => $meals->pop()->id]);
-        });
-
 
         $response = $this->actingAs($this->user, 'api')->getJson('/api/days/week/2000-01-01');
         $response->assertStatus(200);
@@ -150,8 +154,6 @@ class DayApiTest extends TestCase
         $this->assertNotNull($data);
 
         $portionsData = $data[3]['portions'];
-        $portions->each(function (Portion $portion, int $key) use ($portionsData) {
-            $this->assertEquals($portion->id, $portionsData[$key]['id']);
-        });
+        $this->assertEquals($portion->id, $portionsData[0]['id']);
     }
 }

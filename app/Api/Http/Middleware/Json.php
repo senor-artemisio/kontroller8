@@ -4,6 +4,7 @@ namespace App\Api\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Middleware для проверки json-заголовков.
@@ -11,10 +12,10 @@ use Illuminate\Http\JsonResponse;
 class Json
 {
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param Closure $next
      *
-     * @return \Illuminate\Http\JsonResponse|mixed
+     * @return JsonResponse|mixed
      */
     public function handle($request, Closure $next)
     {
@@ -28,7 +29,7 @@ class Json
 
         if (\in_array($request->method(), ['POST', 'PUT', 'PATCH'])) {
             $contentTypeHeader = $request->header('Content-Type');
-            if (strpos($contentTypeHeader, $type) !== 0) {
+            if (strpos($contentTypeHeader, $type) === 0) {
                 return $this->badRequestResponse();
             }
         }

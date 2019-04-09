@@ -22,6 +22,9 @@ Route::middleware(['json'])->group(function () {
             ->only('store', 'destroy', 'update');
         Route::get('days/week/{date}', 'DayController@week')->name('days.week');
         Route::get('users/me', 'UserController@me');
+
+        Route::post('portions/mark-eaten/{portion}', 'PortionController@markEaten');
+        Route::post('portions/unmark-eaten/{portion}', 'PortionController@unmarkEaten');
     });
     Route::post('auth/sign-in', 'AuthController@signin');
     Route::post('auth/sign-up', 'AuthController@signup');

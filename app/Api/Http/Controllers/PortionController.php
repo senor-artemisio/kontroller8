@@ -32,10 +32,24 @@ class PortionController extends Controller
      * @return PortionResource
      * @throws AuthorizationException
      */
-    public function markEaten(Portion $portion)
+    public function markEaten(Portion $portion): PortionResource
     {
-        $this->authorize('update', $portion);
-        $this->markEaten($portion);
+        $this->authorize('markEaten', $portion);
+        $this->portionService->markEaten($portion);
+        $updatedPortion = $this->portionRepository->findById($portion->id);
+
+        return PortionResource::make($updatedPortion);
+    }
+
+    /**
+     * @param Portion $portion
+     * @return PortionResource
+     * @throws AuthorizationException
+     */
+    public function unmarkEaten(Portion $portion): PortionResource
+    {
+        $this->authorize('unmarkEaten', $portion);
+        $this->portionService->unmarkEaten($portion);
 
         $updatedPortion = $this->portionRepository->findById($portion->id);
 

@@ -19,7 +19,7 @@
         <div class="row border border-right-0 border-bottom-0 border-top-0">
             <div v-for="day in items" :class="getDayCssClass(day)">
                 <h5 class="row align-items-center">
-                    <span class="date col-1">{{day.title}}</span>
+                    <span :class="getDayTitleCssClass(day)">{{day.title}}</span>
                     <small class="col d-sm-none text-center text-muted">{{day.dayOfWeek}}</small>
                     <span class="col-1"></span>
                 </h5>
@@ -29,7 +29,8 @@
                        v-on:click.prevent="eatenToggle(portion)"
                        :id="'p-'+portion.id">
                         <span class="text-capitalize">{{portion.meal.title}}</span><br>
-                        <small>{{portion.weight}}g / {{portion.time_plan}}</small>
+                        <small v-if="portion.eaten">{{portion.weight}}g / {{ portion.time_eaten }}</small>
+                        <small v-else>{{portion.weight}}g / {{ portion.time_plan }}</small>
                     </p>
                 </div>
             </div>
@@ -45,10 +46,12 @@
             return {
                 items: [],
                 date: null,
-                title: null
+                title: null,
+                client: null
             };
         },
         mounted() {
+            this.client = Api.client();
             this.date = this.$router.currentRoute.params.date;
             this.title = moment(this.date, 'YYYY-MM-DD').format('MMMM Do YYYY');
             this.load(this.date);
@@ -61,7 +64,7 @@
         methods: {
             load(date) {
                 const component = this;
-                Api.client().get('days/week/' + date).then(function (response) {
+                this.client.get('days/week/' + date).then(function (response) {
                     component.items = response.data.data;
                     component.date = date;
                     component.title = moment(date, 'YYYY-MM-DD').format('MMMM Do YYYY');
@@ -85,6 +88,9 @@
                 }
                 return cssClass;
             },
+            getDayTitleCssClass(day) {
+                return day.eaten ? 'date col-1 text-overline' : 'date col-1';
+            },
             isEmptyPortions(item) {
                 return item.portions.length === 0;
             },
@@ -101,11 +107,20 @@
                 } else {
                     p.classList.add('text-overline');
                 }
+
+                let url = '';
+                if (portion.eaten) {
+                    url = 'portions/unmark-eaten/' + portion.id;
+                } else {
+                    url = 'portions/mark-eaten/' + portion.id;
+                }
+
+                const component = this;
+                this.client.post(url).then(function (response) {
+                    component.load(component.date);
+                });
+
                 portion.eaten = !portion.eaten;
-
-                this.load(this.date);
-
-                console.log(portion.id, portion.eaten);
             }
         }
     }

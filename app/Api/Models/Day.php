@@ -24,7 +24,7 @@ use Illuminate\Support\Carbon;
  * @property string $user_id
  * @property string|Carbon $created_at
  * @property string|Carbon $updated_at
- * @property Portion $portions
+ * @property Portion[] $portions
  */
 class Day extends Model
 {
@@ -61,5 +61,19 @@ class Day extends Model
     public function portions(): HasMany
     {
         return $this->hasMany(Portion::class);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEaten(): bool
+    {
+        foreach ($this->portions as $portion) {
+            if (!$portion->eaten) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

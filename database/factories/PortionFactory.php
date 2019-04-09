@@ -17,7 +17,7 @@ $factory->define(Portion::class, function (Faker $faker) {
         'weight' => $faker->numberBetween(1, 500),
         'eaten' => $faker->boolean,
         'user_id' => Ulid::generate(),
-        'time_plan' => $faker->time(),
-        'time_eaten' => $faker->time(),
+        'time_plan' => $faker->time('H:i'),
+        'time_eaten' => $faker->time('H:i'),
     ];
 });

@@ -6,7 +6,8 @@ import axios from 'axios';
 export default {
     client() {
         let headers = {
-            "X-Requested-With": "XMLHttpRequest",
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json',
         };
 
 

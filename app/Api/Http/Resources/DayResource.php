@@ -34,7 +34,8 @@ class DayResource extends JsonResource
             'weight_eaten' => $day->weight_eaten,
             'created_at' => $day->created_at->toDateTimeString(),
             'updated_at' => $day->updated_at->toDateTimeString(),
-            'portions' => PortionResource::collection($day->portions)
+            'portions' => PortionMealResource::collection($day->portions),
+            'eaten' => $day->isEaten()
         ];
     }
 }
