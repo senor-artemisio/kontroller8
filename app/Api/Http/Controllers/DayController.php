@@ -38,4 +38,10 @@ class DayController extends Controller
 
         return DayResource::collection($days);
     }
+
+
+    public function day(string $date): DayResource
+    {
+
+    }
 }

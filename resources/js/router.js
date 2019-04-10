@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 
 import Dashboard from './pages/Dashboard';
 import Days from './pages/Days';
+import Day from './pages/Day';
 import Meals from './pages/Meals';
 import Meal from './pages/Meal';
 import Auth from './pages/Auth';
@@ -52,6 +53,15 @@ const router = new VueRouter({
                 menu: Menu
             },
             name: "days",
+            props: {default: true}
+        },
+        {
+            path: '/day/:date',
+            components: {
+                default: Day,
+                menu: Menu
+            },
+            name: "day",
             props: {default: true}
         }
     ],

@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|Carbon $created_at
  * @property string|Carbon $updated_at
  * @property Meal $meal
+ * @property Day $day
  */
 class Portion extends Model
 {
@@ -64,5 +65,13 @@ class Portion extends Model
     public function meal(): BelongsTo
     {
         return $this->belongsTo(Meal::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function day(): BelongsTo
+    {
+        return $this->belongsTo(Day::class);
     }
 }

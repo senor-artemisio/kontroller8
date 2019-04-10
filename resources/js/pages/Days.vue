@@ -19,12 +19,29 @@
         <div class="row border border-right-0 border-bottom-0 border-top-0">
             <div v-for="day in items" :class="getDayCssClass(day)">
                 <h5 class="row align-items-center">
-                    <span :class="getDayTitleCssClass(day)">{{day.title}}
+                    <span :class="getDayTitleCssClass(day)">
+                        {{day.title}}
                         <b-link :to="getDayUrl(day)" class="day-edit-link"><i class="fas fa-pen ml-2"></i></b-link>
                     </span>
                     <small class="col d-sm-none text-center text-muted">{{day.dayOfWeek}}</small>
                     <span class="col-1"></span>
                 </h5>
+                <p class="text-primary" v-if="day.weight !== day.weight_eaten">
+                    {{day.weight}}g / {{day.weight_eaten}}g<br>
+                    <span class="text-success">{{day.protein}}g</span> /
+                    <span class="text-light">{{day.fat}}g</span> /
+                    <span class="text-danger">{{day.carbohydrates}}g</span>
+                    <br>
+                    <span class="text-success">{{day.protein_eaten}}g</span> /
+                    <span class="text-light">{{day.fat_eaten}}g</span> /
+                    <span class="text-danger">{{day.carbohydrates_eaten}}g</span>
+                </p>
+                <p class="text-primary" v-else>
+                    {{day.weight}}g<br>
+                    <span class="text-success">{{day.protein}}g</span> /
+                    <span class="text-light">{{day.fat}}g</span> /
+                    <span class="text-danger">{{day.carbohydrates}}g</span>
+                </p>
                 <p v-if="isEmptyPortions(day)">No portions</p>
                 <div v-else>
                     <p v-for="portion in day.portions" :class="getPortionCssClass(portion, day)"
@@ -33,6 +50,10 @@
                         <span class="text-capitalize">{{portion.meal.title}}</span><br>
                         <small v-if="portion.eaten">{{portion.weight}}g / {{ portion.time_eaten }}</small>
                         <small v-else>{{portion.weight}}g / {{ portion.time_plan }}</small>
+                        <br>
+                        <small>
+                            {{portion.protein}}g / {{portion.fat}}g / {{portion.carbohydrates}}g
+                        </small>
                     </p>
                 </div>
             </div>

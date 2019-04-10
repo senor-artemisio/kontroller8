@@ -66,9 +66,23 @@ class DayRepository
      * @return Day|Model
      * @throws ModelNotFoundException
      */
-    public function findById(string $id): Day
+    public function findById(string $id): ?Day
     {
-        return $this->day->findOrFail($id);
+        return $this->day->where('id', $id)->get()->first();
+    }
+
+    public function findByDate(string $date): ?Day
+    {
+        $day = $this->day->where('date', $date)->get()->first();
+        if ($day === null) {
+            $day = new Day([
+                'date' => $date,
+                'created_at' => $date,
+                'updated_at' => $date
+            ]);
+        }
+
+        return $day;
     }
 
     /**
@@ -79,13 +93,13 @@ class DayRepository
      * @param Carbon $date
      * @return Collection
      */
-    public function findWeekByOwner(string $userId, Carbon $date)
+    public function findWeekByOwner(string $userId, Carbon $date): Collection
     {
         // get existing days with portions from database
         $query = $this->day
             ->with([
-                'portions' => function (HasMany $query) {
-                    $query->orderBy('time_plan', 'asc');
+                'portions' => static function (HasMany $query) {
+                    $query->orderBy('time_plan');
                 },
                 'portions.meal'
             ])
@@ -101,7 +115,7 @@ class DayRepository
         $dateCursor = $date->copy()->subDays(3);
         for ($i = 1; $i <= 7; $i++) {
             // find day in existing days
-            $day = $existsDays->filter(function (Day $day) use ($dateCursor) {
+            $day = $existsDays->filter(static function (Day $day) use ($dateCursor) {
                 return $day->date->toDateString() === $dateCursor->toDateString();
             })->first();
 

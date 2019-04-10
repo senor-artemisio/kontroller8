@@ -64,14 +64,20 @@ class DayService
             'fiber_eaten' => 0,
             'weight_eaten' => 0
         ];
-//        foreach ($day->dayMeals as $dayMeal) {
-//            $attributes['protein'] += $dayMeal->protein_total;
-//            $attributes['fat'] += $dayMeal->fat_total;
-//            $attributes['carbohydrates'] += $dayMeal->carbohydrates_total;
-//            $attributes['fiber'] = $dayMeal->fiber_total;
-//            $attributes['weight'] = $dayMeal->weight;
-//            $attributes['weight_eaten'] = $dayMeal->weight_eaten;
-//        }
+        foreach ($day->portions as $portion) {
+            $attributes['protein'] += $portion->protein;
+            $attributes['fat'] += $portion->fat;
+            $attributes['carbohydrates'] += $portion->carbohydrates;
+            $attributes['fiber'] += $portion->fiber;
+            $attributes['weight'] += $portion->weight;
+            if ($portion->eaten) {
+                $attributes['protein_eaten'] += $portion->protein;
+                $attributes['fat_eaten'] += $portion->fat;
+                $attributes['carbohydrates_eaten'] += $portion->carbohydrates;
+                $attributes['fiber_eaten'] += $portion->fiber;
+                $attributes['weight_eaten'] += $portion->weight;
+            }
+        }
         $this->dayRepository->update($day, $attributes);
     }
 }
