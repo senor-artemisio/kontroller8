@@ -19,7 +19,9 @@
         <div class="row border border-right-0 border-bottom-0 border-top-0">
             <div v-for="day in items" :class="getDayCssClass(day)">
                 <h5 class="row align-items-center">
-                    <span :class="getDayTitleCssClass(day)">{{day.title}}</span>
+                    <span :class="getDayTitleCssClass(day)">{{day.title}}
+                        <b-link :to="getDayUrl(day)" class="day-edit-link"><i class="fas fa-pen ml-2"></i></b-link>
+                    </span>
                     <small class="col d-sm-none text-center text-muted">{{day.dayOfWeek}}</small>
                     <span class="col-1"></span>
                 </h5>
@@ -56,12 +58,17 @@
             this.title = moment(this.date, 'YYYY-MM-DD').format('MMMM Do YYYY');
             this.load(this.date);
         },
+
         watch: {
             '$route.params.date'(to, from) {
-                this.load(to);
+                this.load(to); // reload items when url params is changed
             }
         },
         methods: {
+            /**
+             * Load week from API.
+             * @param date
+             */
             load(date) {
                 const component = this;
                 this.client.get('days/week/' + date).then(function (response) {
@@ -70,6 +77,11 @@
                     component.title = moment(date, 'YYYY-MM-DD').format('MMMM Do YYYY');
                 });
             },
+            /**
+             * Make current day dark.
+             * @param day
+             * @returns {string}
+             */
             getDayCssClass(day) {
                 let cssClass = 'day col-sm p-2 border border-left-0 border-top-0 text-truncate';
                 if (day.date !== this.date) {
@@ -80,6 +92,28 @@
 
                 return cssClass;
             },
+            /**
+             * @param day
+             * @returns {string} url for manage day page
+             */
+            getDayUrl(day) {
+                console.log(day);
+                return '/day/' + day.date;
+            },
+            /**
+             * Makes portion through line or not depends from eaten property all portions in day.
+             * @param day
+             * @returns {string}
+             */
+            getDayTitleCssClass(day) {
+                return day.eaten && !this.isEmptyPortions(day) ? 'date col-1 text-overline' : 'date col-1';
+            },
+            /**
+             * Makes portion through line or not depends from eaten property.
+             * @param portion
+             * @param day
+             * @returns {string}
+             */
             getPortionCssClass(portion, day) {
                 let cssClass = 'cursor-pointer';
 
@@ -88,20 +122,34 @@
                 }
                 return cssClass;
             },
-            getDayTitleCssClass(day) {
-                return day.eaten ? 'date col-1 text-overline' : 'date col-1';
+            /**
+             * Check what day have portions.
+             * @param day
+             * @returns {boolean}
+             */
+            isEmptyPortions(day) {
+                return day.portions.length === 0;
             },
-            isEmptyPortions(item) {
-                return item.portions.length === 0;
-            },
+            /**
+             * @returns {string} previous day url
+             */
             getPrevUrl() {
                 return '/days/' + moment(this.date, 'YYYY-MM-DD').subtract(1, 'days').format('YYYY-MM-DD');
             },
+            /**
+             * @returns {string} next day url
+             */
             getNextUrl() {
                 return '/days/' + moment(this.date, 'YYYY-MM-DD').add(1, 'days').format('YYYY-MM-DD');
             },
+            /**
+             * Toggle eaten state for portion, save it in database.
+             * @param portion
+             */
             eatenToggle(portion) {
+                const component = this;
                 let p = this.$el.querySelector('#p-' + portion.id);
+
                 if (portion.eaten) {
                     p.classList.remove('text-overline');
                 } else {
@@ -115,8 +163,7 @@
                     url = 'portions/mark-eaten/' + portion.id;
                 }
 
-                const component = this;
-                this.client.post(url).then(function (response) {
+                this.client.post(url, {}).then(function (response) {
                     component.load(component.date);
                 });
 

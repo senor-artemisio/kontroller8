@@ -29,7 +29,7 @@ class Json
 
         if (\in_array($request->method(), ['POST', 'PUT', 'PATCH'])) {
             $contentTypeHeader = $request->header('Content-Type');
-            if (strpos($contentTypeHeader, $type) === 0) {
+            if (strpos($contentTypeHeader, $type) === false) {
                 return $this->badRequestResponse();
             }
         }
