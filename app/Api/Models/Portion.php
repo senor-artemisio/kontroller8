@@ -13,15 +13,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $day_id
  * @property string $meal_id
  * @property string $user_id
- * @property string $title
  * @property integer $protein
  * @property integer $fat
  * @property integer $carbohydrates
  * @property integer $fiber
  * @property integer $weight
  * @property bool $eaten
- * @property string|Carbon $time_plan
- * @property string|Carbon $time_eaten
+ * @property string|Carbon $time
  * @property string|Carbon $created_at
  * @property string|Carbon $updated_at
  * @property Meal $meal
@@ -48,13 +46,11 @@ class Portion extends Model
             'fiber',
             'weight',
             'eaten',
-            'time_plan',
-            'time_eaten',
+            'time',
         ];
         $this->casts = [
             'eaten' => 'bool',
-            'time_plan' => 'time',
-            'time_eaten' => 'time'
+            'time' => 'time',
         ];
         parent::__construct($attributes);
     }

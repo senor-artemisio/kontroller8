@@ -2,6 +2,10 @@
 
 namespace App\Api\Repositories;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
+
 /**
  * REST features for repository.
  */
@@ -52,5 +56,22 @@ trait Rest
         $this->columns = $columns;
 
         return $this;
+    }
+
+    /**
+     * @param Builder $query
+     * @return LengthAwarePaginator|Collection
+     */
+    protected function buildQuery(Builder $query)
+    {
+        if ($this->sortBy !== null) {
+            $query = $query->orderBy(snake_case($this->sortBy), $this->sortDirection);
+        }
+
+        if ($this->perPage !== null) {
+            return $query->paginate($this->perPage, $this->columns);
+        }
+
+        return $query->get($this->columns);
     }
 }

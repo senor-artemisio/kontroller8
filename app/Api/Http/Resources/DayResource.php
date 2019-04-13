@@ -32,10 +32,13 @@ class DayResource extends JsonResource
             'carbohydrates_eaten' => $day->carbohydrates_eaten,
             'fiber_eaten' => $day->fiber_eaten,
             'weight_eaten' => $day->weight_eaten,
+            'protein_percent' => $day->getProteinEatenPercent(),
+            'fat_percent' => $day->getFatEatenPercent(),
+            'carbohydrates_percent' => $day->getCarbohydratesEatenPercent(),
             'created_at' => $day->created_at->toDateTimeString(),
             'updated_at' => $day->updated_at->toDateTimeString(),
             'portions' => PortionMealResource::collection($day->portions),
-            'eaten' => $day->isEaten()
+            'eaten' => $day->isEaten(),
         ];
     }
 }

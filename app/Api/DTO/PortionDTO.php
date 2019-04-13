@@ -2,43 +2,34 @@
 
 namespace App\Api\DTO;
 
+
+/**
+ * Data transfer object for meal.
+ */
 class PortionDTO extends BaseDTO
 {
-    /** @var string */
-    private $id;
+    use NutritionAttributes;
 
     /** @var string */
-    private $dayId;
+    protected $id;
 
     /** @var string */
-    private $mealId;
+    protected $dayId;
 
     /** @var string */
-    private $userId;
+    protected $mealId;
+
+    /** @var string */
+    protected $userId;
 
     /** @var integer */
-    private $protein;
-
-    /** @var integer */
-    private $fat;
-
-    /** @var integer */
-    private $carbohydrates;
-
-    /** @var integer */
-    private $fiber;
-
-    /** @var integer */
-    private $weight;
+    protected $weight;
 
     /** @var bool */
-    private $eaten;
+    protected $eaten;
 
     /** @var string|null */
-    private $timePlan;
-
-    /** @var string|null */
-    private $timeEaten;
+    protected $time;
 
     /**
      * @return string
@@ -107,70 +98,6 @@ class PortionDTO extends BaseDTO
     /**
      * @return int
      */
-    public function getProtein(): int
-    {
-        return $this->protein;
-    }
-
-    /**
-     * @param int $protein
-     */
-    public function setProtein(int $protein): void
-    {
-        $this->protein = $protein;
-    }
-
-    /**
-     * @return int
-     */
-    public function getFat(): int
-    {
-        return $this->fat;
-    }
-
-    /**
-     * @param int $fat
-     */
-    public function setFat(int $fat): void
-    {
-        $this->fat = $fat;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCarbohydrates(): int
-    {
-        return $this->carbohydrates;
-    }
-
-    /**
-     * @param int $carbohydrates
-     */
-    public function setCarbohydrates(int $carbohydrates): void
-    {
-        $this->carbohydrates = $carbohydrates;
-    }
-
-    /**
-     * @return int
-     */
-    public function getFiber(): int
-    {
-        return $this->fiber;
-    }
-
-    /**
-     * @param int $fiber
-     */
-    public function setFiber(int $fiber): void
-    {
-        $this->fiber = $fiber;
-    }
-
-    /**
-     * @return int
-     */
     public function getWeight(): int
     {
         return $this->weight;
@@ -187,7 +114,7 @@ class PortionDTO extends BaseDTO
     /**
      * @return bool
      */
-    public function isEaten(): bool
+    public function getEaten(): bool
     {
         return $this->eaten;
     }
@@ -203,33 +130,17 @@ class PortionDTO extends BaseDTO
     /**
      * @return string|null
      */
-    public function getTimePlan(): ?string
+    public function getTime(): ?string
     {
-        return $this->timePlan;
+        return $this->time;
     }
 
     /**
-     * @param string|null $timePlan
+     * @param string|null $time
      */
-    public function setTimePlan(?string $timePlan): void
+    public function setTime(?string $time): void
     {
-        $this->timePlan = $timePlan;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getTimeEaten(): ?string
-    {
-        return $this->timeEaten;
-    }
-
-    /**
-     * @param string|null $timeEaten
-     */
-    public function setTimeEaten(?string $timeEaten): void
-    {
-        $this->timeEaten = $timeEaten;
+        $this->time = $time;
     }
 
     /**
@@ -245,8 +156,7 @@ class PortionDTO extends BaseDTO
             'fiber',
             'weight',
             'eaten',
-            'timePlan',
-            'timeEaten',
+            'time',
         ];
     }
 }

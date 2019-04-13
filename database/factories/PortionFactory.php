@@ -10,14 +10,13 @@ $factory->define(Portion::class, function (Faker $faker) {
         'id' => Ulid::generate(),
         'day_id' => Ulid::generate(),
         'meal_id' => Ulid::generate(),
+        'user_id' => Ulid::generate(),
         'protein' => $faker->numberBetween(0, 200),
         'fat' => $faker->numberBetween(0, 200),
         'carbohydrates' => $faker->numberBetween(0, 200),
         'fiber' => $faker->numberBetween(0, 200),
         'weight' => $faker->numberBetween(1, 500),
         'eaten' => $faker->boolean,
-        'user_id' => Ulid::generate(),
-        'time_plan' => $faker->time('H:i'),
-        'time_eaten' => $faker->time('H:i'),
+        'time' => $faker->time('H:i'),
     ];
 });

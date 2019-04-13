@@ -19,7 +19,7 @@ class DayServiceTest extends TestCase
     use RefreshDatabase;
 
     /** @var DayService */
-    private $dayService;
+    private $service;
 
     /** @var Day */
     private $day;
@@ -34,7 +34,7 @@ class DayServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->dayService = $this->app->make(DayService::class);
+        $this->service = $this->app->make(DayService::class);
         $this->day = new Day();
         $this->user = factory(User::class)->create();
     }
@@ -50,11 +50,11 @@ class DayServiceTest extends TestCase
             'date' => Carbon::now()->format('Y-m-d')
         ]);
 
-        $this->dayService->create($dto, $this->user->id);
+        $this->service->create($dto, $this->user->id);
 
         $this->assertDatabaseHas('days', [
-            'id' => $dto->id,
-            'date' => $dto->date,
+            'id' => $dto->getId(),
+            'date' => $dto->getDate(),
             'protein' => 0,
             'fat' => 0,
             'fiber' => 0,
@@ -64,5 +64,16 @@ class DayServiceTest extends TestCase
             'fiber_eaten' => 0,
             'weight_eaten' => 0
         ]);
+    }
+
+    /**
+     * @throws \Exception
+     * @covers  \App\Api\Services\DayService::delete()
+     */
+    public function testDelete(): void
+    {
+        $day = factory(Day::class)->create();
+        $this->service->delete($day);
+        $this->assertDatabaseMissing($this->day->getTable(), ['id' => $day->id]);
     }
 }

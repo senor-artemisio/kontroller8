@@ -4,36 +4,36 @@ namespace Tests\Unit\Meal;
 
 use App\Api\Repositories\MealRepository;
 use App\Api\Models\Meal;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
- * @see MealRepository
+ * @covers \App\Api\Repositories\MealRepository
  */
 class MealRepositoryTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @var MealRepository */
-    protected $mealRepository;
+    protected $repository;
 
     /** @var Meal */
     protected $meal;
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->mealRepository = $this->app->make(MealRepository::class);
+        $this->repository = $this->app->make(MealRepository::class);
         $this->meal = new Meal();
     }
 
     /**
-     * @return void
-     * @see MealRepository::create()
+     * @covers \App\Api\Repositories\MealRepository::create()
      */
     public function testCreate(): void
     {
@@ -41,13 +41,13 @@ class MealRepositoryTest extends TestCase
         $meal = factory(Meal::class)->make();
         $attributes = $meal->attributesToArray();
 
-        $this->mealRepository->create($attributes);
+        $this->repository->create($attributes);
 
         $this->assertDatabaseHas($this->meal->getTable(), $attributes);
     }
 
     /**
-     * @see MealRepository::update()
+     * @covers \App\Api\Repositories\MealRepository::update()
      */
     public function testUpdate(): void
     {
@@ -56,7 +56,7 @@ class MealRepositoryTest extends TestCase
         $attributes = $meal->attributesToArray();
         $attributes['title'] = 'chicken breast';
 
-        $this->mealRepository->update($meal, $attributes);
+        $this->repository->update($meal, $attributes);
 
         $this->assertDatabaseHas($this->meal->getTable(), [
             'id' => $meal->id,
@@ -65,13 +65,47 @@ class MealRepositoryTest extends TestCase
     }
 
     /**
+     * @covers \App\Api\Repositories\MealRepository::delete()
      * @throws \Exception
-     *@see MealRepository::delete()
      */
     public function testDelete(): void
     {
         $meal = factory(Meal::class)->create();
-        $this->mealRepository->delete($meal);
+        $this->repository->delete($meal);
         $this->assertDatabaseMissing($this->meal->getTable(), ['id' => $meal->id]);
+    }
+
+    /**
+     * @covers \App\Api\Repositories\MealRepository::findById()
+     */
+    public function testFindById(): void
+    {
+        $meal = factory(Meal::class)->create();
+        $mealFounded = $this->repository->findById($meal->id);
+
+        $this->assertEquals($meal->id, $mealFounded->id);
+    }
+
+    /**
+     * @covers \App\Api\Repositories\MealRepository::findById()
+     */
+    public function testFindByIdNotExists(): void
+    {
+        factory(Meal::class)->create();
+        $this->expectException(ModelNotFoundException::class);
+        $this->repository->findById(\Ulid::generate());
+    }
+
+    /**
+     * @covers \App\Api\Repositories\MealRepository::findByOwner()
+     */
+    public function testFindByOwner(): void
+    {
+        factory(Meal::class, 3)->create();
+        $meal = factory(Meal::class)->create();
+
+        $meals = $this->repository->findByOwner($meal->user_id);
+        $this->assertCount(1, $meals);
+        $this->assertEquals($meal->id, $meals->first()->id);
     }
 }

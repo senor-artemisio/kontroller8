@@ -76,4 +76,40 @@ class Day extends Model
 
         return true;
     }
+
+    /**
+     * @return int
+     */
+    public function getProteinEatenPercent(): int
+    {
+        if ($this->weight === 0) {
+            return 0;
+        }
+
+        return ceil($this->protein_eaten / ($this->protein / 100));
+    }
+
+    /**
+     * @return int
+     */
+    public function getFatEatenPercent(): int
+    {
+        if ($this->weight === 0) {
+            return 0;
+        }
+
+        return ceil($this->fat_eaten / ($this->fat / 100));
+    }
+
+    /**
+     * @return int
+     */
+    public function getCarbohydratesEatenPercent(): int
+    {
+        if ($this->weight === 0) {
+            return 0;
+        }
+
+        return ceil($this->carbohydrates_eaten / ($this->carbohydrates / 100));
+    }
 }

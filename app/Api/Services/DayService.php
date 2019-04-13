@@ -30,8 +30,8 @@ class DayService
     {
         $dto->setUserId($userId);
         $this->dayRepository->create([
-            'id' => $dto->id,
-            'date' => $dto->date,
+            'id' => $dto->getId(),
+            'date' => $dto->getDate(),
             'protein' => 0,
             'fat' => 0,
             'carbohydrates' => 0,
@@ -42,8 +42,17 @@ class DayService
             'carbohydrates_eaten' => 0,
             'fiber_eaten' => 0,
             'weight_eaten' => 0,
-            'user_id' => $dto->userId
+            'user_id' => $dto->getUserId()
         ]);
+    }
+
+    /**
+     * @param Day $day
+     * @throws \Exception
+     */
+    public function delete(Day $day): void
+    {
+        $this->dayRepository->delete($day);
     }
 
     /**

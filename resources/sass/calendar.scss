@@ -15,10 +15,15 @@
 @media (min-width: 576px) {
   .calendar .day {
     height: 70vh;
+    overflow-y: scroll;
   }
 }
 
 .calendar .caption a {
   padding-left: 5px;
   padding-right: 5px;
+}
+
+.calendar .portion{
+  line-height:1.3;
 }

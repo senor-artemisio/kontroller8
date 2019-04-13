@@ -28,15 +28,15 @@ class MealService
      */
     public function create(MealDTO $dto, string $userId): void
     {
-        $dto->userId=$userId;
+        $dto->setUserId($userId);
         $this->mealRepository->create([
-            'id' => $dto->id,
-            'title' => $dto->title,
-            'user_id' => $dto->userId,
-            'protein' => $dto->protein,
-            'fat' => $dto->fat,
-            'carbohydrates' => $dto->carbohydrates,
-            'fiber' => $dto->fiber,
+            'id' => $dto->getId(),
+            'title' => $dto->getTitle(),
+            'user_id' => $dto->getUserId(),
+            'protein' => $dto->getProtein(),
+            'fat' => $dto->getFat(),
+            'carbohydrates' => $dto->getCarbohydrates(),
+            'fiber' => $dto->getFiber(),
         ]);
     }
 

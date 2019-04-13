@@ -13,40 +13,15 @@ abstract class BaseDTO
      */
     public function __construct(array $attributes)
     {
-        foreach ($attributes as $name => $value) {
-            $this->__set($name, $value);
+        foreach ($attributes as $attribute => $value) {
+            $setter = camel_case("set_$attribute");
+            if (method_exists($this, $setter)) {
+                $property = camel_case($attribute);
+                $this->$property = $value;
+            } else {
+                throw new DTOException($attribute);
+            }
         }
-    }
-
-    /**
-     * @param $name
-     * @return mixed
-     * @throws DTOException
-     */
-    public function __get($name)
-    {
-        $getter = camel_case("get_$name");
-        if (method_exists($this, $getter)) {
-            return $this->$getter();
-        }
-
-        throw new DTOException($name);
-    }
-
-    /**
-     * @param $name
-     * @param $value
-     * @throws DTOException
-     */
-    public function __set($name, $value)
-    {
-        $setter = camel_case("set_$name");
-        if (method_exists($this, $setter)) {
-            $this->$setter($value);
-            return;
-        }
-
-        throw new DTOException($name);
     }
 
     /**

@@ -4,11 +4,10 @@ namespace App\Api\Repositories;
 
 use App\Api\Models\Day;
 use Exception;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 /**
@@ -16,11 +15,11 @@ use Illuminate\Support\Collection;
  */
 class DayRepository
 {
+    use Rest;
+
     /** @var Builder */
     private $day;
 
-    /** @var array */
-    private $columns = ['*'];
 
     /**
      * Init repo.
@@ -62,88 +61,26 @@ class DayRepository
     }
 
     /**
-     * @param string $id
+     * @param string $dayId
      * @return Day|Model
      * @throws ModelNotFoundException
      */
-    public function findById(string $id): ?Day
+    public function findById(string $dayId): ?Day
     {
-        return $this->day->where('id', $id)->get()->first();
+        return $this->day->findOrFail($dayId);
     }
 
-    public function findByDate(string $date): ?Day
-    {
-        $day = $this->day->where('date', $date)->get()->first();
-        if ($day === null) {
-            $day = new Day([
-                'date' => $date,
-                'created_at' => $date,
-                'updated_at' => $date
-            ]);
-        }
-
-        return $day;
-    }
 
     /**
-     * Make collection of 7 days for a date.
-     * For not existing days make empty day model.
-     *
      * @param string $userId
-     * @param Carbon $date
-     * @return Collection
+     * @return Collection|LengthAwarePaginator
      */
-    public function findWeekByOwner(string $userId, Carbon $date): Collection
+    public function findByOwner(string $userId)
     {
-        // get existing days with portions from database
-        $query = $this->day
-            ->with([
-                'portions' => static function (HasMany $query) {
-                    $query->orderBy('time_plan');
-                },
-                'portions.meal'
-            ])
-            ->where('user_id', $userId)
-            ->whereBetween('date', [
-                $date->copy()->subDays(3),
-                $date->copy()->addDays(3)
-            ]);
+        $query = $this->day->where('user_id', $userId);
 
-        $existsDays = $query->get($this->columns);
-        $days = [];
-        // set cursor to first day of week
-        $dateCursor = $date->copy()->subDays(3);
-        for ($i = 1; $i <= 7; $i++) {
-            // find day in existing days
-            $day = $existsDays->filter(static function (Day $day) use ($dateCursor) {
-                return $day->date->toDateString() === $dateCursor->toDateString();
-            })->first();
-
-            // if day not found replace it by new empty day model
-            if ($day === null) {
-                $day = new Day([
-                    'protein' => 0,
-                    'fat' => 0,
-                    'carbohydrates' => 0,
-                    'fiber' => 0,
-                    'weight' => 0,
-                    'protein_eaten' => 0,
-                    'fat_eaten' => 0,
-                    'carbohydrates_eaten' => 0,
-                    'fiber_eaten' => 0,
-                    'weight_eaten' => 0,
-                    'date' => $dateCursor,
-                ]);
-                $day->created_at = $dateCursor;
-                $day->updated_at = $dateCursor;
-            }
-
-            $days[] = $day;
-
-            // seek cursor to next day
-            $dateCursor->addDay();
-        }
-
-        return collect($days);
+        return $this->buildQuery($query);
     }
+
+
 }

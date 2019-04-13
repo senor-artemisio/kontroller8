@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $user->id,
                 'date' => $date->addDay()->format('Y-m-d')
             ]);
-            factory(Meal::class, 5)->create(['user_id' => $user->id])
+            factory(Meal::class, 15)->create(['user_id' => $user->id])
                 ->each(function (Meal $meal) use ($user, $day) {
                     factory(Portion::class)->create([
                         'user_id' => $user->id,

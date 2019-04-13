@@ -11,33 +11,32 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
- * @see MealService
+ * @covers \App\Api\Services\MealService
  */
 class MealServiceTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @var MealService */
-    protected $mealService;
+    protected $service;
 
     /** @var Meal */
     protected $meal;
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->mealService = $this->app->make(MealService::class);
+        $this->service = $this->app->make(MealService::class);
         $this->meal = new Meal();
     }
 
     /**
      * @return void
      * @throws DTOException
-     * @see MealService::create()
+     * @covers  \App\Api\Services\MealService::create()
      */
     public function testCreate(): void
     {
@@ -49,7 +48,7 @@ class MealServiceTest extends TestCase
         unset($attributes['created_at'], $attributes['updated_at'], $attributes['user_id']);
 
         $dto = new MealDTO($attributes);
-        $this->mealService->create($dto, $user->id);
+        $this->service->create($dto, $user->id);
 
         $attributes['user_id'] = $user->id;
         $this->assertDatabaseHas($this->meal->getTable(), $attributes);
@@ -57,7 +56,7 @@ class MealServiceTest extends TestCase
 
     /**
      * @throws DTOException
-     * @see MealService::update()
+     * @covers  \App\Api\Services\MealService::update()
      */
     public function testUpdate(): void
     {
@@ -65,7 +64,7 @@ class MealServiceTest extends TestCase
         $attributes = ['title' => 'chicken breast'];
         $dto = new MealDTO($attributes);
 
-        $this->mealService->update($meal, $dto);
+        $this->service->update($meal, $dto);
 
         $this->assertDatabaseHas($this->meal->getTable(), [
             'id' => $meal->id,
@@ -75,12 +74,12 @@ class MealServiceTest extends TestCase
 
     /**
      * @throws \Exception
-     * @see MealService::delete()
+     * @covers  \App\Api\Services\MealService::delete()
      */
     public function testDelete(): void
     {
         $meal = factory(Meal::class)->create();
-        $this->mealService->delete($meal);
+        $this->service->delete($meal);
         $this->assertDatabaseMissing($this->meal->getTable(), ['id' => $meal->id]);
     }
 }

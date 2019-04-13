@@ -2,9 +2,12 @@
 
 namespace Tests\Unit\Portion;
 
+use App\Api\DTO\DTOException;
+use App\Api\DTO\PortionDTO;
 use App\Api\Models\Portion;
+use App\Api\Models\User;
 use App\Api\Services\PortionService;
-use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
@@ -12,6 +15,8 @@ use Tests\TestCase;
  */
 class PortionServiceTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @var PortionService */
     private $service;
 
@@ -21,7 +26,7 @@ class PortionServiceTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->portion = new Portion();
@@ -29,43 +34,52 @@ class PortionServiceTest extends TestCase
     }
 
     /**
-     * @covers \App\Api\Services\PortionService::markEaten()
+     * @return void
+     * @throws DTOException
+     * @see PortionService::create()
      */
-    public function testMarkEaten(): void
+    public function testCreate(): void
     {
-        $hasEaten = factory(Portion::class)->create(['eaten' => true]);
-        $notEaten = factory(Portion::class)->create(['eaten' => false]);
+        /** @var Portion $portion */
+        $portion = factory(Portion::class)->make();
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        $attributes = $portion->attributesToArray();
+        unset($attributes['created_at'], $attributes['updated_at'], $attributes['user_id']);
 
-        $portion = factory(Portion::class)->create(['eaten' => false, 'time_eaten' => '10:00']);
-        $this->service->markEaten($portion);
+        $dto = new PortionDTO($attributes);
+        $this->service->create($dto, $user->id);
 
-        $this->assertDatabaseHas($this->portion->getTable(), [
-            'id' => $portion->id,
-            'eaten' => true,
-            'time_eaten' => Carbon::now()->format('H:i')
-        ]);
-        $this->assertDatabaseHas($this->portion->getTable(), ['id' => $hasEaten->id, 'eaten' => true]);
-        $this->assertDatabaseHas($this->portion->getTable(), ['id' => $notEaten->id, 'eaten' => false]);
+        $attributes['user_id'] = $user->id;
+        $this->assertDatabaseHas($this->portion->getTable(), $attributes);
     }
 
     /**
-     * @covers \App\Api\Services\PortionService::unmarkEaten()
+     * @throws DTOException
+     * @covers  \App\Api\Services\PortionService::update()
      */
-    public function testUnmarkEaten(): void
+    public function testUpdate(): void
     {
-        $hasEaten = factory(Portion::class)->create(['eaten' => true]);
-        $notEaten = factory(Portion::class)->create(['eaten' => false]);
+        $portion = factory(Portion::class)->create();
+        $attributes = ['fat' => 10];
+        $dto = new PortionDTO($attributes);
 
-        $portion = factory(Portion::class)->create(['eaten' => true]);
-        $this->service->unmarkEaten($portion);
+        $this->service->update($portion, $dto);
 
         $this->assertDatabaseHas($this->portion->getTable(), [
             'id' => $portion->id,
-            'eaten' => false,
-            'time_eaten' => null
+            'fat' => $attributes['fat']
         ]);
+    }
 
-        $this->assertDatabaseHas($this->portion->getTable(), ['id' => $hasEaten->id, 'eaten' => true]);
-        $this->assertDatabaseHas($this->portion->getTable(), ['id' => $notEaten->id, 'eaten' => false]);
+    /**
+     * @throws \Exception
+     * @covers  \App\Api\Services\PortionService::delete()
+     */
+    public function testDelete(): void
+    {
+        $portion = factory(Portion::class)->create();
+        $this->service->delete($portion);
+        $this->assertDatabaseMissing($this->portion->getTable(), ['id' => $portion->id]);
     }
 }

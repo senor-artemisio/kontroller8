@@ -59,13 +59,13 @@ class MealRepository
     }
 
     /**
-     * @param string $id
+     * @param string $mealId
      * @return Meal|Model
      * @throws ModelNotFoundException
      */
-    public function findById(string $id): Meal
+    public function findById(string $mealId): Meal
     {
-        return $this->meal->findOrFail($id);
+        return $this->meal->findOrFail($mealId);
     }
 
     /**
@@ -76,14 +76,6 @@ class MealRepository
     {
         $query = $this->meal->where('user_id', $userId);
 
-        if ($this->sortBy !== null) {
-            $query = $query->orderBy(snake_case($this->sortBy), $this->sortDirection);
-        }
-
-        if ($this->perPage !== null) {
-            return $query->paginate($this->perPage, $this->columns);
-        }
-
-        return $query->get($this->columns);
+        return $this->buildQuery($query);
     }
 }

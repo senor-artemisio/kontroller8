@@ -60,8 +60,7 @@ class Init extends Migration
             $table->integer('fiber')->nullable(false);
             $table->integer('weight')->nullable(false);
             $table->boolean('eaten')->nullable(false);
-            $table->time('time_plan')->nullable();
-            $table->time('time_eaten')->nullable();
+            $table->time('time')->nullable();
 
             $table->timestamps();
 

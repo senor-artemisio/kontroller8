@@ -3,11 +3,10 @@
 namespace Tests\Unit\Day;
 
 use App\Api\Models\Day;
-use App\Api\Models\User;
 use App\Api\Repositories\DayRepository;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 /**
@@ -18,16 +17,10 @@ class DayRepositoryTest extends TestCase
     use RefreshDatabase;
 
     /** @var DayRepository */
-    protected $dayRepository;
+    protected $repository;
 
     /** @var Day */
-    protected $dayModel;
-
-    /** @var User */
-    private $user;
-
-    /** @var */
-    private $weekDates;
+    protected $day;
 
     /**
      * {@inheritdoc}
@@ -35,12 +28,8 @@ class DayRepositoryTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->dayRepository = $this->app->make(DayRepository::class);
-        $this->dayModel = new Day();
-        $this->user = factory(User::class)->create();
-        $this->weekDates = [
-            '1999-12-29', '1999-12-30', '1999-12-31', '2000-01-01', '2000-01-02', '2000-01-03', '2000-01-04'
-        ];
+        $this->repository = $this->app->make(DayRepository::class);
+        $this->day = new Day();
     }
 
     /**
@@ -52,9 +41,9 @@ class DayRepositoryTest extends TestCase
         $day = factory(Day::class)->make();
         $attributes = $day->attributesToArray();
 
-        $this->dayRepository->create($attributes);
+        $this->repository->create($attributes);
 
-        $this->assertDatabaseHas($this->dayModel->getTable(), $attributes);
+        $this->assertDatabaseHas($this->day->getTable(), $attributes);
     }
 
     /**
@@ -67,9 +56,9 @@ class DayRepositoryTest extends TestCase
         $attributes = $day->attributesToArray();
         $attributes['fat'] = 3;
 
-        $this->dayRepository->update($day, $attributes);
+        $this->repository->update($day, $attributes);
 
-        $this->assertDatabaseHas($this->dayModel->getTable(), [
+        $this->assertDatabaseHas($this->day->getTable(), [
             'id' => $day->id,
             'fat' => $attributes['fat']
         ]);
@@ -82,87 +71,41 @@ class DayRepositoryTest extends TestCase
     public function testDelete(): void
     {
         $day = factory(Day::class)->create();
-        $this->dayRepository->delete($day);
-        $this->assertDatabaseMissing($this->dayModel->getTable(), ['id' => $day->id]);
+        $this->repository->delete($day);
+        $this->assertDatabaseMissing($this->day->getTable(), ['id' => $day->id]);
     }
 
     /**
-     * Check find week for date without existing days.
+     * @covers \App\Api\Repositories\DayRepository::findById()
      */
-    public function testFindWeekByOwnerNotExists(): void
+    public function testFindById(): void
     {
-        $date = Carbon::parse('2000-01-01 00:00:00');
-        $days = $this->dayRepository->findWeekByOwner($this->user->id, $date);
+        $day = factory(Day::class)->create();
+        $dayFounded = $this->repository->findById($day->id);
 
-        foreach ($this->weekDates as $key => $date) {
-            $this->assertEquals($days->get($key)->date, Carbon::parse($date));
-        }
+        $this->assertEquals($day->id, $dayFounded->id);
     }
 
     /**
-     * Check find week for date with existing days.
+     * @covers \App\Api\Repositories\DayRepository::findById()
      */
-    public function testFindWeekByOwnerExists(): void
+    public function testFindByIdNotExists(): void
     {
-        $expectedDays = collect([]);
-
-        foreach ($this->weekDates as $date) {
-            $expectedDays->push(factory(Day::class)->create([
-                'user_id' => $this->user->id,
-                'date' => Carbon::parse($date),
-            ]));
-        }
-
-        $days = $this->dayRepository->findWeekByOwner($this->user->id, Carbon::parse('2000-01-01'));
-
-        $expectedDays->each(function (Day $expectedDay, int $key) use ($days) {
-            $expectedDayData = $expectedDay->toArray();
-            $dayData = $days->get($key)->toArray();
-            unset($expectedDayData['portions'], $dayData['portions']);
-            $this->assertEquals($expectedDayData, $dayData);
-        });
+        factory(Day::class)->create();
+        $this->expectException(ModelNotFoundException::class);
+        $this->repository->findById(\Ulid::generate());
     }
 
     /**
-     * Check find week for date with partially existing days.
+     * @covers \App\Api\Repositories\DayRepository::findByOwner()
      */
-    public function testFindWeekByOwnerPartialExists(): void
+    public function testFindByOwner(): void
     {
-        $expectedDays = collect([]);
+        factory(Day::class, 3)->create();
+        $day = factory(Day::class)->create();
 
-        foreach ($this->weekDates as $key => $date) {
-            if ($key === 3 || $key === 5) {
-                $expectedDay = new Day([
-                    'date' => Carbon::parse($date),
-                    'protein' => 0,
-                    'fat' => 0,
-                    'carbohydrates' => 0,
-                    'fiber' => 0,
-                    'weight' => 0,
-                    'protein_eaten' => 0,
-                    'fat_eaten' => 0,
-                    'carbohydrates_eaten' => 0,
-                    'fiber_eaten' => 0,
-                    'weight_eaten' => 0,
-                ]);
-                $expectedDay->created_at = $expectedDay->date;
-                $expectedDay->updated_at = $expectedDay->date;
-            } else {
-                $expectedDay = factory(Day::class)->create([
-                    'user_id' => $this->user->id,
-                    'date' => Carbon::parse($date)
-                ]);
-            }
-            $expectedDays->push($expectedDay);
-        }
-
-        $days = $this->dayRepository->findWeekByOwner($this->user->id, Carbon::parse('2000-01-01'));
-
-        $expectedDays->each(function (Day $expectedDay, int $key) use ($days) {
-            $expectedDayData = $expectedDay->toArray();
-            $dayData = $days->get($key)->toArray();
-            unset($expectedDayData['portions'], $dayData['portions']);
-            $this->assertEquals($expectedDayData, $dayData);
-        });
+        $meals = $this->repository->findByOwner($day->user_id);
+        $this->assertCount(1, $meals);
+        $this->assertEquals($day->id, $meals->first()->id);
     }
 }

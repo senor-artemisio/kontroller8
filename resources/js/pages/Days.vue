@@ -1,4 +1,4 @@
-<template>
+<template xmlns="http://www.w3.org/1999/html">
     <div class="container-fluid calendar">
         <header>
             <h4 class="display-5 mb-3 mt-3 text-center caption">
@@ -19,42 +19,29 @@
         <div class="row border border-right-0 border-bottom-0 border-top-0">
             <div v-for="day in items" :class="getDayCssClass(day)">
                 <h5 class="row align-items-center">
-                    <span :class="getDayTitleCssClass(day)">
+                    <span class="date col-1">
                         {{day.title}}
                         <b-link :to="getDayUrl(day)" class="day-edit-link"><i class="fas fa-pen ml-2"></i></b-link>
                     </span>
                     <small class="col d-sm-none text-center text-muted">{{day.dayOfWeek}}</small>
                     <span class="col-1"></span>
                 </h5>
-                <p class="text-primary" v-if="day.weight !== day.weight_eaten">
-                    {{day.weight}}g / {{day.weight_eaten}}g<br>
-                    <span class="text-success">{{day.protein}}g</span> /
-                    <span class="text-light">{{day.fat}}g</span> /
-                    <span class="text-danger">{{day.carbohydrates}}g</span>
-                    <br>
-                    <span class="text-success">{{day.protein_eaten}}g</span> /
-                    <span class="text-light">{{day.fat_eaten}}g</span> /
-                    <span class="text-danger">{{day.carbohydrates_eaten}}g</span>
-                </p>
-                <p class="text-primary" v-else>
-                    {{day.weight}}g<br>
-                    <span class="text-success">{{day.protein}}g</span> /
-                    <span class="text-light">{{day.fat}}g</span> /
-                    <span class="text-danger">{{day.carbohydrates}}g</span>
+                <p class="text-primary">
+                    <span class="text-success">{{day.protein_percent}}%</span> /
+                    <span class="text-info">{{day.fat_percent}}%</span> /
+                    <span class="text-danger">{{day.carbohydrates_percent}}%</span>
                 </p>
                 <p v-if="isEmptyPortions(day)">No portions</p>
                 <div v-else>
-                    <p v-for="portion in day.portions" :class="getPortionCssClass(portion, day)"
-                       v-on:click.prevent="eatenToggle(portion)"
-                       :id="'p-'+portion.id">
-                        <span class="text-capitalize">{{portion.meal.title}}</span><br>
-                        <small v-if="portion.eaten">{{portion.weight}}g / {{ portion.time_eaten }}</small>
-                        <small v-else>{{portion.weight}}g / {{ portion.time_plan }}</small>
-                        <br>
-                        <small>
-                            {{portion.protein}}g / {{portion.fat}}g / {{portion.carbohydrates}}g
-                        </small>
-                    </p>
+                    <div v-for="portion in day.portions" :class="getPortionCssClass(portion, day)"
+                         v-on:click.prevent="eatenToggle(portion)"
+                         :id="'p-'+portion.id">
+                        <span class="text-capitalize">{{portion.meal.title}}</span>
+                        <div class="pb-3 d-block">
+                            <span class="badge badge-secondary">{{portion.weight}}g</span>
+                            <span class="badge badge-secondary">{{ portion.time }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -122,21 +109,13 @@
                 return '/day/' + day.date;
             },
             /**
-             * Makes portion through line or not depends from eaten property all portions in day.
-             * @param day
-             * @returns {string}
-             */
-            getDayTitleCssClass(day) {
-                return day.eaten && !this.isEmptyPortions(day) ? 'date col-1 text-overline' : 'date col-1';
-            },
-            /**
              * Makes portion through line or not depends from eaten property.
              * @param portion
              * @param day
              * @returns {string}
              */
             getPortionCssClass(portion, day) {
-                let cssClass = 'cursor-pointer';
+                let cssClass = 'cursor-pointer portion';
 
                 if (portion.eaten) {
                     cssClass += ' text-muted text-overline';

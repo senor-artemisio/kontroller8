@@ -19,8 +19,7 @@ class PortionResource extends JsonResource
         /** @var Portion $portion */
         $portion = $this;
 
-        $timeEaten = $portion->time_eaten ? Carbon::createFromTimeString($portion->time_eaten)->format('H:i') : null;
-        $timePlan = $portion->time_plan ? Carbon::createFromTimeString($portion->time_plan)->format('H:i') : null;
+        $time = $portion->time ? Carbon::createFromTimeString($portion->time)->format('H:i') : null;
 
         return [
             'id' => $portion->id,
@@ -32,8 +31,7 @@ class PortionResource extends JsonResource
             'eaten' => $portion->eaten,
             'created_at' => $portion->created_at->toDateTimeString(),
             'updated_at' => $portion->updated_at->toDateTimeString(),
-            'time_eaten' => $timeEaten,
-            'time_plan' => $timePlan
+            'time' => $time,
         ];
     }
 }

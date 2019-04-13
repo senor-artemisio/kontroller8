@@ -2,17 +2,19 @@
 
 namespace App\Api\Services;
 
+use App\Api\DTO\PortionDTO;
 use App\Api\Models\Portion;
 use App\Api\Repositories\PortionRepository;
-use Carbon\Carbon;
 
+/**
+ * Business logic for portion.
+ */
 class PortionService
 {
     /** @var PortionRepository */
     private $portionRepository;
 
     /**
-     * PortionService constructor.
      * @param PortionRepository $portionRepository
      */
     public function __construct(PortionRepository $portionRepository)
@@ -21,24 +23,42 @@ class PortionService
     }
 
     /**
-     * @param Portion $portion
+     * @param PortionDTO $dto
+     * @param string $userId
      */
-    public function markEaten(Portion $portion): void
+    public function create(PortionDTO $dto, string $userId): void
     {
-        $this->portionRepository->update($portion, [
-            'eaten' => true,
-            'time_eaten' => Carbon::now()->format('H:i')
+        $dto->setUserId($userId);
+        $this->portionRepository->create([
+            'id' => $dto->getId(),
+            'user_id' => $dto->getUserId(),
+            'day_id' => $dto->getDayId(),
+            'meal_id' => $dto->getMealId(),
+            'protein' => $dto->getProtein(),
+            'fat' => $dto->getFat(),
+            'carbohydrates' => $dto->getCarbohydrates(),
+            'fiber' => $dto->getFiber(),
+            'weight' => $dto->getWeight(),
+            'eaten' => $dto->getEaten(),
+            'time' => $dto->getTime()
         ]);
     }
 
     /**
      * @param Portion $portion
+     * @param PortionDTO $dto
      */
-    public function unmarkEaten(Portion $portion): void
+    public function update(Portion $portion, PortionDTO $dto): void
     {
-        $this->portionRepository->update($portion, [
-            'eaten' => false,
-            'time_eaten' => null
-        ]);
+        $this->portionRepository->update($portion, $dto->getChangedValues());
+    }
+
+    /**
+     * @param Portion $portion
+     * @throws \Exception
+     */
+    public function delete(Portion $portion): void
+    {
+        $this->portionRepository->delete($portion);
     }
 }

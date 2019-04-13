@@ -29,12 +29,9 @@ class PortionRequest extends FormRequest
             }, $rules);
         }
 
-        $timeRules = [
-            'time_plan' => 'sometimes|date_format:H:i',
-            'time_eaten' => 'sometimes|date_format:H:i'
-        ];
+        $rules['time'] = 'sometimes|date_format:H:i';
 
-        return array_merge($rules, $timeRules);
+        return $rules;
     }
 
     /**
