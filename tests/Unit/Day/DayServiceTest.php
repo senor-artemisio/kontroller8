@@ -5,6 +5,7 @@ namespace Tests\Unit\Day;
 use App\Api\DTO\DayDTO;
 use App\Api\DTO\DTOException;
 use App\Api\Models\Day;
+use App\Api\Models\Portion;
 use App\Api\Models\User;
 use App\Api\Services\DayService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -75,5 +76,62 @@ class DayServiceTest extends TestCase
         $day = factory(Day::class)->create();
         $this->service->delete($day);
         $this->assertDatabaseMissing($this->day->getTable(), ['id' => $day->id]);
+    }
+
+
+    /**
+     * @covers \App\Api\Services\DayService::refresh()
+     */
+    public function testRefresh(): void
+    {
+        $anotherDay = factory(Day::class)->create();
+        factory(Portion::class, 3)->create(['day_id' => $anotherDay->id, 'user_id' => $anotherDay->user_id]);
+
+        $day = factory(Day::class)->create([
+            'protein' => 0,
+            'fiber' => 0,
+            'fat' => 0,
+            'weight' => 0,
+            'carbohydrates' => 0,
+            'protein_eaten' => 0,
+            'fat_eaten' => 0,
+            'fiber_eaten' => 0,
+            'carbohydrates_eaten' => 0,
+        ]);
+        factory(Portion::class, 2)->create([
+            'day_id' => $day->id,
+            'user_id' => $day->user_id,
+            'protein' => 1,
+            'fat' => 1,
+            'carbohydrates' => 1,
+            'fiber' => 1,
+            'eaten' => true,
+            'weight' => 1,
+        ]);
+        factory(Portion::class, 3)->create([
+            'day_id' => $day->id,
+            'user_id' => $day->user_id,
+            'protein' => 1,
+            'fat' => 1,
+            'carbohydrates' => 1,
+            'fiber' => 1,
+            'eaten' => false,
+            'weight' => 1,
+        ]);
+
+        $this->service->refresh($day);
+
+        $this->assertDatabaseHas($this->day->getTable(), [
+            'id' => $day->id,
+            'protein' => 5,
+            'fat' => 5,
+            'carbohydrates' => 5,
+            'fiber' => 5,
+            'protein_eaten' => 2,
+            'fat_eaten' => 2,
+            'carbohydrates_eaten' => 2,
+            'fiber_eaten' => 2,
+            'weight' => 5,
+        ]);
     }
 }
