@@ -96,7 +96,7 @@ class AuthApiTest extends TestCase
     }
 
     /**
-     * @covers \App\Api\Http\Controllers\AuthController::login()
+     * @covers \App\Api\Http\Controllers\AuthController::signin()
      */
     public function testSignInAuthorized(): void
     {

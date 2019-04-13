@@ -8,16 +8,16 @@ namespace App\Api\DTO;
 class UserDTO extends BaseDTO
 {
     /** @var string */
-    private $id;
+    protected $id;
 
     /** @var string */
-    private $name;
+    protected $name;
 
     /** @var string */
-    private $email;
+    protected $email;
 
     /** @var string */
-    private $password;
+    protected $password;
 
     /**
      * @return string
