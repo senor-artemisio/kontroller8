@@ -18,13 +18,14 @@ Route::middleware(['json'])->group(function () {
     Route::middleware(['auth:api'])->group(function () {
         Route::resource('meals', 'MealController')
             ->only('index', 'show', 'store', 'destroy', 'update');
-        Route::resource('days', 'DayController')
-            ->only('store', 'destroy', 'update');
-        Route::get('days/week/{date}', 'DayController@week')->name('days.week');
-        Route::get('users/me', 'UserController@me');
 
-        Route::post('portions/mark-eaten/{portion}', 'PortionController@markEaten');
-        Route::post('portions/unmark-eaten/{portion}', 'PortionController@unmarkEaten');
+        Route::resource('days', 'DayController')
+            ->only('index', 'store', 'destroy', 'update');
+
+        Route::resource('days/{day}/portions', 'PortionController')
+            ->only('index', 'store', 'destroy', 'update');
+
+        Route::get('users/me', 'UserController@me');
     });
     Route::post('auth/sign-in', 'AuthController@signin');
     Route::post('auth/sign-up', 'AuthController@signup');

@@ -14,26 +14,13 @@ class PortionPolicy
     use HandlesAuthorization;
 
     /**
-     * Check access for mark portion eaten.
+     * Check access for create portions.
      *
-     * @param Portion $portion
      * @param User $user
      * @return bool
      */
-    public function markEaten(User $user, Portion $portion): bool
+    public function create(User $user): bool
     {
-        return $portion->user_id === $user->getAuthIdentifier();
-    }
-
-    /**
-     * Check access for unmark portion eaten.
-     *
-     * @param Portion $portion
-     * @param User $user
-     * @return bool
-     */
-    public function unmarkEaten(User $user, Portion $portion): bool
-    {
-        return $portion->user_id === $user->getAuthIdentifier();
+        return true;
     }
 }

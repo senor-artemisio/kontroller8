@@ -14,13 +14,7 @@ class PortionDTO extends BaseDTO
     protected $id;
 
     /** @var string */
-    protected $dayId;
-
-    /** @var string */
     protected $mealId;
-
-    /** @var string */
-    protected $userId;
 
     /** @var integer */
     protected $weight;
@@ -50,22 +44,6 @@ class PortionDTO extends BaseDTO
     /**
      * @return string
      */
-    public function getDayId(): string
-    {
-        return $this->dayId;
-    }
-
-    /**
-     * @param string $dayId
-     */
-    public function setDayId(string $dayId): void
-    {
-        $this->dayId = $dayId;
-    }
-
-    /**
-     * @return string
-     */
     public function getMealId(): string
     {
         return $this->mealId;
@@ -77,22 +55,6 @@ class PortionDTO extends BaseDTO
     public function setMealId(string $mealId): void
     {
         $this->mealId = $mealId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserId(): string
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @param string $userId
-     */
-    public function setUserId(string $userId): void
-    {
-        $this->userId = $userId;
     }
 
     /**

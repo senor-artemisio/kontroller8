@@ -4,6 +4,7 @@ namespace Tests\Unit\Portion;
 
 use App\Api\DTO\DTOException;
 use App\Api\DTO\PortionDTO;
+use App\Api\Models\Day;
 use App\Api\Models\Portion;
 use App\Api\Models\User;
 use App\Api\Services\PortionService;
@@ -40,17 +41,22 @@ class PortionServiceTest extends TestCase
      */
     public function testCreate(): void
     {
-        /** @var Portion $portion */
+        $day = factory(Day::class)->create();
         $portion = factory(Portion::class)->make();
-        /** @var User $user */
         $user = factory(User::class)->create();
         $attributes = $portion->attributesToArray();
-        unset($attributes['created_at'], $attributes['updated_at'], $attributes['user_id']);
+        unset(
+            $attributes['created_at'],
+            $attributes['updated_at'],
+            $attributes['user_id'],
+            $attributes['day_id']
+        );
 
         $dto = new PortionDTO($attributes);
-        $this->service->create($dto, $user->id);
+        $this->service->create($dto, $user->id, $day->id);
 
         $attributes['user_id'] = $user->id;
+        $attributes['day_id'] = $day->id;
         $this->assertDatabaseHas($this->portion->getTable(), $attributes);
     }
 

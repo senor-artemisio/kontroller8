@@ -76,10 +76,10 @@ class MealController extends Controller
     public function store(MealRequest $request): MealResource
     {
         $dto = new MealDTO($request->all());
-        $dto->id = \Ulid::generate();
+        $dto->setId(\Ulid::generate());
 
         $this->mealService->create($dto, Auth::user()->getAuthIdentifier());
-        $meal = $this->mealRepository->findById($dto->id);
+        $meal = $this->mealRepository->findById($dto->getId());
         $meal->wasRecentlyCreated = true;
 
         return MealResource::make($meal);

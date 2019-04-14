@@ -16,11 +16,8 @@ class PortionRequest extends FormRequest
     {
         $rules = [
             'eaten' => 'required|bool',
-            'protein' => 'integer|required',
-            'fat' => 'integer|required',
-            'carbohydrates' => 'integer|required',
-            'fiber' => 'integer|require',
-            'weight' => 'integer|require',
+            'meal_id' => 'string|size:26|exists:meals,id',
+            'weight' => 'integer|required'
         ];
 
         if ($this->getMethod() === 'PATCH') {

@@ -14,13 +14,49 @@ class DayPolicy
     use HandlesAuthorization;
 
     /**
-     * Check access for view week
+     * Check access for view days list
      *
      * @param User $user
      * @return bool
      */
-    public function week(User $user): bool
+    public function list(User $user): bool
     {
         return true;
+    }
+
+    /**
+     * Check access for view day.
+     *
+     * @param User $user
+     * @param Day $day
+     * @return mixed
+     */
+    public function view(User $user, Day $day): bool
+    {
+        return $user->getAuthIdentifier() === $day->user_id;
+    }
+
+    /**
+     * Check access for change day.
+     *
+     * @param User $user
+     * @param Day $day
+     * @return mixed
+     */
+    public function update(User $user, Day $day): bool
+    {
+        return $user->getAuthIdentifier() === $day->user_id;
+    }
+
+    /**
+     * Check access for delete day.
+     *
+     * @param User $user
+     * @param Day $day
+     * @return mixed
+     */
+    public function delete(User $user, Day $day)
+    {
+        return $user->getAuthIdentifier() === $day->user_id;
     }
 }

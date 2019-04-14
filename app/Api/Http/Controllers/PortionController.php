@@ -2,7 +2,12 @@
 
 namespace App\Api\Http\Controllers;
 
+use App\Api\DTO\DTOException;
+use App\Api\DTO\PortionDTO;
+use App\Api\Http\Requests\PortionRequest;
+use App\Api\Http\Requests\PortionsRequest;
 use App\Api\Http\Resources\PortionResource;
+use App\Api\Models\Day;
 use App\Api\Models\Portion;
 use App\Api\Repositories\DayRepository;
 use App\Api\Repositories\PortionRepository;
@@ -10,7 +15,8 @@ use App\Api\Services\DayService;
 use App\Api\Services\PortionService;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\Auth;
 
 class PortionController extends Controller
 {
@@ -46,44 +52,43 @@ class PortionController extends Controller
     }
 
     /**
-     * @param Portion $portion
-     * @return PortionResource
+     * @param PortionsRequest $request
+     * @param Day $day
+     * @return ResourceCollection
      * @throws AuthorizationException
      */
-    public function markEaten(Portion $portion): PortionResource
+    public function index(PortionsRequest $request, Day $day): ResourceCollection
     {
-        $this->authorize('markEaten', $portion);
-        $this->portionService->markEaten($portion);
+        $this->authorize('view', $day);
 
-        $day = $this->dayRepository->findById($portion->day_id);
-        if ($day === null) {
-            throw new ModelNotFoundException('Day not found.');
-        }
-        $this->dayService->refresh($day);
+        $portions = $this->portionRepository
+            ->paginate($request->getPerPage())
+            ->sort($request->getSortBy(), $request->getSortDirection())
+            ->findByDay($day->id);
 
-        $updatedPortion = $this->portionRepository->findById($portion->id);
-
-        return PortionResource::make($updatedPortion);
+        return PortionResource::collection($portions);
     }
 
     /**
-     * @param Portion $portion
+     * @param PortionRequest $request
+     * @param Day $day
      * @return PortionResource
      * @throws AuthorizationException
+     * @throws DTOException
      */
-    public function unmarkEaten(Portion $portion): PortionResource
+    public function store(PortionRequest $request, Day $day): PortionResource
     {
-        $this->authorize('unmarkEaten', $portion);
-        $this->portionService->unmarkEaten($portion);
+        $this->authorize('create', Portion::class);
+        $this->authorize('update', $day);
 
-        $day = $this->dayRepository->findById($portion->day_id);
-        if ($day === null) {
-            throw new ModelNotFoundException('Day not found.');
-        }
-        $this->dayService->refresh($day);
+        $dto = new PortionDTO($request->all());
+        $dto->setId(\Ulid::generate());
 
-        $updatedPortion = $this->portionRepository->findById($portion->id);
+        $this->portionService->create($dto, Auth::user()->getAuthIdentifier(), $day->id);
 
-        return PortionResource::make($updatedPortion);
+        $portion = $this->portionRepository->findById($dto->getId());
+        $portion->wasRecentlyCreated = true;
+
+        return PortionResource::make($portion);
     }
 }
