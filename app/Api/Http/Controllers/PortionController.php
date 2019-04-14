@@ -3,15 +3,15 @@
 namespace App\Api\Http\Controllers;
 
 use App\Api\DTO\DTOException;
+use App\Api\DTO\MealDTO;
 use App\Api\DTO\PortionDTO;
 use App\Api\Http\Requests\PortionRequest;
 use App\Api\Http\Requests\PortionsRequest;
 use App\Api\Http\Resources\PortionResource;
 use App\Api\Models\Day;
 use App\Api\Models\Portion;
-use App\Api\Repositories\DayRepository;
+use App\Api\Repositories\MealRepository;
 use App\Api\Repositories\PortionRepository;
-use App\Api\Services\DayService;
 use App\Api\Services\PortionService;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -26,29 +26,23 @@ class PortionController extends Controller
     /** @var PortionService */
     private $portionService;
 
-    /** @var DayService */
-    private $dayService;
-
-    /** @var DayRepository */
-    private $dayRepository;
+    /** @var MealRepository */
+    private $mealRepository;
 
     /**
      * @param PortionService $portionService
      * @param PortionRepository $portionRepository
-     * @param DayService $dayService
-     * @param DayRepository $dayRepository
+     * @param MealRepository $mealRepository
      */
     public function __construct(
         PortionService $portionService,
         PortionRepository $portionRepository,
-        DayService $dayService,
-        DayRepository $dayRepository
+        MealRepository $mealRepository
     )
     {
         $this->portionRepository = $portionRepository;
         $this->portionService = $portionService;
-        $this->dayService = $dayService;
-        $this->dayRepository = $dayRepository;
+        $this->mealRepository = $mealRepository;
     }
 
     /**
@@ -81,12 +75,15 @@ class PortionController extends Controller
         $this->authorize('create', Portion::class);
         $this->authorize('update', $day);
 
-        $dto = new PortionDTO($request->all());
-        $dto->setId(\Ulid::generate());
+        $portionDTO = new PortionDTO($request->all());
+        $portionDTO->setId(\Ulid::generate());
 
-        $this->portionService->create($dto, Auth::user()->getAuthIdentifier(), $day->id);
+        $meal = $this->mealRepository->findById($portionDTO->getMealId());
+        $mealDTO = MealDTO::createFromModel($meal);
 
-        $portion = $this->portionRepository->findById($dto->getId());
+        $this->portionService->create($portionDTO, $mealDTO, Auth::user()->getAuthIdentifier(), $day->id);
+
+        $portion = $this->portionRepository->findById($portionDTO->getId());
         $portion->wasRecentlyCreated = true;
 
         return PortionResource::make($portion);

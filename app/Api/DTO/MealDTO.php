@@ -2,6 +2,8 @@
 
 namespace App\Api\DTO;
 
+use App\Api\Models\Meal;
+
 /**
  * Data transfer object for meal.
  */
@@ -17,6 +19,13 @@ class MealDTO extends BaseDTO
 
     /** @var string */
     protected $userId;
+
+    public static function createFromModel(Meal $meal):MealDTO
+    {
+        $attributes = $meal->attributesToArray();
+        unset($attributes['updated_at'], $attributes['created_at']);
+        return new static($attributes);
+    }
 
     /**
      * @return string

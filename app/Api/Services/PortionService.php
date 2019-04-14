@@ -2,7 +2,9 @@
 
 namespace App\Api\Services;
 
+use App\Api\DTO\MealDTO;
 use App\Api\DTO\PortionDTO;
+use App\Api\Models\Meal;
 use App\Api\Models\Portion;
 use App\Api\Repositories\MealRepository;
 use App\Api\Repositories\PortionRepository;
@@ -32,30 +34,27 @@ class PortionService
     }
 
     /**
-     * @param PortionDTO $dto
+     * @param PortionDTO $portionDTO
      * @param string $userId
      * @param string $dayId
-     * @throws AuthorizationException
      */
-    public function create(PortionDTO $dto, string $userId, string $dayId): void
+    public function create(PortionDTO $portionDTO, MealDTO $mealDTO, string $userId, string $dayId): void
     {
-        $meal = $this->mealRepository->findById($dto->getMealId());
-        $this->authorize('view', $meal);
 
-        $weightK = $dto->getWeight() / 100;
+        $weightK = $portionDTO->getWeight() / 100;
 
         $this->portionRepository->create([
-            'id' => $dto->getId(),
+            'id' => $portionDTO->getId(),
             'user_id' => $userId,
             'day_id' => $dayId,
-            'meal_id' => $dto->getMealId(),
-            'protein' => (int)($meal->protein * $weightK),
-            'fat' => (int)($meal->fat * $weightK),
-            'carbohydrates' => (int)($meal->carbohydrates * $weightK),
-            'fiber' => (int)($meal->fiber * $weightK),
-            'weight' => $dto->getWeight(),
-            'eaten' => $dto->getEaten(),
-            'time' => $dto->getTime()
+            'meal_id' => $portionDTO->getMealId(),
+            'protein' => (int)($mealDTO->getProtein() * $weightK),
+            'fat' => (int)($mealDTO->getFat() * $weightK),
+            'carbohydrates' => (int)($mealDTO->getCarbohydrates() * $weightK),
+            'fiber' => (int)($mealDTO->getFiber() * $weightK),
+            'weight' => $portionDTO->getWeight(),
+            'eaten' => $portionDTO->getEaten(),
+            'time' => $portionDTO->getTime()
         ]);
     }
 

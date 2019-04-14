@@ -3,11 +3,14 @@
 namespace Tests\Unit\Portion;
 
 use App\Api\DTO\DTOException;
+use App\Api\DTO\MealDTO;
 use App\Api\DTO\PortionDTO;
 use App\Api\Models\Day;
+use App\Api\Models\Meal;
 use App\Api\Models\Portion;
 use App\Api\Models\User;
 use App\Api\Services\PortionService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -37,13 +40,15 @@ class PortionServiceTest extends TestCase
     /**
      * @return void
      * @throws DTOException
+     * @throws AuthorizationException
      * @see PortionService::create()
      */
     public function testCreate(): void
     {
-        $day = factory(Day::class)->create();
-        $portion = factory(Portion::class)->make();
         $user = factory(User::class)->create();
+        $day = factory(Day::class)->create(['user_id' => $user->id]);
+        $meal = factory(Meal::class)->create(['user_id' => $user->id]);
+        $portion = factory(Portion::class)->make(['meal_id' => $meal->id]);
         $attributes = $portion->attributesToArray();
         unset(
             $attributes['created_at'],
@@ -52,8 +57,9 @@ class PortionServiceTest extends TestCase
             $attributes['day_id']
         );
 
-        $dto = new PortionDTO($attributes);
-        $this->service->create($dto, $user->id, $day->id);
+        $portionDTO = new PortionDTO($attributes);
+        $mealDTO = MealDTO::createFromModel($meal);
+        $this->service->create($portionDTO, $mealDTO, $user->id, $day->id);
 
         $attributes['user_id'] = $user->id;
         $attributes['day_id'] = $day->id;
