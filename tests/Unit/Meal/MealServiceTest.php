@@ -40,10 +40,9 @@ class MealServiceTest extends TestCase
      */
     public function testCreate(): void
     {
-        /** @var Meal $meal */
         $meal = factory(Meal::class)->make();
-        /** @var User $user */
         $user = factory(User::class)->create();
+
         $attributes = $meal->attributesToArray();
         unset($attributes['created_at'], $attributes['updated_at'], $attributes['user_id']);
 

@@ -60,7 +60,7 @@ class PortionRepository
 
     /**
      * @param string $portionId
-     * @return Portion
+     * @return Portion|Model
      */
     public function findById(string $portionId): Portion
     {

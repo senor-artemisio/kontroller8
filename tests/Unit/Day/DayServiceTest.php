@@ -87,17 +87,8 @@ class DayServiceTest extends TestCase
         $anotherDay = factory(Day::class)->create();
         factory(Portion::class, 3)->create(['day_id' => $anotherDay->id, 'user_id' => $anotherDay->user_id]);
 
-        $day = factory(Day::class)->create([
-            'protein' => 0,
-            'fiber' => 0,
-            'fat' => 0,
-            'weight' => 0,
-            'carbohydrates' => 0,
-            'protein_eaten' => 0,
-            'fat_eaten' => 0,
-            'fiber_eaten' => 0,
-            'carbohydrates_eaten' => 0,
-        ]);
+        $day = factory(Day::class)->create();
+
         factory(Portion::class, 2)->create([
             'day_id' => $day->id,
             'user_id' => $day->user_id,
@@ -108,6 +99,7 @@ class DayServiceTest extends TestCase
             'eaten' => true,
             'weight' => 1,
         ]);
+
         factory(Portion::class, 3)->create([
             'day_id' => $day->id,
             'user_id' => $day->user_id,

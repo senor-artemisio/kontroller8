@@ -11,10 +11,10 @@ namespace App\Api\DTO;
  * @property float $fat
  * @property float $carbohydrates
  * @property float $fiber
- * @property integer $proteinEaten
- * @property integer $fatEaten
- * @property integer $carbohydratesEaten
- * @property integer $fiberEaten
+ * @property float $proteinEaten
+ * @property float $fatEaten
+ * @property float $carbohydratesEaten
+ * @property float $fiberEaten
  * @property integer $weightEaten
  * @property integer $weight
  *
@@ -33,22 +33,22 @@ class DayDTO extends BaseDTO
     /** @var string */
     protected $userId;
 
-    /** @var integer */
+    /** @var float */
     protected $weight;
 
-    /** @var integer */
+    /** @var float */
     protected $weightEaten;
 
-    /** @var integer */
+    /** @var float */
     protected $proteinEaten;
 
-    /** @var integer */
+    /** @var float */
     protected $fatEaten;
 
-    /** @var integer */
+    /** @var float */
     protected $carbohydratesEaten;
 
-    /** @var integer */
+    /** @var float */
     protected $fiberEaten;
 
     /**
@@ -84,65 +84,65 @@ class DayDTO extends BaseDTO
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getProteinEaten(): int
+    public function getProteinEaten(): float
     {
         return $this->proteinEaten;
     }
 
     /**
-     * @param int $proteinEaten
+     * @param float $proteinEaten
      */
-    public function setProteinEaten(int $proteinEaten): void
+    public function setProteinEaten(float $proteinEaten): void
     {
         $this->proteinEaten = $proteinEaten;
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getFatEaten(): int
+    public function getFatEaten(): float
     {
         return $this->fatEaten;
     }
 
     /**
-     * @param int $fatEaten
+     * @param float $fatEaten
      */
-    public function setFatEaten(int $fatEaten): void
+    public function setFatEaten(float $fatEaten): void
     {
         $this->fatEaten = $fatEaten;
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getCarbohydratesEaten(): int
+    public function getCarbohydratesEaten(): float
     {
         return $this->carbohydratesEaten;
     }
 
     /**
-     * @param int $carbohydratesEaten
+     * @param float $carbohydratesEaten
      */
-    public function setCarbohydratesEaten(int $carbohydratesEaten): void
+    public function setCarbohydratesEaten(float $carbohydratesEaten): void
     {
         $this->carbohydratesEaten = $carbohydratesEaten;
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getFiberEaten(): int
+    public function getFiberEaten(): float
     {
         return $this->fiberEaten;
     }
 
     /**
-     * @param int $fiberEaten
+     * @param float $fiberEaten
      */
-    public function setFiberEaten(int $fiberEaten): void
+    public function setFiberEaten(float $fiberEaten): void
     {
         $this->fiberEaten = $fiberEaten;
     }

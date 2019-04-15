@@ -10,7 +10,6 @@ use App\Api\Models\Meal;
 use App\Api\Models\Portion;
 use App\Api\Models\User;
 use App\Api\Services\PortionService;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -40,7 +39,6 @@ class PortionServiceTest extends TestCase
     /**
      * @return void
      * @throws DTOException
-     * @throws AuthorizationException
      * @see PortionService::create()
      */
     public function testCreate(): void
@@ -48,7 +46,10 @@ class PortionServiceTest extends TestCase
         $user = factory(User::class)->create();
         $day = factory(Day::class)->create(['user_id' => $user->id]);
         $meal = factory(Meal::class)->create(['user_id' => $user->id]);
-        $portion = factory(Portion::class)->make(['meal_id' => $meal->id]);
+        $portion = factory(Portion::class)->make([
+            'meal_id' => $meal->id,
+            'weight' => 100,
+        ]);
         $attributes = $portion->attributesToArray();
         unset(
             $attributes['created_at'],
@@ -68,19 +69,52 @@ class PortionServiceTest extends TestCase
 
     /**
      * @throws DTOException
+     * @throws \Exception
      * @covers  \App\Api\Services\PortionService::update()
      */
     public function testUpdate(): void
     {
+        /** @var Portion $portion */
         $portion = factory(Portion::class)->create();
-        $attributes = ['fat' => 10];
-        $dto = new PortionDTO($attributes);
+        $attributes = ['weight' => 100];
+        $portionDTO = new PortionDTO($attributes);
 
-        $this->service->update($portion, $dto);
+        $this->service->update($portion, $portionDTO);
 
         $this->assertDatabaseHas($this->portion->getTable(), [
             'id' => $portion->id,
-            'fat' => $attributes['fat']
+            'weight' => 100,
+            'protein' => $portion->meal->protein,
+            'fat' => $portion->meal->fat,
+            'carbohydrates' => $portion->meal->carbohydrates,
+            'fiber' => $portion->meal->fiber,
+        ]);
+    }
+
+    /**
+     * @throws DTOException
+     * @throws \Exception
+     * @covers  \App\Api\Services\PortionService::update()
+     */
+    public function testUpdateMeal(): void
+    {
+        /** @var Portion $portion */
+        $portion = factory(Portion::class)->create();
+        $attributes = ['weight' => 100];
+        $meal = factory(Meal::class)->create(['user_id' => $portion->user_id]);
+
+        $portionDTO = new PortionDTO($attributes);
+        $mealDTO = MealDTO::createFromModel($meal);
+
+        $this->service->update($portion, $portionDTO, $mealDTO);
+
+        $this->assertDatabaseHas($this->portion->getTable(), [
+            'id' => $portion->id,
+            'weight' => 100,
+            'protein' => $meal->protein,
+            'fat' => $meal->fat,
+            'carbohydrates' => $meal->carbohydrates,
+            'fiber' => $meal->fiber,
         ]);
     }
 

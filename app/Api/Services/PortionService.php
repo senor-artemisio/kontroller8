@@ -4,11 +4,9 @@ namespace App\Api\Services;
 
 use App\Api\DTO\MealDTO;
 use App\Api\DTO\PortionDTO;
-use App\Api\Models\Meal;
 use App\Api\Models\Portion;
 use App\Api\Repositories\MealRepository;
 use App\Api\Repositories\PortionRepository;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 /**
@@ -26,6 +24,7 @@ class PortionService
 
     /**
      * @param PortionRepository $portionRepository
+     * @param MealRepository $mealRepository
      */
     public function __construct(PortionRepository $portionRepository, MealRepository $mealRepository)
     {
@@ -35,23 +34,23 @@ class PortionService
 
     /**
      * @param PortionDTO $portionDTO
+     * @param MealDTO $mealDTO
      * @param string $userId
      * @param string $dayId
      */
     public function create(PortionDTO $portionDTO, MealDTO $mealDTO, string $userId, string $dayId): void
     {
-
-        $weightK = $portionDTO->getWeight() / 100;
+        $this->applyMeal($portionDTO, $mealDTO);
 
         $this->portionRepository->create([
             'id' => $portionDTO->getId(),
             'user_id' => $userId,
             'day_id' => $dayId,
             'meal_id' => $portionDTO->getMealId(),
-            'protein' => (int)($mealDTO->getProtein() * $weightK),
-            'fat' => (int)($mealDTO->getFat() * $weightK),
-            'carbohydrates' => (int)($mealDTO->getCarbohydrates() * $weightK),
-            'fiber' => (int)($mealDTO->getFiber() * $weightK),
+            'protein' => $portionDTO->getProtein(),
+            'fat' => $portionDTO->getFat(),
+            'carbohydrates' => $portionDTO->getCarbohydrates(),
+            'fiber' => $portionDTO->getFiber(),
             'weight' => $portionDTO->getWeight(),
             'eaten' => $portionDTO->getEaten(),
             'time' => $portionDTO->getTime()
@@ -60,11 +59,30 @@ class PortionService
 
     /**
      * @param Portion $portion
-     * @param PortionDTO $dto
+     * @param PortionDTO $portionDTO
+     * @param MealDTO|null $mealDTO
      */
-    public function update(Portion $portion, PortionDTO $dto): void
+    public function update(Portion $portion, PortionDTO $portionDTO, ?MealDTO $mealDTO = null): void
     {
-        $this->portionRepository->update($portion, $dto->getChangedValues());
+        $updateAllowedAttributes = ['meal_id', 'weight', 'eaten', 'time'];
+
+        $changedValues = $portionDTO->getChangedValues();
+
+        foreach ($changedValues as $attribute => $value) {
+            if (!in_array($attribute, $updateAllowedAttributes, true)) {
+                throw new \LogicException("Denied to update attribute $attribute");
+            }
+        }
+
+        if ($mealDTO !== null) {
+            $this->applyMeal($portionDTO, $mealDTO);
+        } elseif (isset($changedValues['weight'])) {
+            $meal = $this->mealRepository->findById($portion->meal_id);
+            $mealDTO = MealDTO::createFromModel($meal);
+            $this->applyMeal($portionDTO, $mealDTO);
+        }
+
+        $this->portionRepository->update($portion, $portionDTO->getChangedValues());
     }
 
     /**
@@ -74,5 +92,19 @@ class PortionService
     public function delete(Portion $portion): void
     {
         $this->portionRepository->delete($portion);
+    }
+
+    /**
+     * @param PortionDTO $portionDTO
+     * @param MealDTO $mealDTO
+     */
+    private function applyMeal(PortionDTO $portionDTO, MealDTO $mealDTO): void
+    {
+        $k = $portionDTO->getWeight() / 100;
+        $portionDTO->setProtein(round($mealDTO->getProtein() * $k, 2));
+        $portionDTO->setFat(round($mealDTO->getFat() * $k, 2));
+        $portionDTO->setCarbohydrates(round($mealDTO->getCarbohydrates() * $k, 2));
+        $portionDTO->setFiber(round($mealDTO->getFiber() * $k, 2));
+        $portionDTO->setMealId($mealDTO->getId());
     }
 }

@@ -11,16 +11,16 @@ use Illuminate\Support\Carbon;
  *
  * @property string $id
  * @property string|Carbon $date
- * @property integer $protein
- * @property integer $fat
- * @property integer $carbohydrates
- * @property integer $fiber
+ * @property float $protein
+ * @property float $fat
+ * @property float $carbohydrates
+ * @property float $fiber
  * @property integer $weight
- * @property integer $protein_eaten
- * @property integer $fat_eaten
- * @property integer $carbohydrates_eaten
- * @property integer $fiber_eaten
- * @property integer $weight_eaten
+ * @property float $protein_eaten
+ * @property float $fat_eaten
+ * @property float $carbohydrates_eaten
+ * @property float $fiber_eaten
+ * @property float $weight_eaten
  * @property string $user_id
  * @property string|Carbon $created_at
  * @property string|Carbon $updated_at

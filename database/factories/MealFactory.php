@@ -1,6 +1,7 @@
 <?php
 
 use App\Api\Models\Meal;
+use App\Api\Models\User;
 use Faker\Generator as Faker;
 use Illuminate\Database\Eloquent\Factory;
 
@@ -14,6 +15,8 @@ $factory->define(Meal::class, function (Faker $faker) {
         'fat' => $faker->randomFloat(1, 0, 33),
         'carbohydrates' => $faker->randomFloat(1, 0, 33),
         'fiber' => $faker->randomFloat(1, 0, 100),
-        'user_id' => Ulid::generate()
+        'user_id' => function () {
+            return factory(User::class)->create()->id;
+        }
     ];
 });

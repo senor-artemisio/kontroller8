@@ -38,15 +38,6 @@ class Meal extends Model
             'fiber',
             'user_id'
         ];
-        $this->casts = [
-            'id' => 'string',
-            'title' => 'string',
-            'protein' => 'float',
-            'fat' => 'float',
-            'carbohydrates' => 'float',
-            'fiber' => 'float',
-            'user_id' => 'string'
-        ];
 
         parent::__construct($attributes);
     }

@@ -13,10 +13,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $day_id
  * @property string $meal_id
  * @property string $user_id
- * @property integer $protein
- * @property integer $fat
- * @property integer $carbohydrates
- * @property integer $fiber
+ * @property float $protein
+ * @property float $fat
+ * @property float $carbohydrates
+ * @property float $fiber
  * @property integer $weight
  * @property bool $eaten
  * @property string|Carbon $time
