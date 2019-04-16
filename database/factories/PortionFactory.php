@@ -23,17 +23,17 @@ $factory->define(Portion::class, function (Faker $faker) {
             return factory(Meal::class)->create(['user_id' => $portion['user_id']])->id;
         },
         'protein' => function (array $portion) {
-            return round(Meal::find($portion['meal_id'])->protein * $portion['weight'] / 100, 2);
+            return round(Meal::find($portion['meal_id'])->protein * $portion['weight'] / 100, 1);
         },
 
         'fat' => function (array $portion) {
-            return round(Meal::find($portion['meal_id'])->fat * $portion['weight'] / 100, 2);
+            return round(Meal::find($portion['meal_id'])->fat * $portion['weight'] / 100, 1);
         },
         'carbohydrates' => function (array $portion) {
-            return round(Meal::find($portion['meal_id'])->carbohydrates * $portion['weight'] / 100, 2);
+            return round(Meal::find($portion['meal_id'])->carbohydrates * $portion['weight'] / 100, 1);
         },
         'fiber' => function (array $portion) {
-            return round(Meal::find($portion['meal_id'])->fiber * $portion['weight'] / 100, 2);
+            return round(Meal::find($portion['meal_id'])->fiber * $portion['weight'] / 100, 1);
         },
         'eaten' => $faker->boolean,
         'time' => $faker->time(),

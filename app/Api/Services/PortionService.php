@@ -74,6 +74,10 @@ class PortionService
             }
         }
 
+        if (!isset($changedValues['weight'])) {
+            $portionDTO->setWeight($portion->weight);
+        }
+
         if ($mealDTO !== null) {
             $this->applyMeal($portionDTO, $mealDTO);
         } elseif (isset($changedValues['weight'])) {
@@ -100,11 +104,12 @@ class PortionService
      */
     private function applyMeal(PortionDTO $portionDTO, MealDTO $mealDTO): void
     {
+        $precision = 1;
         $k = $portionDTO->getWeight() / 100;
-        $portionDTO->setProtein(round($mealDTO->getProtein() * $k, 2));
-        $portionDTO->setFat(round($mealDTO->getFat() * $k, 2));
-        $portionDTO->setCarbohydrates(round($mealDTO->getCarbohydrates() * $k, 2));
-        $portionDTO->setFiber(round($mealDTO->getFiber() * $k, 2));
+        $portionDTO->setProtein(round($mealDTO->getProtein() * $k, $precision));
+        $portionDTO->setFat(round($mealDTO->getFat() * $k, $precision));
+        $portionDTO->setCarbohydrates(round($mealDTO->getCarbohydrates() * $k, $precision));
+        $portionDTO->setFiber(round($mealDTO->getFiber() * $k, $precision));
         $portionDTO->setMealId($mealDTO->getId());
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +29,10 @@ Route::middleware(['json'])->group(function () {
     });
     Route::post('auth/sign-in', 'AuthController@signin');
     Route::post('auth/sign-up', 'AuthController@signup');
+
+    Route::any('{any}', function () {
+        throw new NotFoundHttpException('Not found');
+    })->where('any', '.*');
 });
 
 

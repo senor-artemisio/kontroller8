@@ -146,10 +146,10 @@ class PortionApiTest extends TestCase
             'meal_id' => $meal->id,
             'weight' => 200,
             'eaten' => true,
-            'protein' => (int)($meal->protein * 2),
-            'fat' => (int)($meal->fat * 2),
-            'carbohydrates' => (int)($meal->carbohydrates * 2),
-            'fiber' => (int)($meal->fiber * 2),
+            'protein' => round($meal->protein * 2, 1),
+            'fat' => round($meal->fat * 2, 1),
+            'carbohydrates' => round($meal->carbohydrates * 2, 1),
+            'fiber' => round($meal->fiber * 2, 1),
         ]);
     }
 
@@ -210,4 +210,131 @@ class PortionApiTest extends TestCase
             ->assertStatus(403);
     }
 
+    /**
+     * @covers \App\Api\Http\Controllers\PortionController::store()
+     */
+    public function testCreateUnauthorized(): void
+    {
+        $day = factory(Day::class)->create();
+        $meal = factory(Meal::class)->create(['user_id' => $day->user_id]);
+        $data = [
+            'meal_id' => $meal->id,
+            'weight' => 200,
+            'eaten' => true
+        ];
+        $this->postJson("/api/days/{$day->id}/portions", $data)
+            ->assertStatus(401);
+    }
+
+
+    /**
+     * @covers \App\Api\Http\Controllers\PortionController::update()
+     */
+    public function testUpdateOwner(): void
+    {
+        $portion = factory(Portion::class)->create(['user_id' => $this->user->id]);
+
+        $data = ['weight' => 10];
+
+        $this->actingAs($this->user, 'api')
+            ->patchJson("/api/days/{$portion->day_id}/portions/{$portion->id}", $data)
+            ->assertStatus(200);
+
+        $this->assertDatabaseHas($this->portion->getTable(), [
+            'id' => $portion->id,
+            'weight' => 10,
+            'protein' => round($portion->meal->protein / 10, 1),
+            'fat' => round($portion->meal->fat / 10, 1),
+            'carbohydrates' => round($portion->meal->carbohydrates / 10, 1),
+            'fiber' => round($portion->meal->fiber / 10, 1),
+        ]);
+    }
+
+    /**
+     * @covers \App\Api\Http\Controllers\PortionController::update()
+     */
+    public function testUpdateMealOwner(): void
+    {
+        $portion = factory(Portion::class)->create(['user_id' => $this->user->id, 'weight' => 10]);
+        $meal = factory(Meal::class)->create(['user_id' => $portion->user_id]);
+        $data = ['meal_id' => $meal->id];
+
+        $this->actingAs($this->user, 'api')
+            ->patchJson("/api/days/{$portion->day_id}/portions/{$portion->id}", $data)
+            ->assertStatus(200);
+
+        $this->assertDatabaseHas($this->portion->getTable(), [
+            'id' => $portion->id,
+            'weight' => 10,
+            'protein' => round($meal->protein / 10, 1),
+            'fat' => round($meal->fat / 10, 1),
+            'carbohydrates' => round($meal->carbohydrates / 10, 1),
+            'fiber' => round($meal->fiber / 10, 1),
+        ]);
+    }
+
+    /**
+     * @covers \App\Api\Http\Controllers\PortionController::update()
+     */
+    public function testUpdateAuthorizedForeignDayMeal(): void
+    {
+        $portion = factory(Portion::class)->create();
+        $meal = factory(Meal::class)->create();
+        $data = ['meal_id' => $meal->id];
+
+        $this->actingAs($this->user, 'api')
+            ->patchJson("/api/days/{$portion->day_id}/portions/{$portion->id}", $data)
+            ->assertStatus(403);
+    }
+
+    /**
+     * @covers \App\Api\Http\Controllers\PortionController::update()
+     */
+    public function testUpdateAuthorizedForeignDay(): void
+    {
+        $portion = factory(Portion::class)->create();
+        $meal = factory(Meal::class)->create(['user_id' => $this->user->id]);
+        $data = ['meal_id' => $meal->id];
+
+        $this->actingAs($this->user, 'api')
+            ->patchJson("/api/days/{$portion->day_id}/portions/{$portion->id}", $data)
+            ->assertStatus(403);
+    }
+
+    /**
+     * @covers \App\Api\Http\Controllers\PortionController::update()
+     */
+    public function testUpdateUnauthorized(): void
+    {
+        $portion = factory(Portion::class)->create();
+        $meal = factory(Meal::class)->create();
+        $data = ['meal_id' => $meal->id];
+
+        $this->patchJson("/api/days/{$portion->day_id}/portions/{$portion->id}", $data)
+            ->assertStatus(401);
+    }
+
+    /**
+     * @covers \App\Api\Http\Controllers\PortionController::destroy()
+     */
+    public function testDeleteOwner(): void
+    {
+        $portion = factory(Portion::class)->create(['user_id' => $this->user->id]);
+        $this->actingAs($this->user, 'api')
+            ->deleteJson("/api/days/{$portion->day_id}/portions/{$portion->id}")
+            ->assertStatus(200);
+        $this->assertDatabaseMissing($this->portion->getTable(), ['id' => $portion->id]);
+    }
+
+    /**
+     * @covers \App\Api\Http\Controllers\PortionController::destroy()
+     */
+    public function testDeleteAuthorizedForeignDay(): void
+    {
+        $portion = factory(Portion::class)->create();
+        $this->actingAs($this->user, 'api')
+            ->deleteJson("/api/days/{$portion->day_id}/portions/{$portion->id}")
+            ->assertStatus(403);
+        $this->assertDatabaseHas($this->portion->getTable(), ['id' => $portion->id]);
+    }
 }

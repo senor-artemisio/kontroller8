@@ -79,13 +79,58 @@ class PortionController extends Controller
         $portionDTO->setId(\Ulid::generate());
 
         $meal = $this->mealRepository->findById($portionDTO->getMealId());
+        $this->authorize('view', $meal);
         $mealDTO = MealDTO::createFromModel($meal);
 
         $this->portionService->create($portionDTO, $mealDTO, Auth::user()->getAuthIdentifier(), $day->id);
 
-        $portion = $this->portionRepository->findById($portionDTO->getId());
-        $portion->wasRecentlyCreated = true;
+        $createdPortion = $this->portionRepository->findById($portionDTO->getId());
+        $createdPortion->wasRecentlyCreated = true;
 
-        return PortionResource::make($portion);
+        return PortionResource::make($createdPortion);
+    }
+
+    /**
+     * @param PortionRequest $request
+     * @param Day $day
+     * @param Portion $portion
+     * @return PortionResource
+     * @throws AuthorizationException
+     * @throws DTOException
+     */
+    public function update(PortionRequest $request, Day $day, Portion $portion): PortionResource
+    {
+        $this->authorize('update', $portion);
+        $this->authorize('update', $day);
+
+
+        $portionDTO = new PortionDTO($request->all());
+
+        if ($request->has('meal_id')) {
+            $meal = $this->mealRepository->findById($portionDTO->getMealId());
+            $this->authorize('view', $meal);
+            $mealDTO = MealDTO::createFromModel($meal);
+        } else {
+            $mealDTO = null;
+        }
+
+        $this->portionService->update($portion, $portionDTO, $mealDTO);
+        $updatedPortion = $this->portionRepository->findById($portion->id);
+
+        return PortionResource::make($updatedPortion);
+    }
+
+    /**
+     * @param Day $day
+     * @param Portion $portion
+     * @throws AuthorizationException
+     * @throws \Exception
+     */
+    public function destroy(Day $day, Portion $portion): void
+    {
+        $this->authorize('update', $day);
+        $this->authorize('delete', $portion);
+
+        $this->portionService->delete($portion);
     }
 }
