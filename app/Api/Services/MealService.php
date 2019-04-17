@@ -37,6 +37,7 @@ class MealService
             'fat' => $dto->getFat(),
             'carbohydrates' => $dto->getCarbohydrates(),
             'fiber' => $dto->getFiber(),
+            'calories' => ceil($dto->getProtein() * 4 + $dto->getFat() * 8 + $dto->getCarbohydrates() * 4)
         ]);
     }
 
@@ -46,7 +47,15 @@ class MealService
      */
     public function update(Meal $meal, MealDTO $dto): void
     {
-        $this->mealRepository->update($meal, $dto->getChangedValues());
+        $values = $dto->getChangedValues();
+
+        $values['calories'] = ceil(
+            ($values['protein'] ?? $meal->protein) * 4 +
+            ($values['fat'] ?? $meal->fat) * 8 +
+            ($values['carbohydrates'] ?? $meal->carbohydrates) * 4
+        );
+
+        $this->mealRepository->update($meal, $values);
     }
 
     /**

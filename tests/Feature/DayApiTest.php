@@ -24,9 +24,6 @@ class DayApiTest extends TestCase
     /** @var Day */
     protected $dayModel;
 
-    /** @var */
-    private $weekDates;
-
     /**
      * {@inheritDoc}
      */

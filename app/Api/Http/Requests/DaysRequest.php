@@ -2,46 +2,20 @@
 
 namespace App\Api\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Carbon;
-
 /**
  * HTTP-request for days request.
  */
-class DaysRequest extends FormRequest
+class DaysRequest extends ItemsRequest
 {
     /**
-     * @return array
+     * {@inheritDoc}
      */
-    public function rules(): array
+    protected function getSortableAttributes(): array
     {
         return [
-            'date' => 'date|required'
+            'date', 'eaten', 'weight', 'weight_eaten',
+            'protein', 'fat', 'fiber', 'carbohydrates',
+            'protein_eaten', 'fat_eaten', 'fiber_eaten', 'carbohydrates_eaten',
         ];
-    }
-
-    /**
-     * @return Carbon|null
-     */
-    public function getDate(): ?Carbon
-    {
-        $date = $this->all(['date'])['date'] ?? null;
-        if ($date === null) {
-            return null;
-        }
-
-        return Carbon::parse($date);
-    }
-
-    /**
-     * @param null $keys
-     * @return array
-     */
-    public function all($keys = null)
-    {
-        $data = parent::all($keys);
-        $data['date'] = $this->route('date');
-
-        return $data;
     }
 }

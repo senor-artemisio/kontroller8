@@ -169,6 +169,7 @@ class MealApiTest extends TestCase
         $mealData['id'] = $data['id'];
         $mealData['created_at'] = $data['created_at'];
         $mealData['updated_at'] = $data['updated_at'];
+        $mealData['calories'] = 121;
 
         unset($data['type']);
 

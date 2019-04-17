@@ -27,6 +27,7 @@ class MealResource extends JsonResource
             'carbohydrates' => $meal->carbohydrates,
             'fiber' => $meal->fiber,
             'type' => $meal->type,
+            'calories' => $meal->calories,
             'created_at' => $meal->created_at->toDateTimeString(),
             'updated_at' => $meal->updated_at->toDateTimeString(),
         ];

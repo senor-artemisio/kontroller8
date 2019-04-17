@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
  * @property float $fat
  * @property float $carbohydrates
  * @property float $fiber
+ * @property int $calories
  * @property string $user_id
  * @property string $type
  * @property string|Carbon $created_at
@@ -36,6 +37,7 @@ class Meal extends Model
             'fat',
             'carbohydrates',
             'fiber',
+            'calories',
             'user_id'
         ];
 

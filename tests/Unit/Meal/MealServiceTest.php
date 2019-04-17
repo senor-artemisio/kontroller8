@@ -44,12 +44,19 @@ class MealServiceTest extends TestCase
         $user = factory(User::class)->create();
 
         $attributes = $meal->attributesToArray();
-        unset($attributes['created_at'], $attributes['updated_at'], $attributes['user_id']);
+        $calories = $attributes['calories'];
+        unset(
+            $attributes['created_at'],
+            $attributes['updated_at'],
+            $attributes['user_id'],
+            $attributes['calories'],
+        );
 
         $dto = new MealDTO($attributes);
         $this->service->create($dto, $user->id);
 
         $attributes['user_id'] = $user->id;
+        $attributes['calories'] = $calories;
         $this->assertDatabaseHas($this->meal->getTable(), $attributes);
     }
 
@@ -59,15 +66,17 @@ class MealServiceTest extends TestCase
      */
     public function testUpdate(): void
     {
+        /** @var Meal $meal */
         $meal = factory(Meal::class)->create();
-        $attributes = ['title' => 'chicken breast'];
+        $attributes = ['title' => 'chicken breast', 'fat' => 5];
         $dto = new MealDTO($attributes);
 
         $this->service->update($meal, $dto);
 
         $this->assertDatabaseHas($this->meal->getTable(), [
             'id' => $meal->id,
-            'title' => $attributes['title']
+            'title' => $attributes['title'],
+            'calories' => ceil($meal->protein * 4 + $meal->fat * 8 + $meal->carbohydrates * 4)
         ]);
     }
 

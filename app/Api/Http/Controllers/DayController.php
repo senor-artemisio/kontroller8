@@ -6,6 +6,7 @@ use App\Api\Http\Requests\DaysRequest;
 use App\Api\Http\Resources\DayResource;
 use App\Api\Models\Day;
 use App\Api\Repositories\DayRepository;
+use App\Api\Services\DayService;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -16,32 +17,34 @@ class DayController extends Controller
     /** @var DayRepository */
     private $dayRepository;
 
-    public function __construct(DayRepository $dayRepository)
+    /** @var DayService */
+    private $dayService;
+
+    /**
+     * @param DayRepository $dayRepository
+     * @param DayService $dayService
+     */
+    public function __construct(DayRepository $dayRepository, DayService $dayService)
     {
         $this->dayRepository = $dayRepository;
+        $this->dayService = $dayService;
     }
 
     /**
-     * Return requested date with 3 days before and 3 days after.
-     * Not existing days replaced by empty models.
-     *
      * @param DaysRequest $request
      * @return ResourceCollection
      * @throws AuthorizationException
      */
-    public function week(DaysRequest $request): ResourceCollection
+    public function index(DaysRequest $request): ResourceCollection
     {
-        $this->authorize('week', Day::class);
-        $date = $request->getDate();
+        $this->authorize('list', Day::class);
         $userId = Auth::user()->getAuthIdentifier();
-        $days = $this->dayRepository->findWeekByOwner($userId, $date);
+
+        $days = $this->dayRepository
+            ->paginate($request->getPerPage())
+            ->sort($request->getSortBy(), $request->getSortDirection())
+            ->findByOwner($userId);
 
         return DayResource::collection($days);
-    }
-
-
-    public function day(string $date): DayResource
-    {
-
     }
 }
