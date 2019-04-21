@@ -12,7 +12,7 @@
                      :fields="fields"
                      :sort-by.sync="sortBy" :sort-desc.sync="sortDesc"
                      @sort-changed="sortChanged"
-                     @row-clicked="toDay"/>
+                     @row-clicked="toItem"/>
             <div class="overflow-auto">
                 <b-pagination-nav class="float-md-left" use-router
                                   base-url="/days/"
@@ -29,18 +29,15 @@
     </b-container>
 </template>
 <script>
-    import Api from '../api';
+    import items from '../mixins/items';
 
     export default {
+        mixins: [items],
         data() {
             return {
-                currentPage: null,
-                lastPage: null,
-                perPage: 5,
-                perPageOptions: [2, 5, 10, 20, 50],
                 sortBy: 'date',
-                sortDesc: true,
-                items: [],
+                itemsUrl: 'days',
+                itemUrl: 'day',
                 fields: [
                     {
                         key: 'date',
@@ -64,56 +61,7 @@
                         sortable: false
                     },
                 ],
-                loaded: false
             };
         },
-        methods: {
-            toDay(item, index, button) {
-                this.$router.push('/day/' + item.id);
-            },
-            sortChanged(ctx) {
-                this.sortBy = ctx.sortBy;
-                this.sortDesc = ctx.sortDesc;
-                this.load();
-            },
-            perPageChanged() {
-                this.currentPage = 1;
-                this.load();
-            },
-            load() {
-                Api.client().get(this.buildApiUrl()).then((response) => {
-                    const result = response.data;
-                    this.items = result.data;
-                    this.lastPage = parseInt(result.meta.last_page);
-                    this.perPage = parseInt(result.meta.per_page);
-                    if (this.currentPage > this.lastPage) {
-                        this.$router.push('/days/' + this.lastPage);
-                    }
-                    this.loaded = true;
-                });
-            },
-            buildApiUrl() {
-                let url = '';
-
-                url += 'days?page=' + this.currentPage;
-                url += '&perPage=' + this.perPage;
-                url += '&sortBy=' + this.sortBy;
-                url += '&sortDirection=' + (this.sortDesc ? 'desc' : 'asc');
-
-                return url;
-            }
-        },
-        mounted() {
-            if (this.currentPage === null) {
-                this.currentPage = parseInt(this.$router.currentRoute.params.page);
-            }
-            this.load();
-        },
-        watch: {
-            '$route.params.page'(to, from) {
-                this.currentPage = to;
-                this.load();
-            }
-        }
     }
 </script>
