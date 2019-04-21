@@ -16,11 +16,13 @@ use Illuminate\Support\Carbon;
  * @property float $carbohydrates
  * @property float $fiber
  * @property integer $weight
+ * @property integer $calories
  * @property float $protein_eaten
  * @property float $fat_eaten
  * @property float $carbohydrates_eaten
  * @property float $fiber_eaten
- * @property float $weight_eaten
+ * @property integer $weight_eaten
+ * @property integer $calories_eaten
  * @property string $user_id
  * @property string|Carbon $created_at
  * @property string|Carbon $updated_at
@@ -78,5 +80,28 @@ class Day extends Model
         }
 
         return true;
+    }
+
+    /**
+     * Get PFC ratio for day.
+     *
+     * @return array
+     */
+    public function getRatio(): array
+    {
+        if ($this->calories === 0) {
+            return [0, 0, 0];
+        }
+        $proteinCalories = $this->protein * 4;
+        $fatCalories = $this->fat * 8;
+        $carbohydratesCalories = $this->carbohydrates * 4;
+
+        $percent = $this->calories / 100;
+
+        return [
+            (int)ceil($proteinCalories / $percent),
+            (int)ceil($fatCalories / $percent),
+            (int)ceil($carbohydratesCalories / $percent)
+        ];
     }
 }

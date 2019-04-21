@@ -29,6 +29,7 @@ class DayResource extends JsonResource
             'carbohydrates' => $day->carbohydrates,
             'fiber' => $day->fiber,
             'weight' => $day->weight,
+            'calories' => $day->calories,
             'protein_percent' => $this->getProteinPercent(),
             'fat_percent' => $this->getFatPercent(),
             'carbohydrates_percent' => $this->getCarbohydratesPercent(),
@@ -40,9 +41,11 @@ class DayResource extends JsonResource
             'protein_eaten_percent' => $this->getProteinEatenPercent(),
             'fat_eaten_percent' => $this->getFatEatenPercent(),
             'carbohydrates_eaten_percent' => $this->getCarbohydratesEatenPercent(),
+            'calories_eaten_percent' => $this->getCaloriesEatenPercent(),
             'created_at' => $day->created_at->toDateTimeString(),
             'updated_at' => $day->updated_at->toDateTimeString(),
             'eaten' => $day->isEaten(),
+            'ratio' => $day->getRatio()
         ];
     }
 }

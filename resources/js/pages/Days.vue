@@ -1,173 +1,118 @@
 <template xmlns="http://www.w3.org/1999/html">
-    <div class="container-fluid calendar">
-        <header>
-            <h4 class="display-5 mb-3 mt-3 text-center caption">
-                <b-link :to="getPrevUrl()">
-                    <i class="fas fa-arrow-left"></i>
-                </b-link>
-                {{ title }}
-                <b-link :to="getNextUrl()">
-                    <i class="fas fa-arrow-right"></i>
-                </b-link>
-            </h4>
-            <div class="row d-none d-sm-flex p-1 bg-dark text-white pt-3">
-                <h5 v-for="item in items" class="col-sm p-1 text-center">
-                    {{item.dayOfWeek}}
-                </h5>
-            </div>
-        </header>
-        <div class="row border border-right-0 border-bottom-0 border-top-0">
-            <div v-for="day in items" :class="getDayCssClass(day)">
-                <h5 class="row align-items-center">
-                    <span class="date col-1">
-                        {{day.title}}
-                        <b-link :to="getDayUrl(day)" class="day-edit-link"><i class="fas fa-pen ml-2"></i></b-link>
-                    </span>
-                    <small class="col d-sm-none text-center text-muted">{{day.dayOfWeek}}</small>
-                    <span class="col-1"></span>
-                </h5>
-                <p class="text-primary">
-                    <span class="text-success">{{day.protein_percent}}%</span> /
-                    <span class="text-info">{{day.fat_percent}}%</span> /
-                    <span class="text-danger">{{day.carbohydrates_percent}}%</span>
-                </p>
-                <p v-if="isEmptyPortions(day)">No portions</p>
-                <div v-else>
-                    <div v-for="portion in day.portions" :class="getPortionCssClass(portion, day)"
-                         v-on:click.prevent="eatenToggle(portion)"
-                         :id="'p-'+portion.id">
-                        <span class="text-capitalize">{{portion.meal.title}}</span>
-                        <div class="pb-3 d-block">
-                            <span class="badge badge-secondary">{{portion.weight}}g</span>
-                            <span class="badge badge-secondary">{{ portion.time }}</span>
-                        </div>
-                    </div>
-                </div>
+    <b-container>
+        <h1 class="mt-3">
+            Days
+            <b-button size="sm" variant="primary" to="/day/new">
+                <i class="fas fa-plus"></i>
+            </b-button>
+        </h1>
+        <div v-if="loaded">
+            <b-table responsive stacked="sm" hover tbody-tr-class="cursor-pointer" :no-local-sorting="true"
+                     :items="items"
+                     :fields="fields"
+                     :sort-by.sync="sortBy" :sort-desc.sync="sortDesc"
+                     @sort-changed="sortChanged"
+                     @row-clicked="toDay"/>
+            <div class="overflow-auto">
+                <b-pagination-nav class="float-md-left" use-router
+                                  base-url="/days/"
+                                  :number-of-pages="lastPage"
+                                  first-text="⇤"
+                                  last-text="⇥"
+                                  next-text="→"
+                                  prev-text="←"
+                                  v-model="currentPage"></b-pagination-nav>
+                <b-form-select class="float-md-right w-auto mb-3" size="sm" :options="perPageOptions" v-model="perPage"
+                               v-on:change="perPageChanged"/>
             </div>
         </div>
-    </div>
+    </b-container>
 </template>
 <script>
     import Api from '../api';
-    import moment from 'moment';
 
     export default {
-        data: function () {
+        data() {
             return {
+                currentPage: null,
+                lastPage: null,
+                perPage: 5,
+                perPageOptions: [2, 5, 10, 20, 50],
+                sortBy: 'date',
+                sortDesc: true,
                 items: [],
-                date: null,
-                title: null,
-                client: null
+                fields: [
+                    {
+                        key: 'date',
+                        sortable: true
+                    },
+                    {
+                        key: 'calories',
+                        sortable: true
+                    },
+                    {
+                        key: 'ratio',
+                        sortable: false,
+                        label: 'Ratio %',
+                        formatter: (value, key, item) => {
+                            return value.join(' / ');
+                        }
+                    },
+                    {
+                        key: 'calories_eaten_percent',
+                        label: 'Progress %',
+                        sortable: false
+                    },
+                ],
+                loaded: false
             };
         },
-        mounted() {
-            this.client = Api.client();
-            this.date = this.$router.currentRoute.params.date;
-            this.title = moment(this.date, 'YYYY-MM-DD').format('MMMM Do YYYY');
-            this.load(this.date);
-        },
+        methods: {
+            toDay(item, index, button) {
+                this.$router.push('/day/' + item.id);
+            },
+            sortChanged(ctx) {
+                this.sortBy = ctx.sortBy;
+                this.sortDesc = ctx.sortDesc;
+                this.load();
+            },
+            perPageChanged() {
+                this.currentPage = 1;
+                this.load();
+            },
+            load() {
+                Api.client().get(this.buildApiUrl()).then((response) => {
+                    const result = response.data;
+                    this.items = result.data;
+                    this.lastPage = parseInt(result.meta.last_page);
+                    this.perPage = parseInt(result.meta.per_page);
+                    if (this.currentPage > this.lastPage) {
+                        this.$router.push('/days/' + this.lastPage);
+                    }
+                    this.loaded = true;
+                });
+            },
+            buildApiUrl() {
+                let url = '';
 
-        watch: {
-            '$route.params.date'(to, from) {
-                this.load(to); // reload items when url params is changed
+                url += 'days?page=' + this.currentPage;
+                url += '&perPage=' + this.perPage;
+                url += '&sortBy=' + this.sortBy;
+                url += '&sortDirection=' + (this.sortDesc ? 'desc' : 'asc');
+
+                return url;
             }
         },
-        methods: {
-            /**
-             * Load week from API.
-             * @param date
-             */
-            load(date) {
-                const component = this;
-                this.client.get('days/week/' + date).then(function (response) {
-                    component.items = response.data.data;
-                    component.date = date;
-                    component.title = moment(date, 'YYYY-MM-DD').format('MMMM Do YYYY');
-                });
-            },
-            /**
-             * Make current day dark.
-             * @param day
-             * @returns {string}
-             */
-            getDayCssClass(day) {
-                let cssClass = 'day col-sm p-2 border border-left-0 border-top-0 text-truncate';
-                if (day.date !== this.date) {
-                    cssClass += ' d-none d-sm-block bd-light text-dark';
-                } else {
-                    cssClass += ' bg-dark text-light'
-                }
-
-                return cssClass;
-            },
-            /**
-             * @param day
-             * @returns {string} url for manage day page
-             */
-            getDayUrl(day) {
-                console.log(day);
-                return '/day/' + day.date;
-            },
-            /**
-             * Makes portion through line or not depends from eaten property.
-             * @param portion
-             * @param day
-             * @returns {string}
-             */
-            getPortionCssClass(portion, day) {
-                let cssClass = 'cursor-pointer portion';
-
-                if (portion.eaten) {
-                    cssClass += ' text-muted text-overline';
-                }
-                return cssClass;
-            },
-            /**
-             * Check what day have portions.
-             * @param day
-             * @returns {boolean}
-             */
-            isEmptyPortions(day) {
-                return day.portions.length === 0;
-            },
-            /**
-             * @returns {string} previous day url
-             */
-            getPrevUrl() {
-                return '/days/' + moment(this.date, 'YYYY-MM-DD').subtract(1, 'days').format('YYYY-MM-DD');
-            },
-            /**
-             * @returns {string} next day url
-             */
-            getNextUrl() {
-                return '/days/' + moment(this.date, 'YYYY-MM-DD').add(1, 'days').format('YYYY-MM-DD');
-            },
-            /**
-             * Toggle eaten state for portion, save it in database.
-             * @param portion
-             */
-            eatenToggle(portion) {
-                const component = this;
-                let p = this.$el.querySelector('#p-' + portion.id);
-
-                if (portion.eaten) {
-                    p.classList.remove('text-overline');
-                } else {
-                    p.classList.add('text-overline');
-                }
-
-                let url = '';
-                if (portion.eaten) {
-                    url = 'portions/unmark-eaten/' + portion.id;
-                } else {
-                    url = 'portions/mark-eaten/' + portion.id;
-                }
-
-                this.client.post(url, {}).then(function (response) {
-                    component.load(component.date);
-                });
-
-                portion.eaten = !portion.eaten;
+        mounted() {
+            if (this.currentPage === null) {
+                this.currentPage = parseInt(this.$router.currentRoute.params.page);
+            }
+            this.load();
+        },
+        watch: {
+            '$route.params.page'(to, from) {
+                this.currentPage = to;
+                this.load();
             }
         }
     }

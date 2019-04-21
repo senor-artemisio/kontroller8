@@ -7,10 +7,12 @@ namespace App\Api\Components;
  * @property float $protein
  * @property float $fat
  * @property float $carbohydrates
+ * @property int $calories
  * @property float $weight_eaten
  * @property float $protein_eaten
  * @property float $fat_eaten
  * @property float $carbohydrates_eaten
+ * @property int $calories_eaten
  */
 trait NutritionPercents
 {
@@ -84,5 +86,17 @@ trait NutritionPercents
         }
 
         return ceil($this->carbohydrates / ($this->weight / 100));
+    }
+
+    /**
+     * @return int
+     */
+    public function getCaloriesEatenPercent(): int
+    {
+        if ($this->calories === 0) {
+            return 0;
+        }
+
+        return ceil($this->calories_eaten / ($this->calories / 100));
     }
 }

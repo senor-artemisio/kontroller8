@@ -16,6 +16,7 @@ class DaysRequest extends ItemsRequest
             'date', 'eaten', 'weight', 'weight_eaten',
             'protein', 'fat', 'fiber', 'carbohydrates',
             'protein_eaten', 'fat_eaten', 'fiber_eaten', 'carbohydrates_eaten',
+            'calories', 'calories_eaten'
         ];
     }
 }

@@ -8,7 +8,6 @@ import Meals from './pages/Meals';
 import Meal from './pages/Meal';
 import Auth from './pages/Auth';
 import Menu from './components/Menu';
-import moment from 'moment';
 
 Vue.use(VueRouter);
 Vue.component('Menu', Menu);
@@ -45,9 +44,9 @@ const router = new VueRouter({
             name: "meal",
             props: {default: true}
         },
-        {path: '/days', redirect: '/days/' + moment().format('YYYY-MM-DD')},
+        {path: '/days', redirect: '/days/1'},
         {
-            path: '/days/:date',
+            path: '/days/:page',
             components: {
                 default: Days,
                 menu: Menu
@@ -56,7 +55,7 @@ const router = new VueRouter({
             props: {default: true}
         },
         {
-            path: '/day/:date',
+            path: '/day/:id',
             components: {
                 default: Day,
                 menu: Menu
