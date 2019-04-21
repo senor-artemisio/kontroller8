@@ -21,6 +21,9 @@ class PortionApiTest extends TestCase
     /** @var Portion */
     private $portion;
 
+    /** @var Day */
+    private $day;
+
     /** @var User */
     private $user;
 
@@ -32,6 +35,7 @@ class PortionApiTest extends TestCase
         parent::setUp();
         $this->user = factory(User::class)->create();
         $this->portion = new Portion();
+        $this->day = new Day();
     }
 
     /**
@@ -42,7 +46,8 @@ class PortionApiTest extends TestCase
     public function testIndexUnauthorized(): void
     {
         $day = factory(Day::class)->create();
-        $this->getJson("/api/days/{$day->id}/portions")->assertStatus(401);
+        $this->getJson("/api/days/{$day->id}/portions?page=1&perPage=10&sortBy=time&sortDirection=asc")
+            ->assertStatus(401);
     }
 
     /**
@@ -55,7 +60,7 @@ class PortionApiTest extends TestCase
         $dayId = \Ulid::generate();
         $this->getJson("/api/days/$dayId/portions")->assertStatus(401);
         $this->actingAs($this->user, 'api')
-            ->getJson("/api/days/$dayId/portions")
+            ->getJson("/api/days/$dayId/portions?page=1&perPage=10&sortBy=time&sortDirection=asc")
             ->assertStatus(404);
     }
 
@@ -76,7 +81,7 @@ class PortionApiTest extends TestCase
         $response->assertStatus(200);
 
         $data = $response->decodeResponseJson('data');
-        $this->assertNotNull($day);
+        $this->assertNotNull($data);
         $this->assertCount(3, $data);
         $portionsIds = array_column($data, 'id');
 
@@ -108,7 +113,11 @@ class PortionApiTest extends TestCase
 
         factory(Portion::class)->create(['day_id' => $day->id, 'user_id' => $day->user_id, 'time' => '10:00']);
         factory(Portion::class)->create(['day_id' => $day->id, 'user_id' => $day->user_id, 'time' => '12:00']);
-        $portion = factory(Portion::class)->create(['day_id' => $day->id, 'user_id' => $day->user_id, 'time' => '11:00']);
+        $portion = factory(Portion::class)->create([
+            'day_id' => $day->id,
+            'user_id' => $day->user_id,
+            'time' => '11:00'
+        ]);
 
         $response = $this->actingAs($this->user, 'api')
             ->getJson("/api/days/{$day->id}/portions?page=2&perPage=1&sortBy=time&sortDirection=asc");
@@ -127,6 +136,7 @@ class PortionApiTest extends TestCase
      */
     public function testCreateOwner(): void
     {
+        /** @var Day $day */
         $day = factory(Day::class)->create(['user_id' => $this->user->id]);
         /** @var Meal $meal */
         $meal = factory(Meal::class)->create(['user_id' => $this->user->id]);
@@ -142,14 +152,33 @@ class PortionApiTest extends TestCase
 
         $response->assertStatus(201);
 
+        $protein = round($meal->protein * 2, 1);
+        $fat = round($meal->fat * 2, 1);
+        $carbohydrates = round($meal->carbohydrates * 2, 1);
+        $fiber = round($meal->fiber * 2, 1);
+
         $this->assertDatabaseHas($this->portion->getTable(), [
             'meal_id' => $meal->id,
             'weight' => 200,
             'eaten' => true,
-            'protein' => round($meal->protein * 2, 1),
-            'fat' => round($meal->fat * 2, 1),
-            'carbohydrates' => round($meal->carbohydrates * 2, 1),
-            'fiber' => round($meal->fiber * 2, 1),
+            'protein' => $protein,
+            'fat' => $fat,
+            'carbohydrates' => $carbohydrates,
+            'fiber' => $fiber,
+        ]);
+
+        $this->assertDatabaseHas($day->getTable(), [
+            'id' => $day->id,
+            'weight' => 200,
+            'weight_eaten' => 200,
+            'protein' => $protein,
+            'fat' => $fat,
+            'carbohydrates' => $carbohydrates,
+            'fiber' => $fiber,
+            'protein_eaten' => $protein,
+            'fat_eaten' => $fat,
+            'carbohydrates_eaten' => $carbohydrates,
+            'fiber_eaten' => $fiber
         ]);
     }
 
@@ -232,6 +261,7 @@ class PortionApiTest extends TestCase
      */
     public function testUpdateOwner(): void
     {
+        /** @var Portion $portion */
         $portion = factory(Portion::class)->create(['user_id' => $this->user->id]);
 
         $data = ['weight' => 10];
@@ -240,13 +270,26 @@ class PortionApiTest extends TestCase
             ->patchJson("/api/days/{$portion->day_id}/portions/{$portion->id}", $data)
             ->assertStatus(200);
 
+        $protein = round($portion->meal->protein / 10, 1);
+        $fat = round($portion->meal->fat / 10, 1);
+        $carbohydrates = round($portion->meal->carbohydrates / 10, 1);
+        $fiber = round($portion->meal->fiber / 10, 1);
+
         $this->assertDatabaseHas($this->portion->getTable(), [
             'id' => $portion->id,
             'weight' => 10,
-            'protein' => round($portion->meal->protein / 10, 1),
-            'fat' => round($portion->meal->fat / 10, 1),
-            'carbohydrates' => round($portion->meal->carbohydrates / 10, 1),
-            'fiber' => round($portion->meal->fiber / 10, 1),
+            'protein' => $protein,
+            'fat' => $fat,
+            'carbohydrates' => $carbohydrates,
+            'fiber' => $fiber,
+        ]);
+
+        $this->assertDatabaseHas($this->day->getTable(), [
+            'id' => $portion->day_id,
+            'protein' => $protein,
+            'fat' => $fat,
+            'carbohydrates' => $carbohydrates,
+            'fiber' => $fiber,
         ]);
     }
 
@@ -324,6 +367,19 @@ class PortionApiTest extends TestCase
             ->deleteJson("/api/days/{$portion->day_id}/portions/{$portion->id}")
             ->assertStatus(200);
         $this->assertDatabaseMissing($this->portion->getTable(), ['id' => $portion->id]);
+        $this->assertDatabaseHas($this->day->getTable(), [
+            'id' => $portion->day_id,
+            'weight' => 0,
+            'protein' => 0,
+            'fat' => 0,
+            'carbohydrates' => 0,
+            'weight_eaten' => 0,
+            'protein_eaten' => 0,
+            'fat_eaten' => 0,
+            'carbohydrates_eaten' => 0,
+            'calories' => 0,
+            'calories_eaten' => 0,
+        ]);
     }
 
     /**

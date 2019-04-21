@@ -2,9 +2,13 @@
 
 namespace App\Api\Http\Controllers;
 
+use App\Api\DTO\DayDTO;
+use App\Api\DTO\DTOException;
+use App\Api\Http\Requests\DayRequest;
 use App\Api\Http\Requests\DaysRequest;
 use App\Api\Http\Resources\DayResource;
 use App\Api\Models\Day;
+use App\Api\Models\User;
 use App\Api\Repositories\DayRepository;
 use App\Api\Services\DayService;
 use App\Http\Controllers\Controller;
@@ -12,6 +16,9 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * REST API for days.
+ */
 class DayController extends Controller
 {
     /** @var DayRepository */
@@ -19,6 +26,9 @@ class DayController extends Controller
 
     /** @var DayService */
     private $dayService;
+
+    /** @var User */
+    private $user;
 
     /**
      * @param DayRepository $dayRepository
@@ -28,6 +38,7 @@ class DayController extends Controller
     {
         $this->dayRepository = $dayRepository;
         $this->dayService = $dayService;
+        $this->user = Auth::user();
     }
 
     /**
@@ -46,5 +57,37 @@ class DayController extends Controller
             ->findByOwner($userId);
 
         return DayResource::collection($days);
+    }
+
+    /**
+     * @param DayRequest $request
+     * @return DayResource
+     * @throws AuthorizationException
+     * @throws DTOException
+     */
+    public function store(DayRequest $request): DayResource
+    {
+        $this->authorize('create', Day::class);
+
+        $dayDTO = new DayDTO($request->all());
+        $dayDTO->setId(\Ulid::generate());
+
+        $this->dayService->create($dayDTO, $this->user->getAuthIdentifier());
+
+        $createdDay = $this->dayRepository->findById($dayDTO->getId());
+        $createdDay->wasRecentlyCreated = true;
+
+        return DayResource::make($createdDay);
+    }
+
+    /**
+     * @param Day $day
+     * @throws AuthorizationException
+     * @throws \Exception
+     */
+    public function destroy(Day $day): void
+    {
+        $this->authorize('delete', $day);
+        $this->dayService->delete($day);
     }
 }

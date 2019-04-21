@@ -10,14 +10,20 @@ use App\Api\Http\Requests\PortionsRequest;
 use App\Api\Http\Resources\PortionResource;
 use App\Api\Models\Day;
 use App\Api\Models\Portion;
+use App\Api\Models\User;
+use App\Api\Repositories\DayRepository;
 use App\Api\Repositories\MealRepository;
 use App\Api\Repositories\PortionRepository;
+use App\Api\Services\DayService;
 use App\Api\Services\PortionService;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * REST API for portions.
+ */
 class PortionController extends Controller
 {
     /** @var PortionRepository */
@@ -29,6 +35,12 @@ class PortionController extends Controller
     /** @var MealRepository */
     private $mealRepository;
 
+    /** @var DayService */
+    private $dayService;
+
+    /** @var User */
+    private $user;
+
     /**
      * @param PortionService $portionService
      * @param PortionRepository $portionRepository
@@ -37,12 +49,15 @@ class PortionController extends Controller
     public function __construct(
         PortionService $portionService,
         PortionRepository $portionRepository,
-        MealRepository $mealRepository
+        MealRepository $mealRepository,
+        DayService $dayService
     )
     {
         $this->portionRepository = $portionRepository;
         $this->portionService = $portionService;
         $this->mealRepository = $mealRepository;
+        $this->dayService = $dayService;
+        $this->user = Auth::user();
     }
 
     /**
@@ -82,10 +97,12 @@ class PortionController extends Controller
         $this->authorize('view', $meal);
         $mealDTO = MealDTO::createFromModel($meal);
 
-        $this->portionService->create($portionDTO, $mealDTO, Auth::user()->getAuthIdentifier(), $day->id);
+        $this->portionService->create($portionDTO, $mealDTO, $this->user->getAuthIdentifier(), $day->id);
 
         $createdPortion = $this->portionRepository->findById($portionDTO->getId());
         $createdPortion->wasRecentlyCreated = true;
+
+        $this->dayService->refresh($day);
 
         return PortionResource::make($createdPortion);
     }
@@ -116,6 +133,8 @@ class PortionController extends Controller
 
         $this->portionService->update($portion, $portionDTO, $mealDTO);
         $updatedPortion = $this->portionRepository->findById($portion->id);
+
+        $this->dayService->refresh($day);
 
         return PortionResource::make($updatedPortion);
     }

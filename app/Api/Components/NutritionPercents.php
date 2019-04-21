@@ -19,7 +19,7 @@ trait NutritionPercents
      */
     public function getProteinEatenPercent(): int
     {
-        if ($this->protein === 0) {
+        if ($this->protein === 0.0) {
             return 0;
         }
 
@@ -43,7 +43,7 @@ trait NutritionPercents
      */
     public function getFatEatenPercent(): int
     {
-        if ($this->fat === 0) {
+        if ($this->fat === 0.0) {
             return 0;
         }
 
@@ -67,7 +67,7 @@ trait NutritionPercents
      */
     public function getCarbohydratesEatenPercent(): int
     {
-        if ($this->carbohydrates === 0) {
+        if ($this->carbohydrates === 0.0) {
             return 0;
         }
 

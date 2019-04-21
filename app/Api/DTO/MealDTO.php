@@ -20,7 +20,15 @@ class MealDTO extends BaseDTO
     /** @var string */
     protected $userId;
 
-    public static function createFromModel(Meal $meal):MealDTO
+    /** @var int */
+    protected $calories;
+
+    /**
+     * @param Meal $meal
+     * @return MealDTO
+     * @throws DTOException
+     */
+    public static function createFromModel(Meal $meal): MealDTO
     {
         $attributes = $meal->attributesToArray();
         unset($attributes['updated_at'], $attributes['created_at']);
@@ -76,10 +84,26 @@ class MealDTO extends BaseDTO
     }
 
     /**
+     * @return int
+     */
+    public function getCalories(): int
+    {
+        return $this->calories;
+    }
+
+    /**
+     * @param int $calories
+     */
+    public function setCalories(int $calories): void
+    {
+        $this->calories = $calories;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getChangeableAttributes(): array
     {
-        return ['title', 'userId', 'protein', 'fat', 'carbohydrates', 'fiber'];
+        return ['title', 'userId', 'protein', 'fat', 'carbohydrates', 'fiber', 'calories'];
     }
 }

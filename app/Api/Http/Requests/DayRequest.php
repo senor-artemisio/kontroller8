@@ -16,31 +16,16 @@ class DayRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
-            'protein' => 'numeric|required',
-            'fat' => 'numeric|required',
-            'carbohydrates' => 'numeric|required',
-            'fiber' => 'numeric|required',
-            'date' => 'date|required',
-            'weight' => 'numeric|required',
-            'weight_eaten' => 'numeric|required',
-            'user_id' => 'string|size:26|required|exists:days',
+        return [
+            'date' => 'date|required|unique:days',
         ];
-
-        if ($this->getMethod() === 'PATCH') {
-            $rules = array_map(function ($value) {
-                return $value . '|sometimes';
-            }, $rules);
-        }
-
-        return $rules;
     }
 
     /**
      * Check access locate in controller.
      *
-     * @see \App\Api\Http\Controllers\MealController
      * @return bool
+     * @see \App\Api\Http\Controllers\MealController
      */
     public function authorize(): bool
     {

@@ -25,6 +25,17 @@ class DayPolicy
     }
 
     /**
+     * Check access for create new day
+     *
+     * @param User $user
+     * @return bool
+     */
+    public function create(User $user): bool
+    {
+        return true;
+    }
+
+    /**
      * Check access for view day.
      *
      * @param User $user

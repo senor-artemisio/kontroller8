@@ -44,11 +44,13 @@ class Day extends Model
             'carbohydrates',
             'fiber',
             'weight',
+            'calories',
             'protein_eaten',
             'fat_eaten',
             'carbohydrates_eaten',
             'fiber_eaten',
             'weight_eaten',
+            'calories_eaten',
             'user_id',
         ];
         $this->dates = ['date'];

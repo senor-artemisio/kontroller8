@@ -55,6 +55,7 @@ class PortionServiceTest extends TestCase
             $attributes['created_at'],
             $attributes['updated_at'],
             $attributes['user_id'],
+            $attributes['calories'],
             $attributes['day_id']
         );
 

@@ -4,21 +4,6 @@ namespace App\Api\DTO;
 
 /**
  * Data transfer object for day.
- *
- * @property string $id
- * @property string $date
- * @property float $protein
- * @property float $fat
- * @property float $carbohydrates
- * @property float $fiber
- * @property float $proteinEaten
- * @property float $fatEaten
- * @property float $carbohydratesEaten
- * @property float $fiberEaten
- * @property integer $weightEaten
- * @property integer $weight
- *
- * @property string $userId
  */
 class DayDTO extends BaseDTO
 {
@@ -36,8 +21,8 @@ class DayDTO extends BaseDTO
     /** @var float */
     protected $weight;
 
-    /** @var float */
-    protected $weightEaten;
+    /** @var integer */
+    protected $calories;
 
     /** @var float */
     protected $proteinEaten;
@@ -50,6 +35,12 @@ class DayDTO extends BaseDTO
 
     /** @var float */
     protected $fiberEaten;
+
+    /** @var float */
+    protected $weightEaten;
+
+    /** @var integer */
+    protected $caloriesEaten;
 
     /**
      * @return string
@@ -196,6 +187,38 @@ class DayDTO extends BaseDTO
     }
 
     /**
+     * @return float
+     */
+    public function getCalories(): float
+    {
+        return $this->calories;
+    }
+
+    /**
+     * @param float $calories
+     */
+    public function setCalories(float $calories): void
+    {
+        $this->calories = $calories;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCaloriesEaten(): int
+    {
+        return $this->caloriesEaten;
+    }
+
+    /**
+     * @param int $caloriesEaten
+     */
+    public function setCaloriesEaten(int $caloriesEaten): void
+    {
+        $this->caloriesEaten = $caloriesEaten;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getChangeableAttributes(): array
@@ -206,11 +229,13 @@ class DayDTO extends BaseDTO
             'carbohydrates',
             'fiber',
             'weight',
+            'calories',
             'proteinEaten',
             'fatEaten',
             'carbohydratesEaten',
             'fiberEaten',
             'weightEaten',
+            'caloriesEaten',
         ];
     }
 }

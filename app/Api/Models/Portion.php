@@ -45,6 +45,7 @@ class Portion extends Model
             'carbohydrates',
             'fiber',
             'weight',
+            'calories',
             'eaten',
             'time',
         ];

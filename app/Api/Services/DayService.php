@@ -23,26 +23,27 @@ class DayService
     }
 
     /**
-     * @param DayDTO $dto
+     * @param DayDTO $dayDTO
      * @param string $userId
      */
-    public function create(DayDTO $dto, string $userId): void
+    public function create(DayDTO $dayDTO, string $userId): void
     {
-        $dto->setUserId($userId);
         $this->dayRepository->create([
-            'id' => $dto->getId(),
-            'date' => $dto->getDate(),
+            'id' => $dayDTO->getId(),
+            'date' => $dayDTO->getDate(),
             'protein' => 0,
             'fat' => 0,
             'carbohydrates' => 0,
             'fiber' => 0,
             'weight' => 0,
+            'calories' => 0,
             'protein_eaten' => 0,
             'fat_eaten' => 0,
             'carbohydrates_eaten' => 0,
             'fiber_eaten' => 0,
             'weight_eaten' => 0,
-            'user_id' => $dto->getUserId()
+            'calories_eaten' => 0,
+            'user_id' => $userId
         ]);
     }
 
@@ -67,24 +68,29 @@ class DayService
             'carbohydrates' => 0,
             'fiber' => 0,
             'weight' => 0,
+            'calories' => 0,
             'protein_eaten' => 0,
             'fat_eaten' => 0,
             'carbohydrates_eaten' => 0,
             'fiber_eaten' => 0,
-            'weight_eaten' => 0
+            'weight_eaten' => 0,
+            'calories_eaten' => 0
         ];
         foreach ($day->portions as $portion) {
+            $calories = ceil($portion->protein * 4 + $portion->fat * 8 + $portion->carbohydrates * 4);
             $attributes['protein'] += $portion->protein;
             $attributes['fat'] += $portion->fat;
             $attributes['carbohydrates'] += $portion->carbohydrates;
             $attributes['fiber'] += $portion->fiber;
             $attributes['weight'] += $portion->weight;
+            $attributes['calories'] += $calories;
             if ($portion->eaten) {
                 $attributes['protein_eaten'] += $portion->protein;
                 $attributes['fat_eaten'] += $portion->fat;
                 $attributes['carbohydrates_eaten'] += $portion->carbohydrates;
                 $attributes['fiber_eaten'] += $portion->fiber;
                 $attributes['weight_eaten'] += $portion->weight;
+                $attributes['calories_eaten'] += $calories;
             }
         }
         $this->dayRepository->update($day, $attributes);

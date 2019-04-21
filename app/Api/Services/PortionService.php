@@ -2,6 +2,7 @@
 
 namespace App\Api\Services;
 
+use App\Api\DTO\DTOException;
 use App\Api\DTO\MealDTO;
 use App\Api\DTO\PortionDTO;
 use App\Api\Models\Portion;
@@ -52,6 +53,7 @@ class PortionService
             'carbohydrates' => $portionDTO->getCarbohydrates(),
             'fiber' => $portionDTO->getFiber(),
             'weight' => $portionDTO->getWeight(),
+            'calories' => $portionDTO->getCalories(),
             'eaten' => $portionDTO->getEaten(),
             'time' => $portionDTO->getTime()
         ]);
@@ -61,6 +63,7 @@ class PortionService
      * @param Portion $portion
      * @param PortionDTO $portionDTO
      * @param MealDTO|null $mealDTO
+     * @throws DTOException
      */
     public function update(Portion $portion, PortionDTO $portionDTO, ?MealDTO $mealDTO = null): void
     {
@@ -111,5 +114,8 @@ class PortionService
         $portionDTO->setCarbohydrates(round($mealDTO->getCarbohydrates() * $k, $precision));
         $portionDTO->setFiber(round($mealDTO->getFiber() * $k, $precision));
         $portionDTO->setMealId($mealDTO->getId());
+        $portionDTO->setCalories(
+            ceil($portionDTO->getProtein() * 4 + $portionDTO->getFat() * 8 + $portionDTO->getCarbohydrates())
+        );
     }
 }

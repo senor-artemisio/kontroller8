@@ -65,7 +65,7 @@ class DayRepository
      * @return Day|Model
      * @throws ModelNotFoundException
      */
-    public function findById(string $dayId): ?Day
+    public function findById(string $dayId): Day
     {
         return $this->day->findOrFail($dayId);
     }

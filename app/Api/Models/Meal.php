@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
  * @property string $type
  * @property string|Carbon $created_at
  * @property string|Carbon $updated_at
+ * @method static find($meal_id)
  */
 class Meal extends Model
 {

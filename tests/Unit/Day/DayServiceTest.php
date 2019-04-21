@@ -60,10 +60,13 @@ class DayServiceTest extends TestCase
             'fat' => 0,
             'fiber' => 0,
             'weight' => 0,
+            'calories' => 0,
             'protein_eaten' => 0,
             'fat_eaten' => 0,
             'fiber_eaten' => 0,
-            'weight_eaten' => 0
+            'weight_eaten' => 0,
+            'calories_eaten' => 0,
+            'user_id' => $this->user->id
         ]);
     }
 
@@ -97,7 +100,8 @@ class DayServiceTest extends TestCase
             'carbohydrates' => 1,
             'fiber' => 1,
             'eaten' => true,
-            'weight' => 1,
+            'weight' => 100,
+            'calories' => 16
         ]);
 
         factory(Portion::class, 3)->create([
@@ -108,7 +112,8 @@ class DayServiceTest extends TestCase
             'carbohydrates' => 1,
             'fiber' => 1,
             'eaten' => false,
-            'weight' => 1,
+            'weight' => 100,
+            'calories' => 16
         ]);
 
         $this->service->refresh($day);
@@ -123,7 +128,10 @@ class DayServiceTest extends TestCase
             'fat_eaten' => 2,
             'carbohydrates_eaten' => 2,
             'fiber_eaten' => 2,
-            'weight' => 5,
+            'weight' => 500,
+            'calories' => 16 * 5,
+            'weight_eaten' => 200,
+            'calories_eaten' => 16 * 2,
         ]);
     }
 }

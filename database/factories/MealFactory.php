@@ -6,7 +6,7 @@ use Faker\Generator as Faker;
 use Illuminate\Database\Eloquent\Factory;
 
 /** @var Factory $factory */
-$factory->define(Meal::class, function (Faker $faker) {
+$factory->define(Meal::class, static function (Faker $faker) {
 
     $protein = $faker->randomFloat(1, 0, 33);
     $fat = $faker->randomFloat(1, 0, 33);
@@ -20,7 +20,7 @@ $factory->define(Meal::class, function (Faker $faker) {
         'carbohydrates' => $carbohydrates,
         'calories' => ceil($protein * 4 + $fat * 8 + $carbohydrates * 4),
         'fiber' => $faker->randomFloat(1, 0, 100),
-        'user_id' => function () {
+        'user_id' => static function () {
             return factory(User::class)->create()->id;
         }
     ];

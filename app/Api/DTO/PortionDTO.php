@@ -19,6 +19,9 @@ class PortionDTO extends BaseDTO
     /** @var integer */
     protected $weight;
 
+    /** @var integer */
+    protected $calories;
+
     /** @var bool */
     protected $eaten;
 
@@ -106,6 +109,22 @@ class PortionDTO extends BaseDTO
     }
 
     /**
+     * @return int
+     */
+    public function getCalories(): int
+    {
+        return $this->calories;
+    }
+
+    /**
+     * @param int $calories
+     */
+    public function setCalories(int $calories): void
+    {
+        $this->calories = $calories;
+    }
+
+    /**
      * @return array list of changeable attributes
      */
     protected function getChangeableAttributes(): array
@@ -117,6 +136,7 @@ class PortionDTO extends BaseDTO
             'carbohydrates',
             'fiber',
             'weight',
+            'calories',
             'eaten',
             'time',
         ];
