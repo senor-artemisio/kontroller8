@@ -15,16 +15,17 @@ export default {
 
             if (this.isNew()) {
                 method = client.post;
-                url = this.url;
+                url = this.formUrl;
             } else {
                 method = client.patch;
-                url = this.url + '/' + this.form.id;
+                url = this.formUrl + '/' + this.form.id;
             }
             let data = Object.assign({}, this.form);
             delete data['id'];
 
-            method(url, data).then(response => {
-                this.$router.push('/' + this.url);
+            return method(url, data).then(response => {
+                this.errors = {};
+                this.$router.push('/' + this.formUrl);
             }).catch(this.processError);
         },
         isNew() {
@@ -43,7 +44,7 @@ export default {
         },
         getFieldError(field) {
             if (this.errors[field] && this.errors[field].length > 0) {
-                return this.errors[field].join('<br>');
+                return this.errors[field].join("\r\n");
             }
             return null;
         },

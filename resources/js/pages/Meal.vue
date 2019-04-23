@@ -68,7 +68,7 @@
         mixins: [form],
         data() {
             return {
-                url: 'meals',
+                formUrl: 'meals',
                 form: {
                     id: this.$router.currentRoute.params.id,
                     protein: null,
@@ -88,7 +88,7 @@
             if (this.form.id === 'new') {
                 return;
             }
-            Api.client().get('/' + this.url + '/' + this.form.id).then((response) => {
+            Api.client().get('/' + this.formUrl + '/' + this.form.id).then((response) => {
                 const data = response.data.data;
                 this.form.title = data.title;
                 this.form.protein = data.protein;

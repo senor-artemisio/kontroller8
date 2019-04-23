@@ -38,7 +38,6 @@ class DayController extends Controller
     {
         $this->dayRepository = $dayRepository;
         $this->dayService = $dayService;
-        $this->user = Auth::user();
     }
 
     /**
@@ -72,7 +71,7 @@ class DayController extends Controller
         $dayDTO = new DayDTO($request->all());
         $dayDTO->setId(\Ulid::generate());
 
-        $this->dayService->create($dayDTO, $this->user->getAuthIdentifier());
+        $this->dayService->create($dayDTO, Auth::user()->getAuthIdentifier());
 
         $createdDay = $this->dayRepository->findById($dayDTO->getId());
         $createdDay->wasRecentlyCreated = true;

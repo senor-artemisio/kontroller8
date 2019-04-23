@@ -46,6 +46,10 @@
                         sortable: true
                     },
                     {
+                        key: 'calories',
+                        sortable: true
+                    },
+                    {
                         key: 'protein',
                         sortable: true
                     },

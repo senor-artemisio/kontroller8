@@ -12,6 +12,6 @@ class MealsRequest extends ItemsRequest
      */
     protected function getSortableAttributes(): array
     {
-        return ['title', 'protein', 'fat', 'fiber', 'carbohydrates', 'createdAt'];
+        return ['title', 'protein', 'fat', 'fiber', 'carbohydrates', 'calories'];
     }
 }

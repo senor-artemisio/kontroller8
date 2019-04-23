@@ -6,8 +6,13 @@
                 <i class="fas fa-plus"></i>
             </b-button>
         </h1>
-        <b-modal id="days-add" title="Add new day">
-            <b-form-input id="datepicker" v-model="newDayDate" width="276"/>
+        <b-modal id="days-add" title="Add new day" @ok="onSubmitDate" ref="add">
+            <b-form-group label="Date of day"
+                          label-for="day-date"
+                          :state="getFieldState('date')"
+                          :invalid-feedback="getFieldError('date')">
+                <b-form-input id="day-date" type="text" width="276" required/>
+            </b-form-group>
         </b-modal>
         <div v-if="loaded">
             <b-table responsive stacked="sm" hover tbody-tr-class="cursor-pointer" :no-local-sorting="true"
@@ -40,7 +45,11 @@
         mixins: [items, form],
         data() {
             return {
-                newDayDate: moment().format('YYYY-MM-DD'),
+                formUrl: 'days',
+                form: {
+                    id: 'new',
+                    date: null,
+                },
                 sortBy: 'date',
                 itemsUrl: 'days',
                 itemUrl: 'day',
@@ -70,10 +79,24 @@
             };
         },
         mounted() {
-            $('#datepicker').datepicker({
+            let component = this;
+            $('#day-date').datepicker({
                 uiLibrary: 'bootstrap4',
                 format: 'yyyy-mm-dd'
+            }).change(function () {
+                component.form.date = $(this).val();
             });
+        },
+        methods: {
+            onSubmitDate(evt) {
+                evt.preventDefault();
+                this.save().then(() => {
+                    if (!Object.keys(this.errors).length) {
+                        this.$refs.add.hide();
+                        this.load();
+                    }
+                });
+            },
         }
     }
 </script>
