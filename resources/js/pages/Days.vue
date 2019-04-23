@@ -2,10 +2,13 @@
     <b-container>
         <h1 class="mt-3">
             Days
-            <b-button size="sm" variant="primary" to="/day/new">
+            <b-button size="sm" variant="primary" v-b-modal.days-add>
                 <i class="fas fa-plus"></i>
             </b-button>
         </h1>
+        <b-modal id="days-add" title="Add new day">
+            <b-form-input id="datepicker" v-model="newDayDate" width="276"/>
+        </b-modal>
         <div v-if="loaded">
             <b-table responsive stacked="sm" hover tbody-tr-class="cursor-pointer" :no-local-sorting="true"
                      :items="items"
@@ -30,11 +33,14 @@
 </template>
 <script>
     import items from '../mixins/items';
+    import form from '../mixins/form';
+    import moment from 'moment';
 
     export default {
-        mixins: [items],
+        mixins: [items, form],
         data() {
             return {
+                newDayDate: moment().format('YYYY-MM-DD'),
                 sortBy: 'date',
                 itemsUrl: 'days',
                 itemUrl: 'day',
@@ -63,5 +69,11 @@
                 ],
             };
         },
+        mounted() {
+            $('#datepicker').datepicker({
+                uiLibrary: 'bootstrap4',
+                format: 'yyyy-mm-dd'
+            });
+        }
     }
 </script>

@@ -8,8 +8,9 @@
 @import '~bootstrap-vue/src/index.scss';
 // Logo
 @import "logo";
-// Calendar
-@import "calendar";
+
+// Gijgo calendar
+@import "~gijgo/css/gijgo.min.css";
 
 body, html {
   height: 100%;
@@ -21,4 +22,8 @@ body, html {
 
 .text-overline{
   text-decoration: line-through !important;
+}
+
+.gj-picker-bootstrap{
+  z-index: 999999;
 }

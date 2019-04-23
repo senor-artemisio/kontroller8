@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
 
 /**
@@ -10,7 +11,7 @@ use Illuminate\View\View;
 class AppController
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|View
+     * @return Factory|View
      */
     public function index(): View
     {
