@@ -2,18 +2,15 @@
     <b-container>
         <h1 class="mt-3">
             Days
-            <b-button size="sm" variant="primary" v-b-modal.days-add>
-                <i class="fas fa-plus"></i>
+            <b-button size="sm" variant="primary" v-on:click="showDatepicker">
+                <i class="fas fa-calendar"></i>
             </b-button>
+            <b-form-select class="w-auto" size="sm" :options="perPageOptions" v-model="perPage"
+                           v-on:change="perPageChanged"/>
         </h1>
-        <b-modal id="days-add" title="Add new day" @ok="onSubmitDate" ref="add">
-            <b-form-group label="Date of day"
-                          label-for="day-date"
-                          :state="getFieldState('date')"
-                          :invalid-feedback="getFieldError('date')">
-                <b-form-input id="day-date" type="text" width="276" required/>
-            </b-form-group>
-        </b-modal>
+        <div class="d-none">
+            <b-form-input id="day-date"/>
+        </div>
         <div v-if="loaded">
             <b-table responsive stacked="sm" hover tbody-tr-class="cursor-pointer" :no-local-sorting="true"
                      :items="items"
@@ -30,26 +27,19 @@
                                   next-text="→"
                                   prev-text="←"
                                   v-model="currentPage"></b-pagination-nav>
-                <b-form-select class="float-md-right w-auto mb-3" size="sm" :options="perPageOptions" v-model="perPage"
-                               v-on:change="perPageChanged"/>
             </div>
         </div>
     </b-container>
 </template>
 <script>
     import items from '../mixins/items';
-    import form from '../mixins/form';
-    import moment from 'moment';
+    import Api from '../api';
 
     export default {
-        mixins: [items, form],
+        mixins: [items],
         data() {
             return {
-                formUrl: 'days',
-                form: {
-                    id: 'new',
-                    date: null,
-                },
+                datepicker: null,
                 sortBy: 'date',
                 itemsUrl: 'days',
                 itemUrl: 'day',
@@ -60,43 +50,57 @@
                     },
                     {
                         key: 'calories',
-                        sortable: true
+                        sortable: true,
+                        label: 'Calories kkal'
                     },
                     {
                         key: 'ratio',
                         sortable: false,
                         label: 'Ratio %',
-                        formatter: (value, key, item) => {
+                        formatter: (value) => {
                             return value.join(' / ');
                         }
                     },
                     {
-                        key: 'calories_eaten_percent',
+                        key: 'progress',
                         label: 'Progress %',
-                        sortable: false
+                        sortable: false,
+                        formatter: (value) => {
+                            return value.join(' / ');
+                        }
                     },
                 ],
             };
         },
         mounted() {
-            let component = this;
-            $('#day-date').datepicker({
+            const component = this;
+            this.datepicker = $('#day-date').datepicker({
                 uiLibrary: 'bootstrap4',
-                format: 'yyyy-mm-dd'
+                format: 'yyyy-mm-dd',
+                modal: true
             }).change(function () {
-                component.form.date = $(this).val();
+                const date = $(this).val(), client = Api.client();
+                client.get('days?page=1&perPage=1&sortBy=date&sortDirection=asc&date=' + date).then((response) => {
+                    const result = response.data;
+                    const items = result.data;
+                    if (items.length > 0) {
+                        component.$router.push('/day/' + items[0].id);
+                    } else {
+                        client.post('days', {date}).then((response) => {
+                            const result = response.data;
+                            component.$router.push('/day/' + result.data.id);
+                        });
+                    }
+                })
             });
+
+
+            // .change(function () {const date = $(this).val();});
         },
         methods: {
-            onSubmitDate(evt) {
-                evt.preventDefault();
-                this.save().then(() => {
-                    if (!Object.keys(this.errors).length) {
-                        this.$refs.add.hide();
-                        this.load();
-                    }
-                });
-            },
+            showDatepicker() {
+                this.datepicker.open();
+            }
         }
     }
 </script>

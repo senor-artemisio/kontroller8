@@ -45,7 +45,8 @@ class DayResource extends JsonResource
             'created_at' => $day->created_at->toDateTimeString(),
             'updated_at' => $day->updated_at->toDateTimeString(),
             'eaten' => $day->isEaten(),
-            'ratio' => $day->getRatio()
+            'ratio' => $day->getRatio(),
+            'progress' => $day->getProgress(),
         ];
     }
 }

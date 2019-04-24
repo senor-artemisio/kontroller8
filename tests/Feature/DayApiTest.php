@@ -66,6 +66,20 @@ class DayApiTest extends TestCase
         });
     }
 
+    public function testIndexFilterDate(): void
+    {
+        factory(Day::class, 3)->create(['user_id' => $this->user->id]);
+        $day = factory(Day::class)->create(['user_id' => $this->user->id, 'date' => '2000-01-01']);
+
+        $response = $this->actingAs($this->user, 'api')
+            ->getJson('/api/days?page=1&perPage=10&sortBy=date&sortDirection=desc&date=2000-01-01');
+
+        $data = $response->decodeResponseJson('data');
+        $this->assertNotNull($data);
+        $this->assertCount(1, $data);
+        $this->assertEquals($day->id, $data[0]['id']);
+    }
+
     /**
      * Check view days list for authorized user.
      *

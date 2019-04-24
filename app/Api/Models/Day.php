@@ -104,4 +104,32 @@ class Day extends Model
             (int)ceil($carbohydratesCalories / $percent)
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function getProgress(): array
+    {
+        if ($this->calories === 0) {
+            return [0, 0, 0];
+        }
+        $result = [];
+        if ($this->protein === 0) {
+            $result[] = 0;
+        } else {
+            $result[] = (int)ceil($this->protein_eaten / ($this->protein / 100));
+        }
+        if ($this->fat === 0) {
+            $result[] = 0;
+        } else {
+            $result[] = (int)ceil($this->fat_eaten / ($this->fat / 100));
+        }
+        if ($this->carbohydrates === 0) {
+            $result[] = 0;
+        } else {
+            $result[] = (int)ceil($this->carbohydrates_eaten / ($this->carbohydrates / 100));
+        }
+
+        return $result;
+    }
 }

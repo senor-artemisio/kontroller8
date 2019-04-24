@@ -5,6 +5,8 @@
             <b-button size="sm" variant="primary" to="/meal/new">
                 <i class="fas fa-plus"></i>
             </b-button>
+            <b-form-select class="w-auto" size="sm" :options="perPageOptions" v-model="perPage"
+                           v-on:change="perPageChanged"/>
         </h1>
         <div v-if="loaded">
             <b-table responsive stacked="sm" hover tbody-tr-class="cursor-pointer" :no-local-sorting="true"
@@ -22,8 +24,6 @@
                                   next-text="→"
                                   prev-text="←"
                                   v-model="currentPage"></b-pagination-nav>
-                <b-form-select class="float-md-right w-auto mb-3" size="sm" :options="perPageOptions" v-model="perPage"
-                               v-on:change="perPageChanged"/>
             </div>
         </div>
     </b-container>

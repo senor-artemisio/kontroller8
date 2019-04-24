@@ -6,7 +6,7 @@ export default {
             currentPage: null,
             lastPage: null,
             perPage: 5,
-            perPageOptions: [2, 5, 10, 20, 50],
+            perPageOptions: [1, 2, 5, 10, 20, 50],
             sortBy: null,
             sortDesc: true,
             items: [],
@@ -78,7 +78,8 @@ export default {
         this.load();
     },
     watch: {
-        '$route.params.page'(to, from) {
+        '$route.params.page'(to) {
+            // noinspection JSUnusedGlobalSymbols
             this.currentPage = to;
             this.load();
         }

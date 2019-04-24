@@ -8,7 +8,6 @@
 @import '~bootstrap-vue/src/index.scss';
 // Logo
 @import "logo";
-
 // Gijgo calendar
 @import "~gijgo/css/gijgo.min.css";
 
@@ -20,10 +19,16 @@ body, html {
   cursor: pointer;
 }
 
-.text-overline{
+.text-overline {
   text-decoration: line-through !important;
 }
 
-.gj-picker-bootstrap{
+.gj-picker-bootstrap {
   z-index: 999999;
+}
+
+.gj-picker-bootstrap table tr td.today div {
+  background: $primary !important;
+  color: $white !important;
+  border-radius:0  !important;
 }

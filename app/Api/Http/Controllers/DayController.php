@@ -8,7 +8,6 @@ use App\Api\Http\Requests\DayRequest;
 use App\Api\Http\Requests\DaysRequest;
 use App\Api\Http\Resources\DayResource;
 use App\Api\Models\Day;
-use App\Api\Models\User;
 use App\Api\Repositories\DayRepository;
 use App\Api\Services\DayService;
 use App\Http\Controllers\Controller;
@@ -26,9 +25,6 @@ class DayController extends Controller
 
     /** @var DayService */
     private $dayService;
-
-    /** @var User */
-    private $user;
 
     /**
      * @param DayRepository $dayRepository
@@ -50,10 +46,15 @@ class DayController extends Controller
         $this->authorize('list', Day::class);
         $userId = Auth::user()->getAuthIdentifier();
 
-        $days = $this->dayRepository
-            ->paginate($request->getPerPage())
-            ->sort($request->getSortBy(), $request->getSortDirection())
-            ->findByOwner($userId);
+        $this->dayRepository->paginate($request->getPerPage())
+            ->sort($request->getSortBy(), $request->getSortDirection());
+
+        $date = $request->get('date');
+        if ($date !== null) {
+            $this->dayRepository->filter('date', $date);
+        }
+
+        $days = $this->dayRepository->findByOwner($userId);
 
         return DayResource::collection($days);
     }

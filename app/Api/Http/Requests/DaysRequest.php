@@ -10,6 +10,17 @@ class DaysRequest extends ItemsRequest
     /**
      * {@inheritDoc}
      */
+    public function rules(): array
+    {
+        $rules = parent::rules();
+        $rules['date'] = 'sometimes|date';
+
+        return $rules;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     protected function getSortableAttributes(): array
     {
         return [
