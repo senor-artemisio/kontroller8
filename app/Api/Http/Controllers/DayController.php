@@ -82,6 +82,20 @@ class DayController extends Controller
 
     /**
      * @param Day $day
+     * @return DayResource
+     * @throws AuthorizationException
+     * @todo add test
+     */
+    public function show(Day $day): DayResource
+    {
+        $this->authorize('view', $day);
+        $foundedDay = $this->dayRepository->findById($day->id);
+
+        return DayResource::make($foundedDay);
+    }
+
+    /**
+     * @param Day $day
      * @throws AuthorizationException
      * @throws \Exception
      */

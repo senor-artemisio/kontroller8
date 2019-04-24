@@ -32,6 +32,10 @@ class PortionResource extends JsonResource
             'created_at' => $portion->created_at->toDateTimeString(),
             'updated_at' => $portion->updated_at->toDateTimeString(),
             'time' => $time,
+            'meal' => [
+                'id' => $portion->meal_id,
+                'title' => $portion->meal->title
+            ]
         ];
     }
 }

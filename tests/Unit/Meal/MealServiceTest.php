@@ -49,7 +49,7 @@ class MealServiceTest extends TestCase
             $attributes['created_at'],
             $attributes['updated_at'],
             $attributes['user_id'],
-            $attributes['calories'],
+            $attributes['calories']
         );
 
         $dto = new MealDTO($attributes);

@@ -53,7 +53,7 @@
                         <b-button v-else size="lg" variant="primary" :disabled="buttonDisabled" type="submit">
                             Update
                         </b-button>
-                        <b-button to="/meals" size="lg">Cancel</b-button>
+                        <b-button to="/meals" size="lg">Back</b-button>
                     </b-form-group>
                 </b-form>
             </b-col>

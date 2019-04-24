@@ -68,7 +68,7 @@ class DayApiTest extends TestCase
 
     public function testIndexFilterDate(): void
     {
-        factory(Day::class, 3)->create(['user_id' => $this->user->id]);
+        factory(Day::class)->create(['user_id' => $this->user->id, 'date' => '2001-01-01']);
         $day = factory(Day::class)->create(['user_id' => $this->user->id, 'date' => '2000-01-01']);
 
         $response = $this->actingAs($this->user, 'api')

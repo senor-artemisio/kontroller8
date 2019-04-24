@@ -55,7 +55,7 @@ const router = new VueRouter({
             props: {default: true}
         },
         {
-            path: '/day/:id',
+            path: '/day/:id/:page',
             components: {
                 default: Day,
                 menu: Menu

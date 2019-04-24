@@ -12,6 +12,6 @@ class PortionsRequest extends ItemsRequest
      */
     protected function getSortableAttributes(): array
     {
-        return ['protein', 'fat', 'fiber', 'carbohydrates', 'time'];
+        return ['protein', 'fat', 'fiber', 'carbohydrates', 'time', 'weight','eaten'];
     }
 }

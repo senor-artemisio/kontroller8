@@ -84,11 +84,11 @@
                     const result = response.data;
                     const items = result.data;
                     if (items.length > 0) {
-                        component.$router.push('/day/' + items[0].id);
+                        component.$router.push('/day/' + items[0].id+'/1');
                     } else {
                         client.post('days', {date}).then((response) => {
                             const result = response.data;
-                            component.$router.push('/day/' + result.data.id);
+                            component.$router.push('/day/' + result.data.id+'/1');
                         });
                     }
                 })
@@ -100,7 +100,10 @@
         methods: {
             showDatepicker() {
                 this.datepicker.open();
-            }
+            },
+            toItem(item, index, button) {
+                this.$router.push('/' + this.itemUrl + '/' + item.id+'/1');
+            },
         }
     }
 </script>
