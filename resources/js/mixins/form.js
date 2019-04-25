@@ -23,7 +23,7 @@ export default {
             let data = Object.assign({}, this.form);
             delete data['id'];
 
-            return method(url, data).then(response => {
+            return method(url, data).then(() => {
                 this.errors = {};
                 this.$router.push('/' + this.formUrl);
             }).catch(this.processError);
@@ -59,7 +59,7 @@ export default {
                 return console.error(error.response);
 
             }
-            console.error(error);
+            throw error;
         }
     }
 }

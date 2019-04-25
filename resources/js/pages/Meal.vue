@@ -1,12 +1,9 @@
 <template>
     <b-container>
+        <b-breadcrumb class="mt-3" :items="breadcrumbs"></b-breadcrumb>
         <b-row>
             <b-col md="6">
                 <b-form @submit="onSubmit">
-                    <b-form-group label-align="right" label-cols="4" label-cols-lg="4">
-                        <h2 class="mt-3" v-if="isNew()">New meal</h2>
-                        <h2 class="mt-3" v-else>Meal {{form.title}}</h2>
-                    </b-form-group>
                     <b-form-group label-align="right" label-cols="4" label-cols-lg="4" label="Title"
                                   label-for="meal-title"
                                   :state="getFieldState('title')"
@@ -53,7 +50,7 @@
                         <b-button v-else size="lg" variant="primary" :disabled="buttonDisabled" type="submit">
                             Update
                         </b-button>
-                        <b-button to="/meals" size="lg">Back</b-button>
+                        <b-button to="/meals" size="lg">Cancel</b-button>
                     </b-form-group>
                 </b-form>
             </b-col>
@@ -76,20 +73,17 @@
                     carbohydrates: null,
                     fiber: null
                 },
-                breadcrumbs: [
-                    {
-                        text: 'Meals',
-                        href: '/meals'
-                    }
-                ]
+                breadcrumbs: [{text: 'Meals', href: '/meals'}]
             }
         },
         mounted() {
             if (this.form.id === 'new') {
+                this.breadcrumbs.push({text: 'Create', active: true});
                 return;
             }
             Api.client().get('/' + this.formUrl + '/' + this.form.id).then((response) => {
                 const data = response.data.data;
+                this.breadcrumbs.push({text: data.title, active: true});
                 this.form.title = data.title;
                 this.form.protein = data.protein;
                 this.form.fat = data.fat;
