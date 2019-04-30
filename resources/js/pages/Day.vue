@@ -6,23 +6,27 @@
             <b-button to="/days" size="sm">
                 <i class="fas fa-arrow-left"></i>
             </b-button>
-            <b-button size="sm" variant="primary">
+            <b-button size="sm" variant="primary" @click="toNewDayForm()">
                 <i class="fas fa-plus"></i>
             </b-button>
             <b-form-select class="w-auto" size="sm" :options="perPageOptions" v-model="perPage"
                            v-on:change="perPageChanged"/>
         </h2>
         <div v-if="loaded">
-            <b-table responsive stacked="sm" hover no-local-sorting foot-clone no-footer-sorting
-                     tbody-tr-class="cursor-pointer"
-                     tfoot-class="tfoot-hide-sort"
+            <b-table responsive stacked="sm" no-local-sorting foot-clone no-footer-sorting
                      :items="items"
                      :fields="fields"
                      :sort-by.sync="sortBy" :sort-desc.sync="sortDesc"
-                     @sort-changed="sortChanged"
-                     @row-clicked="toItem">
+                     @sort-changed="sortChanged">
                 <template slot="meal" slot-scope="data">
                     <b-link :to="'/meal/'+data.item.meal.id">{{ data.item.meal.title }}</b-link>
+                </template>
+                <template slot="weight" slot-scope="data">
+                    <b-link :to="'/portion/'+day.id+'/'+data.item.id">{{ data.item.weight}}g</b-link>
+                </template>
+                <template slot="eaten" slot-scope="data">
+                    <b-form-checkbox v-model="data.item.eaten" :value="true" :unchecked-value="false"
+                                     @change="toggleEaten(data.item)"/>
                 </template>
                 <template slot="FOOT_meal" slot-scope="data">Total</template>
                 <template slot="FOOT_weight" slot-scope="data">{{ day.weight }}</template>
@@ -66,17 +70,11 @@
                     {key: 'meal', label: 'Meal'},
                     {key: 'weight', sortable: true},
                     {key: 'time', sortable: true},
-                    {
-                        key: 'eaten',
-                        sortable: true,
-                        formatter: (value) => {
-                            return value ? 'yes' : 'no';
-                        }
-                    },
-                    {key: 'protein', sortable: true},
-                    {key: 'fat', sortable: true},
-                    {key: 'carbohydrates', sortable: true},
-                    {key: 'fiber', sortable: true},
+                    {key: 'eaten', sortable: true,},
+                    {key: 'protein', sortable: true, formatter: this.formatterGramm},
+                    {key: 'fat', sortable: true, formatter: this.formatterGramm},
+                    {key: 'carbohydrates', sortable: true, label: 'Carbs', formatter: this.formatterGramm},
+                    {key: 'fiber', sortable: true, formatter: this.formatterGramm},
                 ],
                 day: {id: dayId, date: null},
                 breadcrumbs: [{text: 'Days', href: '/days'}]
@@ -91,6 +89,14 @@
         methods: {
             getItemBaseUrl() {
                 return '/day/' + this.day.id + '/';
+            },
+            toNewDayForm() {
+                this.$router.push('/portion/' + this.day.id + '/new');
+            },
+            toggleEaten(portion) {
+                Api.client().patch('/days/' + this.day.id + '/portions/' + portion.id, {
+                    eaten: !portion.eaten
+                });
             }
         }
     }

@@ -11,7 +11,6 @@ use App\Api\Http\Resources\PortionResource;
 use App\Api\Models\Day;
 use App\Api\Models\Portion;
 use App\Api\Models\User;
-use App\Api\Repositories\DayRepository;
 use App\Api\Repositories\MealRepository;
 use App\Api\Repositories\PortionRepository;
 use App\Api\Services\DayService;
@@ -79,6 +78,22 @@ class PortionController extends Controller
     }
 
     /**
+     * @param Day $day
+     * @param Portion $portion
+     * @return PortionResource
+     * @throws AuthorizationException
+     */
+    public function show(Day $day, Portion $portion)
+    {
+        $this->authorize('update', $portion);
+        $this->authorize('update', $day);
+
+        $foundedPortion = $this->portionRepository->findById($portion->id);
+
+        return PortionResource::make($foundedPortion);
+    }
+
+    /**
      * @param PortionRequest $request
      * @param Day $day
      * @return PortionResource
@@ -119,7 +134,6 @@ class PortionController extends Controller
     {
         $this->authorize('update', $portion);
         $this->authorize('update', $day);
-
 
         $portionDTO = new PortionDTO($request->all());
 

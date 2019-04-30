@@ -12,12 +12,15 @@
             <b-form-input id="day-date"/>
         </div>
         <div v-if="loaded">
-            <b-table responsive stacked="sm" hover tbody-tr-class="cursor-pointer" :no-local-sorting="true"
+            <b-table responsive stacked="sm" :no-local-sorting="true"
                      :items="items"
                      :fields="fields"
                      :sort-by.sync="sortBy" :sort-desc.sync="sortDesc"
-                     @sort-changed="sortChanged"
-                     @row-clicked="toItem"/>
+                     @sort-changed="sortChanged">
+                <template slot="date" slot-scope="data">
+                    <b-link :to="'/day/'+data.item.id+'/1'">{{ data.item.title }}</b-link>
+                </template>
+            </b-table>
             <div class="overflow-auto">
                 <b-pagination-nav class="float-md-left" use-router
                                   base-url="/days/"
@@ -51,19 +54,17 @@
                     {
                         key: 'calories',
                         sortable: true,
-                        label: 'Calories kkal'
+                        label: 'kCal'
                     },
                     {
                         key: 'ratio',
                         sortable: false,
-                        label: 'Ratio %',
                         formatter: (value) => {
                             return value.join(' / ');
                         }
                     },
                     {
                         key: 'progress',
-                        label: 'Progress %',
                         sortable: false,
                         formatter: (value) => {
                             return value.join(' / ');
@@ -84,11 +85,11 @@
                     const result = response.data;
                     const items = result.data;
                     if (items.length > 0) {
-                        component.$router.push('/day/' + items[0].id+'/1');
+                        component.$router.push('/day/' + items[0].id + '/1');
                     } else {
                         client.post('days', {date}).then((response) => {
                             const result = response.data;
-                            component.$router.push('/day/' + result.data.id+'/1');
+                            component.$router.push('/day/' + result.data.id + '/1');
                         });
                     }
                 })
@@ -100,10 +101,7 @@
         methods: {
             showDatepicker() {
                 this.datepicker.open();
-            },
-            toItem(item, index, button) {
-                this.$router.push('/' + this.itemUrl + '/' + item.id+'/1');
-            },
+            }
         }
     }
 </script>

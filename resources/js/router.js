@@ -6,6 +6,7 @@ import Days from './pages/Days';
 import Day from './pages/Day';
 import Meals from './pages/Meals';
 import Meal from './pages/Meal';
+import Portion from './pages/Portion';
 import Auth from './pages/Auth';
 import Menu from './components/Menu';
 
@@ -62,7 +63,16 @@ const router = new VueRouter({
             },
             name: "day",
             props: {default: true}
-        }
+        },
+        {
+            path: '/portion/:dayId/:id',
+            components: {
+                default: Portion,
+                menu: Menu
+            },
+            name: "portion",
+            props: {default: true}
+        },
     ],
     mode: "history"
 });

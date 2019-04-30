@@ -61,15 +61,9 @@ export default {
 
             return url;
         },
-        /**
-         * Route to item page
-         * @param item
-         * @param index
-         * @param button
-         */
-        toItem(item, index, button) {
-            this.$router.push('/' + this.itemUrl + '/' + item.id);
-        },
+        formatterGramm: (value) => {
+            return value + 'g';
+        }
     },
     mounted() {
         if (this.currentPage === null) {

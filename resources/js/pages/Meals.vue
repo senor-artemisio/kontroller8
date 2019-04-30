@@ -9,12 +9,13 @@
                            v-on:change="perPageChanged"/>
         </h1>
         <div v-if="loaded">
-            <b-table responsive stacked="sm" hover tbody-tr-class="cursor-pointer" :no-local-sorting="true"
-                     :items="items"
-                     :fields="fields"
-                     :sort-by.sync="sortBy" :sort-desc.sync="sortDesc"
-                     @sort-changed="sortChanged"
-                     @row-clicked="toItem"/>
+            <b-table responsive stacked="sm" @sort-changed="sortChanged"
+                     :no-local-sorting="true" :items="items" :fields="fields"
+                     :sort-by.sync="sortBy" :sort-desc.sync="sortDesc">
+                <template slot="title" slot-scope="data">
+                    <b-link :to="'/meal/'+data.item.id">{{ data.item.title }}</b-link>
+                </template>
+            </b-table>
             <div class="overflow-auto">
                 <b-pagination-nav class="float-md-left" use-router
                                   base-url="/meals/"
@@ -41,30 +42,12 @@
                 sortBy: 'title',
                 sortDesc: false,
                 fields: [
-                    {
-                        key: 'title',
-                        sortable: true
-                    },
-                    {
-                        key: 'calories',
-                        sortable: true
-                    },
-                    {
-                        key: 'protein',
-                        sortable: true
-                    },
-                    {
-                        key: 'fat',
-                        sortable: true
-                    },
-                    {
-                        key: 'carbohydrates',
-                        sortable: true
-                    },
-                    {
-                        key: 'fiber',
-                        sortable: true
-                    }
+                    {key: 'title', sortable: true},
+                    {key: 'calories', sortable: true, label: 'kCal'},
+                    {key: 'protein', sortable: true, formatter: this.formatterGramm},
+                    {key: 'fat', sortable: true, formatter: this.formatterGramm},
+                    {key: 'carbohydrates', sortable: true, formatter: this.formatterGramm, label: 'Carbs',},
+                    {key: 'fiber', sortable: true, formatter: this.formatterGramm}
                 ],
             };
         },

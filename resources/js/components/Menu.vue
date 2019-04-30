@@ -9,20 +9,15 @@
         <b-collapse is-nav id="nav_collapse">
             <b-navbar-nav>
                 <b-nav-item to="/dashboard">Dashboard</b-nav-item>
-                <b-nav-item to="/meals">Meals</b-nav-item>
-                <b-nav-item to="/days">Days</b-nav-item>
+                <b-nav-item to="/meals" :active="isMeals()">Meals</b-nav-item>
+                <b-nav-item to="/days" :active="isDays()">Days</b-nav-item>
             </b-navbar-nav>
 
             <b-navbar-nav class="ml-auto d-none d-sm-flex">
-                <b-nav-item-dropdown text="Lang" right>
-                    <b-dropdown-item href="#">EN</b-dropdown-item>
-                    <b-dropdown-item href="#">RU</b-dropdown-item>
-                </b-nav-item-dropdown>
-
                 <b-nav-item-dropdown right>
                     <template slot="button-content"><b>{{ user.name }}</b></template>
                     <b-dropdown-item to="/profiile">Profile</b-dropdown-item>
-                    <b-dropdown-item v-on:click="logOut()">Signout</b-dropdown-item>
+                    <b-dropdown-item v-on:click="logOut()">Sign out</b-dropdown-item>
                 </b-nav-item-dropdown>
             </b-navbar-nav>
         </b-collapse>
@@ -46,7 +41,13 @@
         methods: {
             logOut() {
                 this.$store.dispatch('logout');
-            }
+            },
+            isMeals() {
+                return location.pathname.indexOf('/meal') === 0;
+            },
+            isDays() {
+                return location.pathname.indexOf('/day') === 0;
+            },
         }
     }
 </script>

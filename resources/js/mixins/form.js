@@ -3,7 +3,8 @@ import Api from '../api';
 export default {
     data() {
         return {
-            url: null,
+            formUrl: null,
+            backUrl: null,
             buttonDisabled: false,
             errors: {},
         };
@@ -25,7 +26,7 @@ export default {
 
             return method(url, data).then(() => {
                 this.errors = {};
-                this.$router.push('/' + this.formUrl);
+                this.$router.push(this.backUrl);
             }).catch(this.processError);
         },
         isNew() {

@@ -23,7 +23,7 @@ Route::middleware(['json'])->group(function () {
             ->only('index', 'store', 'destroy', 'update', 'show');
 
         Route::resource('days/{day}/portions', 'PortionController')
-            ->only('index', 'store', 'destroy', 'update');
+            ->only('index', 'store', 'destroy', 'update', 'show');
 
         Route::get('users/me', 'UserController@me');
     });

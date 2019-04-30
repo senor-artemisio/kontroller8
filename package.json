@@ -29,5 +29,8 @@
     "vue-router": "^3.0.2",
     "vue-template-compiler": "^2.6.8",
     "vuex": "^3.1.0"
+  },
+  "dependencies": {
+    "autocomplete.js": "^0.36.0"
   }
 }

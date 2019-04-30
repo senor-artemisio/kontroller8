@@ -66,6 +66,7 @@
         data() {
             return {
                 formUrl: 'meals',
+                backUrl:'/meals',
                 form: {
                     id: this.$router.currentRoute.params.id,
                     protein: null,

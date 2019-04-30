@@ -132,4 +132,12 @@ class Day extends Model
 
         return $result;
     }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return "{$this->date->day} {$this->date->localeMonth} {$this->date->year}";
+    }
 }
