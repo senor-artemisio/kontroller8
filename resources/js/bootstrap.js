@@ -11,7 +11,6 @@ try {
     window.$ = window.jQuery = require('jquery');
 
     require('bootstrap');
-    require('gijgo/js/gijgo.min');
 } catch (e) {
 }
 

@@ -1,5 +1,6 @@
 <template>
     <b-container>
+        <b-breadcrumb class="mt-3" :items="breadcrumbs"></b-breadcrumb>
         <h1 class="mt-3">
             Meals
             <b-button size="sm" variant="primary" to="/meal/new">
@@ -49,6 +50,7 @@
                     {key: 'carbohydrates', sortable: true, formatter: this.formatterGramm, label: 'Carbs',},
                     {key: 'fiber', sortable: true, formatter: this.formatterGramm}
                 ],
+                breadcrumbs: [{text: 'Meals', active: true}]
             };
         },
     }

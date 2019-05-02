@@ -1,49 +1,41 @@
 <template>
     <b-container>
         <b-breadcrumb class="mt-3" :items="breadcrumbs"></b-breadcrumb>
+        <h1 class="mt-3">Meal</h1>
         <b-row>
             <b-col md="6">
                 <b-form @submit="onSubmit">
-                    <b-form-group label-align="right" label-cols="4" label-cols-lg="4" label="Title"
-                                  label-for="meal-title"
-                                  :state="getFieldState('title')"
+                    <b-form-group label="Title" label-for="meal-title" :state="getFieldState('title')"
                                   :invalid-feedback="getFieldError('title')">
                         <b-form-input id="meal-title" type="text" v-model="form.title" required/>
                     </b-form-group>
-
-                    <b-form-group label-align="right" label-cols="4" label-cols-lg="4" label="Protein"
-                                  label-for="meal-protein"
-                                  :state="getFieldState('protein')"
+                    <b-form-group label="Protein" label-for="meal-protein" :state="getFieldState('protein')"
                                   :invalid-feedback="getFieldError('protein')">
                         <b-form-input id="meal-protein" type="number" min="0" max="100" step="0.1"
                                       v-model="form.protein"
                                       required/>
                     </b-form-group>
 
-                    <b-form-group label-align="right" label-cols="4" label-cols-lg="4" label="Fat" label-for="meal-fat"
-                                  :state="getFieldState('fat')"
+                    <b-form-group label="Fat" label-for="meal-fat" :state="getFieldState('fat')"
                                   :invalid-feedback="getFieldError('fat')">
                         <b-form-input id="meal-fat" type="number" min="0" max="100" step="0.1" v-model="form.fat"
                                       required/>
                     </b-form-group>
 
-                    <b-form-group label-align="right" label-cols="4" label-cols-lg="4" label="Carbohydrates"
-                                  label-for="meal-carbohydrates"
+                    <b-form-group label="Carbohydrates" label-for="meal-carbohydrates"
                                   :state="getFieldState('carbohydrates')"
                                   :invalid-feedback="getFieldError('carbohydrates')">
                         <b-form-input id="meal-carbohydrates" type="number" min="0" max="100" step="0.1"
                                       v-model="form.carbohydrates" required/>
                     </b-form-group>
 
-                    <b-form-group label-align="right" label-cols="4" label-cols-lg="4" label="Fiber"
-                                  label-for="meal-fiber"
-                                  :state="getFieldState('fiber')"
+                    <b-form-group label="Fiber" label-for="meal-fiber" :state="getFieldState('fiber')"
                                   :invalid-feedback="getFieldError('fiber')">
                         <b-form-input id="meal-fiber" type="number" min="0" max="100" step="0.1"
                                       v-model="form.fiber" required/>
                     </b-form-group>
 
-                    <b-form-group label-align="right" label-cols="4" label-cols-lg="4">
+                    <b-form-group>
                         <b-button v-if="isNew()" variant="primary" size="lg" :disabled="buttonDisabled" type="submit">
                             Create
                         </b-button>
@@ -66,7 +58,7 @@
         data() {
             return {
                 formUrl: 'meals',
-                backUrl:'/meals',
+                backUrl: '/meals',
                 form: {
                     id: this.$router.currentRoute.params.id,
                     protein: null,
@@ -74,7 +66,7 @@
                     carbohydrates: null,
                     fiber: null
                 },
-                breadcrumbs: [{text: 'Meals', href: '/meals'}]
+                breadcrumbs: [{text: 'Meals', to: '/meals'}]
             }
         },
         mounted() {

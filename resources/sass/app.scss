@@ -8,8 +8,8 @@
 @import '~bootstrap-vue/src/index.scss';
 // Logo
 @import "logo";
-// Gijgo calendar
-@import "~gijgo/css/gijgo.min.css";
+// jQuery UI
+@import '~jquery-ui/themes/base/all.css';
 
 body, html {
   height: 100%;
@@ -21,16 +21,6 @@ body, html {
 
 .text-overline {
   text-decoration: line-through !important;
-}
-
-.gj-picker-bootstrap {
-  z-index: 999999;
-}
-
-.gj-picker-bootstrap table tr td.today div {
-  background: $primary !important;
-  color: $white !important;
-  border-radius: 0 !important;
 }
 
 .tfoot-hide-sort th:after {

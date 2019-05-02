@@ -16,7 +16,7 @@ class PortionRequest extends FormRequest
     {
         $rules = [
             'eaten' => 'required|bool',
-            'meal_id' => 'string|size:26|exists:meals,id',
+            'meal_id' => 'required|string|size:26|exists:meals,id',
             'weight' => 'integer|required'
         ];
 

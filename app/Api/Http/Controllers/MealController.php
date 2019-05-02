@@ -48,6 +48,11 @@ class MealController extends Controller
         $this->authorize('list', Meal::class);
         $userId = Auth::user()->getAuthIdentifier();
 
+        $title = $request->get('title');
+        if ($title !== null) {
+            $this->mealRepository->match('title', $title);
+        }
+
         $meals = $this->mealRepository
             ->paginate($request->getPerPage())
             ->sort($request->getSortBy(), $request->getSortDirection())

@@ -9,14 +9,15 @@
         <b-collapse is-nav id="nav_collapse">
             <b-navbar-nav>
                 <b-nav-item to="/dashboard">Dashboard</b-nav-item>
-                <b-nav-item to="/meals" :active="isMeals()">Meals</b-nav-item>
                 <b-nav-item to="/days" :active="isDays()">Days</b-nav-item>
+                <b-nav-item to="/meals" :active="isMeals()">Meals</b-nav-item>
             </b-navbar-nav>
 
             <b-navbar-nav class="ml-auto d-none d-sm-flex">
                 <b-nav-item-dropdown right>
                     <template slot="button-content"><b>{{ user.name }}</b></template>
-                    <b-dropdown-item to="/profiile">Profile</b-dropdown-item>
+                    <b-dropdown-item to="/profile">Profile</b-dropdown-item>
+                    <b-dropdown-item to="/account">Account</b-dropdown-item>
                     <b-dropdown-item v-on:click="logOut()">Sign out</b-dropdown-item>
                 </b-nav-item-dropdown>
             </b-navbar-nav>

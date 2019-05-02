@@ -10,7 +10,6 @@ use App\Api\Http\Requests\PortionsRequest;
 use App\Api\Http\Resources\PortionResource;
 use App\Api\Models\Day;
 use App\Api\Models\Portion;
-use App\Api\Models\User;
 use App\Api\Repositories\MealRepository;
 use App\Api\Repositories\PortionRepository;
 use App\Api\Services\DayService;
@@ -37,13 +36,11 @@ class PortionController extends Controller
     /** @var DayService */
     private $dayService;
 
-    /** @var User */
-    private $user;
-
     /**
      * @param PortionService $portionService
      * @param PortionRepository $portionRepository
      * @param MealRepository $mealRepository
+     * @param DayService $dayService
      */
     public function __construct(
         PortionService $portionService,
@@ -56,7 +53,6 @@ class PortionController extends Controller
         $this->portionService = $portionService;
         $this->mealRepository = $mealRepository;
         $this->dayService = $dayService;
-        $this->user = Auth::user();
     }
 
     /**
@@ -112,7 +108,7 @@ class PortionController extends Controller
         $this->authorize('view', $meal);
         $mealDTO = MealDTO::createFromModel($meal);
 
-        $this->portionService->create($portionDTO, $mealDTO, $this->user->getAuthIdentifier(), $day->id);
+        $this->portionService->create($portionDTO, $mealDTO, Auth::user()->getAuthIdentifier(), $day->id);
 
         $createdPortion = $this->portionRepository->findById($portionDTO->getId());
         $createdPortion->wasRecentlyCreated = true;

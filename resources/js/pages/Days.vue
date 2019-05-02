@@ -1,16 +1,15 @@
 <template xmlns="http://www.w3.org/1999/html">
     <b-container>
+        <b-breadcrumb class="mt-3" :items="breadcrumbs"></b-breadcrumb>
         <h1 class="mt-3">
             Days
-            <b-button size="sm" variant="primary" v-on:click="showDatepicker">
+            <b-button size="sm" variant="primary" v-b-toggle.days-datepicker>
                 <i class="fas fa-calendar"></i>
             </b-button>
             <b-form-select class="w-auto" size="sm" :options="perPageOptions" v-model="perPage"
                            v-on:change="perPageChanged"/>
         </h1>
-        <div class="d-none">
-            <b-form-input id="day-date"/>
-        </div>
+        <b-collapse id="days-datepicker" class="position-absolute" style="z-index: 2"></b-collapse>
         <div v-if="loaded">
             <b-table responsive stacked="sm" :no-local-sorting="true"
                      :items="items"
@@ -37,12 +36,13 @@
 <script>
     import items from '../mixins/items';
     import Api from '../api';
+    import 'jquery-ui/ui/widgets/datepicker.js';
 
     export default {
         mixins: [items],
         data() {
             return {
-                datepicker: null,
+                datepickerContainer: null,
                 sortBy: 'date',
                 itemsUrl: 'days',
                 itemUrl: 'day',
@@ -71,37 +71,31 @@
                         }
                     },
                 ],
+                breadcrumbs: [{text: 'Days', active:true}]
             };
         },
         mounted() {
             const component = this;
-            this.datepicker = $('#day-date').datepicker({
-                uiLibrary: 'bootstrap4',
-                format: 'yyyy-mm-dd',
-                modal: true
-            }).change(function () {
-                const date = $(this).val(), client = Api.client();
-                client.get('days?page=1&perPage=1&sortBy=date&sortDirection=asc&date=' + date).then((response) => {
-                    const result = response.data;
-                    const items = result.data;
-                    if (items.length > 0) {
-                        component.$router.push('/day/' + items[0].id + '/1');
-                    } else {
-                        client.post('days', {date}).then((response) => {
-                            const result = response.data;
-                            component.$router.push('/day/' + result.data.id + '/1');
-                        });
-                    }
-                })
-            });
-
-
-            // .change(function () {const date = $(this).val();});
+            this.datepickerContainer = $('#days-datepicker');
+            this.datepickerContainer.datepicker({
+                showOn: 'button',
+                dateFormat: "yy-mm-dd",
+                onSelect: (date) => {
+                    const client = Api.client();
+                    client.get('days?page=1&perPage=1&sortBy=date&sortDirection=asc&date=' + date).then((response) => {
+                        const result = response.data;
+                        const items = result.data;
+                        if (items.length > 0) {
+                            component.$router.push('/day/' + items[0].id + '/1');
+                        } else {
+                            client.post('days', {date}).then((response) => {
+                                const result = response.data;
+                                component.$router.push('/day/' + result.data.id + '/1');
+                            });
+                        }
+                    })
+                }
+            })
         },
-        methods: {
-            showDatepicker() {
-                this.datepicker.open();
-            }
-        }
     }
 </script>

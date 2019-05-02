@@ -26,6 +26,9 @@ trait Rest
     /** @var array */
     protected $where = [];
 
+    /** @var array */
+    protected $match = [];
+
     /**
      * @param int $perPage
      * @return static
@@ -74,6 +77,18 @@ trait Rest
     }
 
     /**
+     * @param string $column
+     * @param $value
+     * @return Rest
+     */
+    public function match(string $column, $value)
+    {
+        $this->match[$column] = $value;
+
+        return $this;
+    }
+
+    /**
      * @param Builder $query
      * @return LengthAwarePaginator|Collection
      */
@@ -86,6 +101,12 @@ trait Rest
         if (!empty($this->where)) {
             foreach ($this->where as $attribute => $value) {
                 $query->where($attribute, $value);
+            }
+        }
+
+        if (!empty($this->match)) {
+            foreach ($this->match as $attribute => $value) {
+                $query->where($attribute, 'like', '%' . $value . '%');
             }
         }
 

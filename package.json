@@ -16,6 +16,7 @@
     "cross-env": "^5.1",
     "gijgo": "^1.9.13",
     "jquery": "^3.4.0",
+    "jquery-ui": "^1.12.1",
     "js-cookie": "^2.2.0",
     "laravel-mix": "^4.0.7",
     "lodash": "^4.17.5",
@@ -29,8 +30,5 @@
     "vue-router": "^3.0.2",
     "vue-template-compiler": "^2.6.8",
     "vuex": "^3.1.0"
-  },
-  "dependencies": {
-    "autocomplete.js": "^0.36.0"
   }
 }
