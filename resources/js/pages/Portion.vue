@@ -21,7 +21,7 @@
                     </b-form-group>
                     <b-form-group label="Meal" label-for="portion-meal-id" :state="getFieldState('meal_id')"
                                   :invalid-feedback="getFieldError('meal_id')">
-                        <b-form-input id="portion-meal" type="text" v-model="mealTitle" required/>
+                        <b-form-input id="portion-meal" type="text" v-model="mealTitle" required autocomplete="off"/>
                         <input id="portion-meal-id" type="hidden" v-model="form.meal_id"/>
                     </b-form-group>
                     <b-form-group>
@@ -32,6 +32,7 @@
                             Update
                         </b-button>
                         <b-button :to="backUrl" size="lg">Cancel</b-button>
+                        <b-button variant="danger" size="lg" v-if="!isNew()" @click="remove">Delete</b-button>
                     </b-form-group>
                 </b-form>
             </b-col>

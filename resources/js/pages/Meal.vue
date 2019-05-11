@@ -43,6 +43,7 @@
                             Update
                         </b-button>
                         <b-button to="/meals" size="lg">Cancel</b-button>
+                        <b-button variant="danger" size="lg" v-if="!isNew()" @click="remove">Delete</b-button>
                     </b-form-group>
                 </b-form>
             </b-col>

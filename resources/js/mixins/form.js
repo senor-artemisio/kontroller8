@@ -29,6 +29,16 @@ export default {
                 this.$router.push(this.backUrl);
             }).catch(this.processError);
         },
+        remove() {
+            if (!confirm('Are you sure?')) {
+                return;
+            }
+
+            return Api.client().delete(this.formUrl + '/' + this.form.id).then(() => {
+                this.errors = {};
+                this.$router.push(this.backUrl);
+            }).catch(this.processError);
+        },
         isNew() {
             return this.form.id === 'new';
         },

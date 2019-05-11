@@ -34,7 +34,7 @@ class PortionResource extends JsonResource
             'time' => $time,
             'meal' => [
                 'id' => $portion->meal_id,
-                'title' => $portion->meal->title
+                'title' => $portion->meal ? $portion->meal->title : $portion->meal_id
             ],
             'day' => [
                 'id' => $portion->day_id,
