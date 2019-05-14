@@ -70,6 +70,20 @@ class Init extends Migration
 
             $table->primary('id');
         });
+
+        Schema::create('profiles', function (Blueprint $table) {
+            $table->char('user_id', 26)->nullable(false);
+            $table->integer('age')->nullable(false);
+            $table->integer('weight')->nullable(false);
+            $table->integer('height')->nullable(false);
+            $table->boolean('gender')->nullable(false);
+            $table->float('modifier')->nullable(false);
+            $table->float('activity')->nullable(false);
+            $table->integer('calories')->nullable(false);
+
+            $table->timestamps();
+            $table->primary('user_id');
+        });
     }
 
     /**

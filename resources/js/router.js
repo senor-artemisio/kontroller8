@@ -7,6 +7,7 @@ import Day from './pages/Day';
 import Meals from './pages/Meals';
 import Meal from './pages/Meal';
 import Portion from './pages/Portion';
+import Profile from './pages/Profile';
 import Auth from './pages/Auth';
 import Menu from './components/Menu';
 
@@ -24,7 +25,15 @@ const router = new VueRouter({
                 default: Dashboard,
                 menu: Menu
             },
-            name: "dashboard"
+            name: 'dashboard'
+        },
+        {
+            path:'/profile',
+            components:{
+                default: Profile,
+                menu: Menu
+            },
+            name:'profile'
         },
         {path: '/meals', redirect: '/meals/1'},
         {
@@ -33,7 +42,7 @@ const router = new VueRouter({
                 default: Meals,
                 menu: Menu
             },
-            name: "meals",
+            name: 'meals',
             props: {default: true}
         },
         {
@@ -42,7 +51,7 @@ const router = new VueRouter({
                 default: Meal,
                 menu: Menu
             },
-            name: "meal",
+            name: 'meal',
             props: {default: true}
         },
         {path: '/days', redirect: '/days/1'},
@@ -52,7 +61,7 @@ const router = new VueRouter({
                 default: Days,
                 menu: Menu
             },
-            name: "days",
+            name: 'days',
             props: {default: true}
         },
         {
@@ -61,7 +70,7 @@ const router = new VueRouter({
                 default: Day,
                 menu: Menu
             },
-            name: "day",
+            name: 'day',
             props: {default: true}
         },
         {
@@ -70,7 +79,7 @@ const router = new VueRouter({
                 default: Portion,
                 menu: Menu
             },
-            name: "portion",
+            name: 'portion',
             props: {default: true}
         },
     ],
