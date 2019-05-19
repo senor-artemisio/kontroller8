@@ -2,7 +2,10 @@
 
 namespace App\Api\Http\Requests;
 
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 /**
  * HTTP request for day.
@@ -17,7 +20,13 @@ class DayRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date' => 'date|required|unique:days',
+            'date' => [
+                'date',
+                'required',
+                Rule::unique('days', 'date')->where(function (Builder $query) {
+                    $query->where('user_id', '=', Auth::user()->getAuthIdentifier());
+                })
+            ]
         ];
     }
 

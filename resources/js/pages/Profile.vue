@@ -10,12 +10,12 @@
                         <b-form-input id="profile-age" type="number" min="18" max="99" v-model="form.age" required
                                       autocomplete="off"/>
                     </b-form-group>
-                    <b-form-group label="Weight" label-for="profile-weight" :state="getFieldState('weight')"
+                    <b-form-group label="Weight, kg" label-for="profile-weight" :state="getFieldState('weight')"
                                   :invalid-feedback="getFieldError('weight')">
                         <b-form-input id="profile-weight" type="number" min="30" max="200" v-model="form.weight"
                                       required autocomplete="off"/>
                     </b-form-group>
-                    <b-form-group label="Height" label-for="profile-height" :state="getFieldState('height')"
+                    <b-form-group label="Height, cm" label-for="profile-height" :state="getFieldState('height')"
                                   :invalid-feedback="getFieldError('height')">
                         <b-form-input id="profile-height" type="number" min="100" max="250" v-model="form.height"
                                       required autocomplete="off"/>
@@ -34,6 +34,9 @@
                                   :invalid-feedback="getFieldError('activity')">
                         <b-form-input id="profile-activity" type="number" step="any" v-model="form.activity" required
                                       autocomplete="off"/>
+                    </b-form-group>
+                    <b-form-group label="Calories, kCal" label-for="profile-calories">
+                        <b-form-input id="profile-calories" type="disabled" v-model="calories"/>
                     </b-form-group>
                     <b-form-group>
                         <b-button size="lg" variant="primary" :disabled="buttonDisabled" type="submit">

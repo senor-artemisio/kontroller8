@@ -8,7 +8,7 @@
                     <b-form-group label="Weight" label-for="portion-weight" :state="getFieldState('weight')"
                                   :invalid-feedback="getFieldError('weight')">
                         <b-form-input id="portion-weight" type="number" v-model="form.weight" required min="0"
-                                      step="1"/>
+                                      step="1" autocomplete="off"/>
                     </b-form-group>
                     <b-form-group label="Time" label-for="portion-time" :state="getFieldState('time')"
                                   :invalid-feedback="getFieldError('time')">
