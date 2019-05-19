@@ -2,6 +2,8 @@
 
 namespace App\Api\DTO;
 
+use App\Api\Models\Profile;
+
 /**
  * Data transfer object for profile.
  */
@@ -27,6 +29,18 @@ class ProfileDTO extends BaseDTO
 
     /** @var bool */
     protected $gender;
+
+    /**
+     * @param Profile $profile
+     * @return ProfileDTO
+     * @throws DTOException
+     */
+    public static function createFromModel(Profile $profile): ProfileDTO
+    {
+        $attributes = $profile->attributesToArray();
+        unset($attributes['updated_at'], $attributes['created_at'], $attributes['calories']);
+        return new static($attributes);
+    }
 
     /**
      * @return string

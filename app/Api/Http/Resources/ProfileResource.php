@@ -24,6 +24,7 @@ class ProfileResource extends JsonResource
             'weight' => $profile->weight,
             'age' => $profile->age,
             'height' => $profile->height,
+            'gender' => $profile->gender,
             'activity' => $profile->activity,
             'modifier' => $profile->modifier,
             'calories' => $profile->calories,

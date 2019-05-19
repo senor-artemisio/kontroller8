@@ -1,6 +1,6 @@
 <?php
 
-namespace Nexmo\Client\Request;
+namespace App\Api\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -22,7 +22,6 @@ class ProfileRequest extends FormRequest
             'gender' => 'boolean|required',
             'modifier' => 'numeric|required|min:0',
             'activity' => 'numeric|required|min:0',
-            'calories' => 'numeric|required|min:0',
         ];
 
         if ($this->getMethod() === 'PATCH') {

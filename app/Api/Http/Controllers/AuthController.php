@@ -2,6 +2,7 @@
 
 namespace App\Api\Http\Controllers;
 
+use App\Api\DTO\DTOException;
 use App\Api\DTO\UserDTO;
 use App\Api\Http\Requests\LoginRequest;
 use App\Api\Http\Requests\SignupRequest;
@@ -48,7 +49,7 @@ class AuthController extends Controller
      * @param SignupRequest $request
      *
      * @return UserResource
-     * @throws \App\Api\DTO\DTOException
+     * @throws DTOException
      */
     public function signup(SignupRequest $request): UserResource
     {

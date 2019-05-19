@@ -16,6 +16,7 @@ export default new Vuex.Store({
         user(state, user) {
             state.user.name = user.name;
             state.user.email = user.email;
+            state.user.id = user.id;
         },
         token(state, payload) {
             if (payload.token) {

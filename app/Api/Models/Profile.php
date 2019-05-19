@@ -40,8 +40,11 @@ class Profile extends Model
             'calories'
         ];
         $this->casts = [
-            'gender' => 'bool'
+            'gender' => 'bool',
+            'modifier' => 'float',
+            'activity' => 'float'
         ];
+        $this->primaryKey = 'user_id';
 
         parent::__construct($attributes);
     }

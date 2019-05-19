@@ -73,13 +73,13 @@ class Init extends Migration
 
         Schema::create('profiles', function (Blueprint $table) {
             $table->char('user_id', 26)->nullable(false);
-            $table->integer('age')->nullable(false);
-            $table->integer('weight')->nullable(false);
-            $table->integer('height')->nullable(false);
-            $table->boolean('gender')->nullable(false);
-            $table->float('modifier')->nullable(false);
-            $table->float('activity')->nullable(false);
-            $table->integer('calories')->nullable(false);
+            $table->integer('age')->nullable(true);
+            $table->integer('weight')->nullable(true);
+            $table->integer('height')->nullable(true);
+            $table->boolean('gender')->nullable(true);
+            $table->float('modifier')->nullable(true);
+            $table->float('activity', 8, 3)->nullable(true);
+            $table->integer('calories')->nullable(true);
 
             $table->timestamps();
             $table->primary('user_id');

@@ -17,7 +17,6 @@
                     <b-form-group label="Eaten" label-for="portion-eaten" :state="getFieldState('eaten')"
                                   :invalid-feedback="getFieldError('eaten')">
                         <b-form-select v-model="form.eaten" :options="eatenOptions"></b-form-select>
-
                     </b-form-group>
                     <b-form-group label="Meal" label-for="portion-meal-id" :state="getFieldState('meal_id')"
                                   :invalid-feedback="getFieldError('meal_id')">

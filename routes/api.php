@@ -22,6 +22,9 @@ Route::middleware(['json'])->group(function () {
         Route::resource('days', 'DayController')
             ->only('index', 'store', 'destroy', 'update', 'show');
 
+        Route::resource('profiles', 'ProfileController')
+            ->only('update', 'show');
+
         Route::resource('days/{day}/portions', 'PortionController')
             ->only('index', 'store', 'destroy', 'update', 'show');
 

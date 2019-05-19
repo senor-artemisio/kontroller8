@@ -3,6 +3,7 @@
 namespace App\Api\Services;
 
 use App\Api\DTO\UserDTO;
+use App\Api\Repositories\ProfileRepository;
 use App\Api\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
 
@@ -12,14 +13,19 @@ use Illuminate\Support\Facades\Hash;
 class UserService
 {
     /** @var UserRepository */
-    protected $repository;
+    protected $userRepository;
+
+    /** @var ProfileRepository */
+    protected $profileRepository;
 
     /**
-     * @param UserRepository $repository
+     * @param UserRepository $userRepository
+     * @param ProfileRepository $profileRepository
      */
-    public function __construct(UserRepository $repository)
+    public function __construct(UserRepository $userRepository, ProfileRepository $profileRepository)
     {
-        $this->repository = $repository;
+        $this->userRepository = $userRepository;
+        $this->profileRepository = $profileRepository;
     }
 
     /**
@@ -27,11 +33,12 @@ class UserService
      */
     public function create(UserDTO $dto): void
     {
-        $this->repository->create([
+        $this->userRepository->create([
             'id' => $dto->getId(),
             'name' => $dto->getName(),
             'email' => $dto->getEmail(),
             'password' => Hash::make($dto->getPassword())
         ]);
+        $this->profileRepository->create(['user_id' => $dto->getId()]);
     }
 }

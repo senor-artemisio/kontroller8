@@ -3,6 +3,7 @@
 use App\Api\Models\Day;
 use App\Api\Models\Portion;
 use App\Api\Models\Meal;
+use App\Api\Models\Profile;
 use App\Api\Models\User;
 use App\Api\Services\DayService;
 use Carbon\Carbon;
@@ -22,6 +23,16 @@ class DatabaseSeeder extends Seeder
     {
         /** @var User $user */
         $user = factory(User::class)->create(['email' => 'user@kntrl8.com']);
+        factory(Profile::class)->create([
+            'user_id' => $user->id,
+            'age' => 29,
+            'weight' => 105,
+            'height' => 190,
+            'gender' => true,
+            'modifier' => 0.9,
+            'activity' => 1.55,
+            'calories' => 3148
+        ]);
         $date = Carbon::now()->subDays(4);
         /** @var DayService $dayService */
         $dayService = app()->make(DayService::class);
