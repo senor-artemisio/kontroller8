@@ -36,7 +36,7 @@
                                       autocomplete="off"/>
                     </b-form-group>
                     <b-form-group label="Calories, kCal" label-for="profile-calories">
-                        <b-form-input id="profile-calories" type="disabled" v-model="calories"/>
+                        <b-form-input id="profile-calories" type="text" disabled v-model="calories"/>
                     </b-form-group>
                     <b-form-group>
                         <b-button size="lg" variant="primary" :disabled="buttonDisabled" type="submit">
