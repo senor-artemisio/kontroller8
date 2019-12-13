@@ -21,7 +21,7 @@
     "laravel-mix": "^4.0.7",
     "lodash": "^4.17.5",
     "moment": "^2.24.0",
-    "npm": "^6.8.0",
+    "npm": "^6.13.4",
     "popper.js": "^1.12",
     "resolve-url-loader": "^2.3.1",
     "sass": "^1.15.2",
